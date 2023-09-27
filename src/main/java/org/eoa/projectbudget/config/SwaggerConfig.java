@@ -9,11 +9,17 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
+/**
+ * @Author 张骏山
+ * @Date 2023/9/26 16:20
+ * @PackageName: org.eoa.projectbudget.config
+ * @ClassName: SwaggerConfig
+ * @Description: TODO
+ * @Version 1.0
+ */
+
 @Configuration
 public class SwaggerConfig {
-    @Configuration
-    public class SpringDocConfig {
-
         @Bean
         public OpenAPI springOpenAPI() {
             return new OpenAPI()
@@ -29,6 +35,4 @@ public class SwaggerConfig {
                             .description("张骏山的毕业设计")
                             .url("https://www.cnblogs.com/jddreams/p/15922674.html"));
         }
-
-    }
 }
