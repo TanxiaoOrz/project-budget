@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Antd</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.3/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/@ant-design/plots@latest/dist/plots.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.23.4/antd.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/antd/4.23.4/antd.min.js"></script>
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<div id="container"></div>
+<script type="text/babel">
+class App extends React.Component {
+  render() {
+    return (
+        <antd.Space wrap>
+            <antd.Button type="primary">Primary Button</antd.Button>
+            <antd.Button>Default Button</antd.Button>
+            <antd.Button type="dashed">Dashed Button</antd.Button>
+            <antd.Button type="text">Text Button</antd.Button>
+            <antd.Button type="link">Link Button</antd.Button>
+        </antd.Space>
+    );
+  }
+}
+ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+<div id="main" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+ 
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '第一个 ECharts 实例'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+            xAxis: {
+                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        };
+ 
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+    <script>
+
+    </script>
+<div id="root2"></div>
+<script type="text/babel">
+    class Gauge2 extends React.Component{  
+        componentDidMount() {   //初始化组件，只执行一次
+            this.initEcharts();
+        }
+        componentDidUpdate(){   // 组件更新时也会调用。
+            this.initEcharts();
+        }
+        initEcharts() {     
+        const myChart = echarts.init(document.getElementById("main2"));
+        myChart.setOption({  //下列数据可以直接按照可视化图里面的东西进行替换
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                type: 'value'
+                },
+                series: [
+                {
+                    data: [150, 230, 224, 218, 135, 147, 260],
+                    type: 'line'
+                }
+                ]
+        });
+        }
+        render() {   //挂载
+            console.log("render");
+            return <div id="main2" style={{width:'100px',height:'100px'}}></div>
+        }
+    }
+    console.log("render");
+    ReactDOM.render(<Gauge2 />, document.getElementById('root2'));
+    alert(2);
+</script>
+
+
+
+</body>
+</html>
