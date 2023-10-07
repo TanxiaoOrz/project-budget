@@ -1,5 +1,7 @@
 package org.eoa.projectbudget.restController;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -26,6 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "测试控制器")
 public class TestRestController {
 
+    private final Logger log = LoggerFactory.getLogger("TCPServer");
 
     public Integer beforeProcess() {
         return 0;
@@ -46,6 +49,16 @@ public class TestRestController {
     @PostMapping("/bodyParamHeaderPath/{id}")
     public Integer bodyParamHeaderPath(@PathVariable("id") String id, @RequestHeader("token") String token,
             @RequestParam("name") String name) {
+        return 1;
+    }
+
+    @Operation(summary = "日志测试服务")
+    @Parameters({
+            @Parameter(name = "type",description = "日志选择",in = ParameterIn.QUERY)
+    })
+    @PostMapping("/bodyLog")
+    public Integer bodyLog(@RequestParam("type") Integer type) {
+        log.info("{}",type);
         return 1;
     }
 
