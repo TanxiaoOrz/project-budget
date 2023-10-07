@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--    log日志存放路径 -->
+    <springProperty name="LOG_PATH" source="logging.path" defaultValue="./logs"/>
+    <!--自定义控制台日志格式-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--系统INFO级别日志-滚动记录日志-->
+    <appender name="SYS_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--被写入的文件名，可以是相对目录，也可以是绝对目录，如果上级目录不存在会自动创建，没有默认值-->
+        <File>${LOG_PATH}/Main_info.log</File>
+        <!--如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。-->
+        <append>true</append>
+        <!--级别过滤器（LevelFilter）,此处只打INFO级别的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <!--下面2个属性表示匹配规定level的接受打印，不匹配的（即非INFO）拒绝打印-->
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
+            <fileNamePattern>${log.LOG_PATH}/Main_info-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留5天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>1</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>10 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--系统ERROR级别日志-滚动记录日志-->
+    <appender name="SYS_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/Main_error.log</File>
+        <append>true</append>
+        <!--此处只打ERROR级别的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
+            <fileNamePattern>${log.LOG_PATH}/Main_error-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留5天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>5</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>10 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--业务TCPServer入口日志-->
+    <appender name="TCPServer_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/TCPServer入口.log</File>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
+            <fileNamePattern>${log.LOG_PATH}/TCPServer入口-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留5天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>5</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>10 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--业务HTTPServer入口日志-->
+    <appender name="HTTPServer_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/HTTPServer入口.log</File>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
+            <fileNamePattern>${log.LOG_PATH}/HTTPServer入口-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留5天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>5</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>10 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!-- 下面就是根据业务-->
+    <logger name="TCPServer" additivity="false" level="INFO">
+        <appender-ref ref="TCPServer_Appender"/>
+    </logger>
+
+    <logger name="HTTPServer" additivity="false" level="INFO">
+        <appender-ref ref="HTTPServer_Appender"/>
+    </logger>
+    <!--info和error分开打印，注：ERROR > WARN > INFO > DEBUG > TRACE-->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="SYS_INFO"/>
+        <appender-ref ref="SYS_ERROR"/>
+    </root>
+
+</configuration>

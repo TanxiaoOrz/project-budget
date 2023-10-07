@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### log ###
+logs/
+/LOG_PATH_IS_UNDEFINED/HTTPServer入口.log
