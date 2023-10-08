@@ -21,9 +21,9 @@ public class Vo<Entity> {
     public static Integer WRONG_PARAMETER = 1;
     public static Integer NO_AUTHORITY = -3;
     public static Integer SERVER_ERROR = 2;
-    public static Integer SLEEP_TIME = 3;
+    public static Integer STORE_DATA_ERROR = 3;
 
-    @Schema(name = "成功状态",description = "0:成功,-1:重新登录,-2:更新token,-3:无权限,1:入参错误,2:运行错误,3:休眠")
+    @Schema(name = "成功状态",description = "0:成功,-1:重新登录,-2:更新token,-3:无权限,1:入参错误,2:运行错误,3:存储数据错误")
     private Integer code;
     @Schema(name = "结果描述")
     private String description;
