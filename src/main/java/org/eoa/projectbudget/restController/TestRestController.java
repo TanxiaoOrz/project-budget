@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "测试控制器")
 public class TestRestController {
 
-    private final Logger log = LoggerFactory.getLogger("TCPServer");
+//    private final Logger log = LoggerFactory.getLogger("TCPServer");
 
     public Integer beforeProcess() {
         return 0;
@@ -52,14 +52,14 @@ public class TestRestController {
         return 1;
     }
 
-    @Operation(summary = "日志测试服务")
-    @Parameters({
-            @Parameter(name = "type",description = "日志选择",in = ParameterIn.QUERY)
-    })
-    @PostMapping("/bodyLog")
-    public Integer bodyLog(@RequestParam("type") Integer type) {
-        log.info("{}",type);
-        return 1;
-    }
+//    @Operation(summary = "日志测试服务")
+//    @Parameters({
+//            @Parameter(name = "type",description = "日志选择",in = ParameterIn.QUERY)
+//    })
+//    @PostMapping("/bodyLog")
+//    public Integer bodyLog(@RequestParam("type") Integer type) {
+//        log.info("{}",type);
+//        return 1;
+//    }
 
 }
