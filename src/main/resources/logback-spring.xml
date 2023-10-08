@@ -12,7 +12,7 @@
     <!--系统INFO级别日志-滚动记录日志-->
     <appender name="SYS_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--被写入的文件名，可以是相对目录，也可以是绝对目录，如果上级目录不存在会自动创建，没有默认值-->
-        <File>${LOG_PATH}/Main_info.log</File>
+        <File>${LOG_PATH}/eoa_info.log</File>
         <!--如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。-->
         <append>true</append>
         <!--级别过滤器（LevelFilter）,此处只打INFO级别的日志-->
@@ -25,8 +25,8 @@
         <!-- 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
-            <fileNamePattern>${log.LOG_PATH}/Main_info-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
-            <!--保留5天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <fileNamePattern>${log.LOG_PATH}/eoa_info-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
             <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -41,7 +41,7 @@
 
     <!--系统ERROR级别日志-滚动记录日志-->
     <appender name="SYS_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/Main_error.log</File>
+        <File>${LOG_PATH}/eoa_error.log</File>
         <append>true</append>
         <!--此处只打ERROR级别的日志-->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -51,9 +51,9 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
-            <fileNamePattern>${log.LOG_PATH}/Main_error-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
-            <!--保留5天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
-            <maxHistory>5</maxHistory>
+            <fileNamePattern>${log.LOG_PATH}/eoa_error-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!--文件达到 最大128MB时会被压缩和切割 -->
@@ -65,8 +65,8 @@
             <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n</pattern>
         </encoder>
     </appender>
-    <!--业务TCPServer入口日志-->
-    <appender name="TCPServer_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--表单模块日志-->
+    <appender name="Table_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/TCPServer入口.log</File>
         <append>true</append>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -76,9 +76,9 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
-            <fileNamePattern>${log.LOG_PATH}/TCPServer入口-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
-            <!--保留5天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
-            <maxHistory>5</maxHistory>
+            <fileNamePattern>${log.LOG_PATH}/Table-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!--文件达到 最大128MB时会被压缩和切割 -->
@@ -91,8 +91,8 @@
         </encoder>
     </appender>
 
-    <!--业务HTTPServer入口日志-->
-    <appender name="HTTPServer_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--权限模块日志-->
+    <appender name="Authority_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/HTTPServer入口.log</File>
         <append>true</append>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -102,9 +102,9 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
-            <fileNamePattern>${log.LOG_PATH}/HTTPServer入口-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
-            <!--保留5天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
-            <maxHistory>5</maxHistory>
+            <fileNamePattern>${log.LOG_PATH}/authority-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!--文件达到 最大128MB时会被压缩和切割 -->
@@ -117,12 +117,12 @@
         </encoder>
     </appender>
     <!-- 下面就是根据业务-->
-    <logger name="TCPServer" additivity="false" level="INFO">
-        <appender-ref ref="TCPServer_Appender"/>
+    <logger name="TableModule" additivity="false" level="INFO">
+        <appender-ref ref="Table_Appender"/>
     </logger>
 
-    <logger name="HTTPServer" additivity="false" level="INFO">
-        <appender-ref ref="HTTPServer_Appender"/>
+    <logger name="AuthorityModule" additivity="false" level="INFO">
+        <appender-ref ref="Authority_Appender"/>
     </logger>
     <!--info和error分开打印，注：ERROR > WARN > INFO > DEBUG > TRACE-->
     <root level="INFO">
