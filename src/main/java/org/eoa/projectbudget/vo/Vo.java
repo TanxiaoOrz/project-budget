@@ -2,6 +2,7 @@ package org.eoa.projectbudget.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.eoa.projectbudget.exception.EoaException;
 
 /**
  * @Author 张骏山
@@ -30,4 +31,14 @@ public class Vo<Entity> {
     private Entity entity;
     @Schema(name = "更新token",description = "先是短token,后是长token")
     private String[] newToken;
+
+    public Vo(EoaException e) {
+        this.code = e.code;
+        this.description = e.description;
+    }
+
+    public Vo(Integer code, String description) {
+        this.code = code;
+        this.description = description;
+    }
 }
