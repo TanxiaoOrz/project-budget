@@ -49,18 +49,25 @@ public class TableView {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        if (table.getDetailCount()>=0){
-            detailSelect = new ArrayList<>(table.getDetailCount());
-            for (int i = 0; i < table.getDetailCount(); i++) {
+
+        remark = table.getRemark();
+    }
+
+    public TableView generateSelect() {
+        int detailCount = detailNames.length;
+        if (detailCount >0){
+            detailSelect = new ArrayList<>(detailCount);
+            for (int i = 0; i < detailCount; i++) {
                 detailSelect.add(new DropSelect(i,detailNames[i],true,null));
             }
         }
-        if (table.getGroupCount()>=0){
-            groupSelect = new ArrayList<>(table.getGroupCount());
-            for (int i = 0; i < table.getGroupCount(); i++) {
+        int groupCount = groupNames.length;
+        if (groupCount >0){
+            groupSelect = new ArrayList<>(groupCount);
+            for (int i = 0; i < groupCount; i++) {
                 groupSelect.add(new DropSelect(i,groupNames[i],true,null));
             }
         }
-        remark = table.getRemark();
+        return this;
     }
 }

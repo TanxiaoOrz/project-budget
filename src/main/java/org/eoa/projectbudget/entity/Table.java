@@ -33,4 +33,8 @@ public class Table {
     private String defaultCreate;
     private String defaultDelete;
     private String defaultShare;
+
+    public Table() {
+
+    }
 }
