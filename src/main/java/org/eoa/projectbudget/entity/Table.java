@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * @Author 张骏山
@@ -17,6 +20,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @TableName("table_index")
+@Accessors(chain = true)
 public class Table {
     @TableId(type = IdType.AUTO)
     private Long tableId;
@@ -33,6 +37,8 @@ public class Table {
     private String defaultCreate;
     private String defaultDelete;
     private String defaultShare;
+    private Long creator;
+    private Date createTime;
 
     public Table() {
 

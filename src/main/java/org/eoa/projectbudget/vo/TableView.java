@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.apache.ibatis.annotations.Select;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.vo.ViewData.DropSelect;
@@ -23,6 +24,7 @@ import java.util.List;
 @Schema(name = "TableView",title = "表单视图格式")
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 public class TableView {
     private Long tableId;
     private String tableViewName;
