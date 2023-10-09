@@ -25,7 +25,7 @@
         <!-- 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
-            <fileNamePattern>${log.LOG_PATH}/eoa_info-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/eoa_info-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
             <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
             <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
@@ -51,7 +51,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
-            <fileNamePattern>${log.LOG_PATH}/eoa_error-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/eoa_error-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
             <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
             <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
@@ -67,7 +67,7 @@
     </appender>
     <!--表单模块日志-->
     <appender name="Table_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/TCPServer入口.log</File>
+        <File>${LOG_PATH}/table/table.log</File>
         <append>true</append>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
@@ -76,7 +76,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
-            <fileNamePattern>${log.LOG_PATH}/Table-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/table/table-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
             <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
             <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
@@ -93,7 +93,7 @@
 
     <!--权限模块日志-->
     <appender name="Authority_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_PATH}/HTTPServer入口.log</File>
+        <File>${LOG_PATH}/authority/Authority.log</File>
         <append>true</append>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
@@ -102,7 +102,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
-            <fileNamePattern>${log.LOG_PATH}/authority-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/authority/authority-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
             <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
             <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
