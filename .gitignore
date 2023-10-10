@@ -35,3 +35,4 @@ build/
 ### log ###
 logs/
 /LOG_PATH_IS_UNDEFINED/HTTPServer入口.log
+/doc/out/
