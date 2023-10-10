@@ -56,7 +56,6 @@ CREATE TABLE `table_view_index` (
   `tableViewName` VARCHAR(100) NOT NULL COMMENT '表单显示名称',
   `tableDataName` VARCHAR(100) NOT NULL COMMENT '表单存储名称',
   `moduleNo` BIGINT(100) UNSIGNED NULL COMMENT '所属模块',
-  `workFlowNo` BIGINT(100) UNSIGNED NULL COMMENT '对应流程',
   `groupCount` INT NULL COMMENT '格式分组数量',
   `groupName` VARCHAR(1000) NULL COMMENT '格式分组名称',
   `remark` VARCHAR(1000) NULL COMMENT '备注',
