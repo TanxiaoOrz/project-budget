@@ -1,14 +1,13 @@
 package org.eoa.projectbudget.service.table_module;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
+import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Table;
+import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.ModuleTypeMapper;
 import org.eoa.projectbudget.mapper.TableJmsMapper;
-import org.eoa.projectbudget.mapper.TableMapper;
-import org.eoa.projectbudget.mapper.TableMapperAdvance;
+import org.eoa.projectbudget.mapper.TableEntityMapper;
 import org.eoa.projectbudget.service.TableModuleBackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +35,7 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
     @Autowired
     ModuleTypeMapper moduleTypeMapper;
     @Autowired
-    TableMapper tableMapper;
-    @Autowired
-    TableMapperAdvance tableMapperAdvance;
+    TableEntityMapper tableMapper;
     @Autowired
     TableJmsMapper tableJmsMapper;
 
@@ -46,7 +43,8 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
 
     @Override
     @Transactional
-    public Integer createTable(Table table, Long userId) throws ParameterException {
+    public Integer createTable(Table abstracts, Long userId) throws ParameterException {
+        TableEntity table = (TableEntity) abstracts;
 
         log.info("用户:编号=>{}执行新建表单操作\ntable=>{}",userId,table);
 
@@ -61,7 +59,7 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
 
         String mainTableName = MAIN_TABLE + table.getTableId();
         table.setTableDataName(mainTableName);
-        tableMapperAdvance.updateById(table);
+        tableMapper.updateById(table);
         log.info("创建主表:表名=>{}",mainTableName);
 
         tableJmsMapper.createTable(mainTableName,TableJmsMapper.MAIN);
@@ -76,10 +74,12 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
 
     @Override
     @Transactional
-    public Integer updateTable(Table table, Long userId) throws ParameterException {
+    public Integer updateTable(Table abstracts, Long userId) throws ParameterException {
+        TableEntity table = (TableEntity) abstracts;
+
         log.info("用户:编号=>{}执行更新表单操作\ntable=>{}",userId,table);
 
-        Table old = tableMapper.selectById(table.getTableId());
+        TableEntity old = tableMapper.selectById(table.getTableId());
         if (old == null) {
             log.error("该数据不存在tableId=>{}",table.getTableId());
             throw new ParameterException("tableId",table.getTableId().toString(),"该数据编号的表单不存在或未进行修改");
@@ -112,18 +112,43 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
     }
 
     @Override
-    public Table getOne(Long tableId, Long userId) {
+    public Table getTableById(Long tableId, Long userId) {
         log.info("用户:编号=>{}执行查询表单操作\ntableId=>{}",userId,tableId);
-        Table table = tableMapper.selectById(tableId);
+        TableEntity table = tableMapper.selectById(tableId);
         log.info("查询完成,结果数量=>{}",table==null?0:1);
         return table;
     }
 
     @Override
-    public List<Table> getTableFromModule(Long moduleId, Long userId) {
+    public List<? extends Table> getTableFromModule(Long moduleId, Long userId) {
         log.info("用户:编号=>{}执行查询表单操作\nmoduleId=>{}",userId,moduleId);
-        List<Table> tables = tableMapper.selectList(new QueryWrapper<Table>().eq("moduleId", moduleId));
+        List<TableEntity> tables = tableMapper.selectList(new QueryWrapper<TableEntity>().eq("moduleId", moduleId));
         log.info("查询完成,结果数量=>{}",tables.size());
         return tables;
+    }
+
+    @Override
+    public Integer addColumn(Column column, Long userId) {
+        return null;
+    }
+
+    @Override
+    public Integer alterColumn(Column column, Long userId) {
+        return null;
+    }
+
+    @Override
+    public Integer deleteColumn(Long columnId, Long userId) {
+        return null;
+    }
+
+    @Override
+    public Column getColumnById(Long columnId, Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<Column> getColumnByTable(Long tableId, Long userId) {
+        return null;
     }
 }

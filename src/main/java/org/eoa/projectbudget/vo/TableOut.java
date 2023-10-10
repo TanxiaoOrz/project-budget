@@ -6,8 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.apache.ibatis.annotations.Select;
-import org.eoa.projectbudget.entity.Table;
+import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.vo.ViewData.DropSelect;
 
 import java.util.ArrayList;
@@ -17,15 +16,15 @@ import java.util.List;
  * @Author 张骏山
  * @Date 2023/10/8 16:28
  * @PackageName: org.eoa.projectbudget.vo
- * @ClassName: TableView
+ * @ClassName: TableOut
  * @Description: 表单的视图传出类
  * @Version 1.0
  */
-@Schema(name = "TableView",title = "表单视图格式")
+@Schema(name = "TableOut",title = "表单视图格式")
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TableView {
+public class TableOut {
     private Long tableId;
     private String tableViewName;
     private String tableDataName;
@@ -38,7 +37,7 @@ public class TableView {
     private String remark;
 
 
-    public TableView(Table table) {
+    public TableOut(TableEntity table) {
         tableId=table.getTableId();
         tableViewName=table.getTableViewName();
         tableDataName=table.getTableDataName();
@@ -55,7 +54,7 @@ public class TableView {
         remark = table.getRemark();
     }
 
-    public TableView generateSelect() {
+    public TableOut generateSelect() {
         int detailCount = detailNames.length;
         if (detailCount >0){
             detailSelect = new ArrayList<>(detailCount);

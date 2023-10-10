@@ -1,8 +1,9 @@
 package org.eoa.projectbudget.service;
 
+import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Table;
+import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.exception.ParameterException;
-import org.eoa.projectbudget.vo.TableView;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface TableModuleBackService {
      * @param userId 创建人id
      * @return 创建好的表单id
      */
-    Integer createTable(Table table,Long userId) throws ParameterException;
+    Integer createTable(Table table, Long userId) throws ParameterException;
 
     /**
      *
@@ -43,13 +44,23 @@ public interface TableModuleBackService {
      * @param tableId
      * @return 指定id的表单对象
      */
-    Table getOne(Long tableId, Long userId);
+    Table getTableById(Long tableId, Long userId);
 
     /**
      *
      * @param moduleId
      * @return 该应用模块下的所有表单
      */
-    List<Table> getTableFromModule(Long moduleId, Long userId);
+    List<? extends Table> getTableFromModule(Long moduleId, Long userId);
+
+    Integer addColumn(Column column, Long userId);
+
+    Integer alterColumn(Column column,Long userId);
+
+    Integer deleteColumn(Long columnId,Long userId);
+
+    Column getColumnById(Long columnId,Long userId);
+
+    List<? extends Column> getColumnByTable(Long tableId,Long userId);
 
 }
