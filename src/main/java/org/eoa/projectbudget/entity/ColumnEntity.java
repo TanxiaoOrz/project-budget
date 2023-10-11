@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -13,18 +12,20 @@ import java.util.Date;
 
 /**
  * @Author 张骏山
- * @Date 2023/10/10 16:48
+ * @Date 2023/10/11 14:09
  * @PackageName: org.eoa.projectbudget.entity
- * @ClassName: TableOut
- * @Description: TODO
+ * @ClassName: ColumnEntity
+ * @Description: 字段索引实体类
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = false)
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@TableName("table_view_index")
-public class TableView extends Table{
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
+@TableName("table_column_index")
+public class ColumnEntity {
+
+    private Integer columnDetailNo;
 
 }
