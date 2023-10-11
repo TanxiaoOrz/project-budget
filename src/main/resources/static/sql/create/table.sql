@@ -44,7 +44,6 @@ CREATE TABLE `table_column_index` (
   `columnGroupNo` INT NULL DEFAULT -1 COMMENT '格式分组',
   `columnDetailNo` INT NULL DEFAULT -1 COMMENT '明细字段分组',
   `columnViewNo` INT NULL AUTO_INCREMENT COMMENT '顺序序号',
-  `columnViewDisplay` TINYINT NULL DEFAULT 1 COMMENT '展示时是否显示(0否，1是)',
   `creator` BIGINT(64) UNSIGNED NULL COMMENT '创建人',
   `createTime` DATETIME NULL DEFAULT now() COMMENT '创建时间',
   PRIMARY KEY (`columnId`),
