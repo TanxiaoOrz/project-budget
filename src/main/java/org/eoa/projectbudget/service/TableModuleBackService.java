@@ -41,23 +41,23 @@ public interface TableModuleBackService {
 
     /**
      *
-     * @param tableId
+     * @param tableId 表单编号
      * @return 指定id的表单对象
      */
     Table getTableById(Long tableId, Long userId);
 
     /**
      *
-     * @param moduleId
+     * @param moduleId 模块编号
      * @return 该应用模块下的所有表单
      */
     List<? extends Table> getTableFromModule(Long moduleId, Long userId);
 
-    Integer addColumn(Column column, Long userId);
+    Integer addColumn(Column column, Long userId) throws ParameterException;
 
-    Integer alterColumn(Column column,Long userId);
+    Integer alterColumn(Column column,Long userId) throws ParameterException;
 
-    Integer deleteColumn(Long columnId,Long userId);
+    Integer deleteColumn(Long columnId,Long userId) throws ParameterException;
 
     Column getColumnById(Long columnId,Long userId);
 

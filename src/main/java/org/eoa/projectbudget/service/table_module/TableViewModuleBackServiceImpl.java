@@ -1,11 +1,9 @@
 package org.eoa.projectbudget.service.table_module;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.entity.Table;
-import org.eoa.projectbudget.entity.TableEntity;
-import org.eoa.projectbudget.entity.TableView;
+import org.eoa.projectbudget.entity.*;
 import org.eoa.projectbudget.exception.ParameterException;
+import org.eoa.projectbudget.mapper.ColumnViewMapper;
 import org.eoa.projectbudget.mapper.ModuleTypeMapper;
 import org.eoa.projectbudget.mapper.TableEntityMapper;
 import org.eoa.projectbudget.mapper.TableViewMapper;
@@ -27,6 +25,7 @@ import java.util.List;
  * @Version 1.0
  */
 
+
 @Service
 public class TableViewModuleBackServiceImpl implements TableModuleBackService {
 
@@ -34,6 +33,8 @@ public class TableViewModuleBackServiceImpl implements TableModuleBackService {
     ModuleTypeMapper moduleTypeMapper;
     @Autowired
     TableViewMapper tableMapper;
+    @Autowired
+    ColumnViewMapper columnMapper;
 
 
     private final Logger log = LoggerFactory.getLogger("TableModule");
@@ -100,27 +101,67 @@ public class TableViewModuleBackServiceImpl implements TableModuleBackService {
     }
 
     @Override
-    public Integer addColumn(Column column, Long userId) {
-        return null;
+    public Integer addColumn(Column base, Long userId) throws ParameterException {
+        ColumnView column = (ColumnView) base;
+        log.info("用户:编号=>{}执行新建视图字段操作\ncolumn=>{}",userId,column);
+        if (tableMapper.selectById(column.getTableNo()) == null) {
+            log.error("不存在表单编号=>{}的表单，操作中断",column.getTableNo());
+            throw new ParameterException("tableNo",column.getTableNo().toString(),"不存在该表单编号");
+        }
+        if (column.getTableNo() == null) {
+            Integer columnViewNo = columnMapper.getColumnViewNoNew(column.getTableNo());
+            log.info("该字段的显示顺序编号=>{}",columnViewNo);
+            column.setColumnViewNo(columnViewNo);
+        }
+        Integer insert = columnMapper.insert(column);
+        log.info("插入完成,插入后数据=>{}",column);
+        return insert;
     }
 
     @Override
-    public Integer alterColumn(Column column, Long userId) {
-        return null;
+    public Integer alterColumn(Column base, Long userId) throws ParameterException {
+        ColumnView column = (ColumnView) base;
+        log.info("用户:编号=>{}执行修改视图字段操作\ncolumn=>{}",userId,column);
+        ColumnView old = columnMapper.selectById(column.getColumnId());
+        if (old == null) {
+            log.error("不存在字段编号=>{}的表单，操作中断",column.getColumnId());
+            throw new ParameterException("columnId",column.getColumnId().toString(),"不存在该字段编号");
+        }
+        if (!old.getTableNo().equals(column.getTableNo())) {
+            log.error("不允许修改字段所属的表单,原表单编号=>{},新表单编号=>{}",old.getTableNo(),column.getTableNo());
+            throw new ParameterException("tableNo",column.getTableNo().toString(),"不允许修改所属表单");
+        }
+        int update = columnMapper.updateById(column);
+        log.info("修改完成,修改数量=>{}",update);
+        return update;
     }
 
     @Override
-    public Integer deleteColumn(Long columnId, Long userId) {
-        return null;
+    public Integer deleteColumn(Long columnId, Long userId) throws ParameterException {
+        log.info("用户:编号=>{}执行删除视图字段操作\ncolumnId=>{}",userId,columnId);
+        ColumnView old = columnMapper.selectById(columnId);
+        if (old == null) {
+            log.error("不存在字段编号=>{}的表单，操作中断",columnId);
+            throw new ParameterException("columnId",columnId.toString(),"不存在该字段编号");
+        }
+        int delete = columnMapper.deleteById(columnId);
+        log.info("删除完成,删除数量=>{}",delete);
+        return delete;
     }
 
     @Override
     public Column getColumnById(Long columnId, Long userId) {
-        return null;
+        log.info("用户:编号=>{}执行查询视图字段操作\ncolumnId=>{}",userId,columnId);
+        Column column = columnMapper.selectById(columnId);
+        log.info("查询完成,结果数量=>{}",column==null?0:1);
+        return column;
     }
 
     @Override
-    public List<Column> getColumnByTable(Long tableId, Long userId) {
-        return null;
+    public List<ColumnView> getColumnByTable(Long tableId, Long userId) {
+        log.info("用户:编号=>{}执行查询表单操作\ntableId=>{}",userId,tableId);
+        List<ColumnView> columns = columnMapper.selectList(new QueryWrapper<ColumnView>().eq("tableId", tableId));
+        log.info("查询完成,结果数量=>{}",columns.size());
+        return columns;
     }
 }

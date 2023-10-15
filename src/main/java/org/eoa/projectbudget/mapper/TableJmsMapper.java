@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@Slf4j
 public class TableJmsMapper {
 
     public final static int DETAIL = 0;
@@ -43,17 +45,26 @@ public class TableJmsMapper {
               UNIQUE INDEX `detailMainId_UNIQUE` (`detailMainId` ASC));
             """;
 
+    public final String COLUMN_CREATE = """
+            ALTER TABLE `%s`
+            ADD COLUMN `%s` %s NULL;
+            """;
+
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public Integer createTable(String tableName,int type) {
+
+    public void createTable(String tableName,int type) {
         String createSql = String.format(type==MAIN?MAIN_TABLE_CREATE:DETAIL_TABLE_CREATE,tableName);
         jdbcTemplate.execute(createSql);
-        return 0;
+        log.info("执行创建表操作,sql=>{}",createSql);
     }
 
-    public Integer alterColumn() {
-        return 0;
+    public void createColumn(String tableName,String columnName,String columnDataType) {
+        String alterSql = String.format(COLUMN_CREATE,tableName,columnName,columnDataType);
+        jdbcTemplate.execute(alterSql);
+        log.info("执行创建字段操作,sql=>{}",alterSql);
     }
 
 }
