@@ -13,5 +13,6 @@ import org.eoa.projectbudget.entity.ModuleType;
  * @Version 1.0
  */
 
+@Mapper
 public interface ModuleTypeMapper extends BaseMapper<ModuleType> {
 }

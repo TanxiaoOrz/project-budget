@@ -1,6 +1,7 @@
 package org.eoa.projectbudget.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.eoa.projectbudget.entity.TableView;
 
 /**
@@ -11,5 +12,7 @@ import org.eoa.projectbudget.entity.TableView;
  * @Description: TODO
  * @Version 1.0
  */
+
+@Mapper
 public interface TableViewMapper extends BaseMapper<TableView> {
 }
