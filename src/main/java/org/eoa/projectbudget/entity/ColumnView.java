@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -20,21 +21,13 @@ import java.util.Date;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("table_view_column_index")
-public class ColumnView {
+public class ColumnView extends Column{
 
-    private String columnViewName;
-    private String columnDataName;
-    private String columnType;
-    private String columnTypeDescription;
-    private Long tableNo;
-    private Integer columnGroupNo;
-    private Integer columnViewNo;
-    private Long creator;
-    private Date createTime;
     private String columnViewDisplay;
 
 }

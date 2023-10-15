@@ -8,7 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author 张骏山
@@ -22,8 +24,25 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public abstract class Column {
-    public final static String typeText = "0";
+    public final static int SINGLE_TEXT = 0;
+    public final static int TEXT = 1;
+    public final static int NUMBER = 2;
+    public final static int BROWSER_BOX = 3;
+    public final static int SELECT_ITEM = 4;
+    public final static int DATETIME = 5;
+    public final static int FILE = 6;
 
+
+
+    public final static List<String> DATATYPE_GROUP_VIEW =List.of(new String[]{
+            "SINGLE_TEXT",
+            "TEXT",
+            "NUMBER",
+            "BROWSER_BOX",
+            "int",
+            "DATETIME",
+            "FILE"
+    });
 
     @TableId(type = IdType.AUTO)
     protected Long columnId;
