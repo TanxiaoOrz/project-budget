@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Components</title>
+    <script src="import/react.production.min.js"></script>
+    <script src="import/react-dom.production.min.js"></script>
+    <script src="import/babel.min.js"></script>
+    <script src="import/moment.min.js"></script>
+    <link rel="stylesheet" href="import/antd.min.css" />
+    <script src="import/antd.min.js"></script>
+    <script src="import/echarts.min.js"></script>
+    <script src="import/components.min.js"></script>
+</head>
+<body>
+<div id = "test"></div>
+<script type="text/babel">
+    class App extends React.Component {
+      render() {
+        return (
+            <antd.Button>test</antd.Button>
+        );
+      }
+    }
+    alert(1);
+    ReactDOM.render(<App />, document.getElementById('test'));
+</script>
+
+
+</body>
+</html>
