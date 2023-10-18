@@ -21,8 +21,6 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName("table_view_index")
 public class TableView extends Table{
 

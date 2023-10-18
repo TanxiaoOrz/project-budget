@@ -82,4 +82,7 @@ CREATE TABLE `table_view_column_index` (
   UNIQUE INDEX `columnViewNo_UNIQUE` (`columnViewNo` ASC))
 COMMENT = '字段数据索引表（table_column_index）';
 
---- 表单模块创建基础表单
+-- 表单模块创建基础表单
+
+create view module_view as (select *, 1 as tableCounts, 1 as flowCounts, 1 as searchCounts, 1 as chartsCounts  from module_type);
+-- 模块应用查看视图

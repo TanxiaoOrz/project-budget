@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.vo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -17,11 +18,15 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
+@TableName("module_view")
 public class ModuleOut {
     private Long moduleTypeId;
     private String moduleTypeName;
     private String workflowRemark;
     private Long creator;
     private Date createTime;
-    private Integer 
+    private Integer searchCounts;
+    private Integer flowCounts;
+    private Integer tableCounts;
+    private Integer chartsCounts;
 }

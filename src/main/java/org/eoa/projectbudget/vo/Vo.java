@@ -41,4 +41,10 @@ public class Vo<Entity> {
         this.code = code;
         this.description = description;
     }
+
+    public Vo(Entity entity) {
+        this.code = SUCCESS;
+        this.description = "操作成功";
+        this.entity = entity;
+    }
 }
