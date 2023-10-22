@@ -1,11 +1,11 @@
 package org.eoa.projectbudget.service;
 
-import org.eoa.projectbudget.vo.ModuleOut;
+import org.eoa.projectbudget.entity.ModuleView;
 
 import java.util.List;
 
 public interface ModuleService {
 
-    List<ModuleOut> getAll(Long userId);
+    List<ModuleView> getAll(Long userId);
 
 }
