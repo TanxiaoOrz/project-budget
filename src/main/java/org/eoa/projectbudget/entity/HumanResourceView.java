@@ -23,7 +23,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName(schema = "human_view")
+@TableName("human_view")
 public class HumanResourceView {
     @TableId(type = IdType.AUTO)
     Long dataId;
