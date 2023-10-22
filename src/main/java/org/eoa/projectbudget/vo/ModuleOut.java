@@ -28,7 +28,7 @@ public class ModuleOut {
     private String moduleTypeName;
     private String workflowRemark;
     private Long creatorId;
-    private String createName;
+    private String creatorName;
     private Date createTime;
     private Integer searchCounts;
     private Integer flowCounts;
