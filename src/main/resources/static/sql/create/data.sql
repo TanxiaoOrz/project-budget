@@ -1,0 +1,2 @@
+insert into `human_resource` (dataId, loginName, password,name, sex, birth, telephone, mail, phone, fax, workCode, section, depart, job, directorLeader, supporter, photo, signature, lastLogin)
+        VALUES (1,'sysadmin','eoa','系统管理员',null,null,null,null,null,null,null,0,0,'系统管理员',0,0,0,null,null);
