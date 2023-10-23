@@ -28,7 +28,7 @@ import java.util.List;
 @Service
 public class TableModuleBackServiceImpl implements TableModuleBackService {
 
-    public final String MAIN_TABLE = "main_table_";
+    public final String MAIN_TABLE = "form_table_";
     public final String DETAIL_LAG = "_dt_";
 
     @Autowired
