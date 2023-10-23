@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.entity.*;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
+import org.eoa.projectbudget.mapper.FormDDLMapper;
 import org.eoa.projectbudget.mapper.ModuleTypeMapper;
-import org.eoa.projectbudget.mapper.TableJmsMapper;
 import org.eoa.projectbudget.mapper.TableEntityMapper;
 import org.eoa.projectbudget.service.TableModuleBackService;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
     @Autowired
     TableEntityMapper tableMapper;
     @Autowired
-    TableJmsMapper tableJmsMapper;
+    FormDDLMapper formDDLMapper;
     @Autowired
     ColumnEntityMapper columnMapper;
 
@@ -63,10 +63,10 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
         tableMapper.updateById(table);
         log.info("创建主表:表名=>{}",mainTableName);
 
-        tableJmsMapper.createTable(mainTableName,TableJmsMapper.MAIN);
+        formDDLMapper.createTable(mainTableName, FormDDLMapper.MAIN);
         for (int i = 0; i < table.getDetailCount(); i++) {
             String detailTableName = mainTableName + DETAIL_LAG + i;
-            tableJmsMapper.createTable(detailTableName,TableJmsMapper.DETAIL);
+            formDDLMapper.createTable(detailTableName, FormDDLMapper.DETAIL);
             log.info("创建明细表:表名=>{}",detailTableName);
         }
 
@@ -97,7 +97,7 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
 
         for (int i = old.getDetailCount(); i < table.getDetailCount(); i++) {
             String detailTableName = table.getTableDataName() + DETAIL_LAG + i;
-            tableJmsMapper.createTable(detailTableName,TableJmsMapper.DETAIL);
+            formDDLMapper.createTable(detailTableName, FormDDLMapper.DETAIL);
             log.info("创建新的明细表,表名=>{}",detailTableName);
         }
 
@@ -152,7 +152,7 @@ public class TableModuleBackServiceImpl implements TableModuleBackService {
         else
             tableName = tableEntity.getTableDataName()+DETAIL_LAG+column.getColumnDetailNo();
 
-        tableJmsMapper.createColumn(tableName,column.getColumnDataName(), dateType);
+        formDDLMapper.createColumn(tableName,column.getColumnDataName(), dateType);
 
         log.info("创建字段名=>{},字段类型=>{},在表单=>{}",column.getColumnDataName(),dateType,tableName);
         return insert;

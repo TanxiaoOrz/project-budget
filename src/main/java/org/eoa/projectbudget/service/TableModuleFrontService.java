@@ -10,4 +10,6 @@ package org.eoa.projectbudget.service;
  */
 public interface TableModuleFrontService {
 
+
+
 }

@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
  * @Author 张骏山
  * @Date 2023/10/9 14:55
  * @PackageName: org.eoa.projectbudget.mapper
- * @ClassName: TableJmsMapper
+ * @ClassName: FormDDLMapper
  * @Description: 直接运行建表,表单结构修改等操作
  * @Version 1.0
  */
 
 @Component
 @Slf4j
-public class TableJmsMapper {
+public class FormDDLMapper {
 
     public final static int DETAIL = 0;
     public final static int MAIN = 1;
