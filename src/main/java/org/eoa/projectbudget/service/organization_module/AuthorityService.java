@@ -1,0 +1,12 @@
+package org.eoa.projectbudget.service.organization_module;
+
+/**
+ * @Author 张骏山
+ * @Date 2023/10/23 16:26
+ * @PackageName: org.eoa.projectbudget.service.organization_module
+ * @ClassName: AuthorityService
+ * @Description: TODO
+ * @Version 1.0
+ */
+public interface AuthorityService {
+}

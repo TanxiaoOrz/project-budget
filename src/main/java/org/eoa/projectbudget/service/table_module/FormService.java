@@ -3,6 +3,7 @@ package org.eoa.projectbudget.service.table_module;
 import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Form;
 import org.eoa.projectbudget.entity.Table;
+import org.eoa.projectbudget.exception.EoaException;
 
 /**
  * @Author 张骏山
@@ -14,12 +15,12 @@ import org.eoa.projectbudget.entity.Table;
  */
 public interface FormService<C extends Column,T extends Table> {
 
-    Form<C,T> getFormOne(Long tableId,Long dataId,Long userId);
+    Form<C,T> getFormOne(Long tableId,Long dataId,Long userId) throws EoaException;
 
-    Integer updateForm(Form<C,T> form,Long userId);
+    Integer updateForm(Form<C,T> form,Long userId) throws EoaException;
 
-    Integer createForm(Form<C,T> form,Long userId);
+    Integer createForm(Form<C,T> form,Long userId) throws EoaException;
 
-    Integer deleteForm(Long tableId,Long dataId,Long userId);
+    Integer deleteForm(Long tableId,Long dataId,Long userId) throws EoaException;
 
 }
