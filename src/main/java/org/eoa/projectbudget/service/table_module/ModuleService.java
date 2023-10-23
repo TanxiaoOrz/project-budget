@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.service;
+package org.eoa.projectbudget.service.table_module;
 
 import org.eoa.projectbudget.entity.ModuleView;
 

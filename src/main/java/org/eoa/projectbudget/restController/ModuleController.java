@@ -2,8 +2,7 @@ package org.eoa.projectbudget.restController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.eoa.projectbudget.service.ModuleService;
-import org.eoa.projectbudget.entity.ModuleView;
+import org.eoa.projectbudget.service.table_module.ModuleService;
 import org.eoa.projectbudget.utils.CreateOutUtils;
 import org.eoa.projectbudget.vo.ModuleOut;
 import org.eoa.projectbudget.vo.Vo;

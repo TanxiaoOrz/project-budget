@@ -1,47 +1,51 @@
-package org.eoa.projectbudget.service.table_module;
+package org.eoa.projectbudget.service.table_module.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.entity.*;
 import org.eoa.projectbudget.exception.ParameterException;
-import org.eoa.projectbudget.mapper.ColumnViewMapper;
+import org.eoa.projectbudget.mapper.ColumnEntityMapper;
+import org.eoa.projectbudget.mapper.FormDDLMapper;
 import org.eoa.projectbudget.mapper.ModuleTypeMapper;
 import org.eoa.projectbudget.mapper.TableEntityMapper;
-import org.eoa.projectbudget.mapper.TableViewMapper;
-import org.eoa.projectbudget.service.TableModuleBackService;
+import org.eoa.projectbudget.service.table_module.TableColumnService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
 /**
  * @Author 张骏山
- * @Date 2023/10/9 18:48
+ * @Date 2023/10/8 15:24
  * @PackageName: org.eoa.projectbudget.service.table_module
- * @ClassName: TableViewModuleBackServiceImpl
- * @Description: 表单操作接口的视图实现
+ * @ClassName: TableEntityServiceImpl
+ * @Description: 表单模块后端操作处理业务类
  * @Version 1.0
  */
-
-
 @Service
-public class TableViewModuleBackServiceImpl implements TableModuleBackService {
+public class TableEntityServiceImpl implements TableColumnService {
+
+    public final String MAIN_TABLE = "form_table_";
+    public final String DETAIL_LAG = "_dt_";
 
     @Autowired
     ModuleTypeMapper moduleTypeMapper;
     @Autowired
-    TableViewMapper tableMapper;
+    TableEntityMapper tableMapper;
     @Autowired
-    ColumnViewMapper columnMapper;
-
+    FormDDLMapper formDDLMapper;
+    @Autowired
+    ColumnEntityMapper columnMapper;
 
     private final Logger log = LoggerFactory.getLogger("TableModule");
 
     @Override
+    @Transactional
     public Integer createTable(Table abstracts, Long userId) throws ParameterException {
-        TableView table = (TableView) abstracts;
+        TableEntity table = (TableEntity) abstracts;
 
         log.info("用户:编号=>{}执行新建表单操作\ntable=>{}",userId,table);
 
@@ -53,25 +57,49 @@ public class TableViewModuleBackServiceImpl implements TableModuleBackService {
         }
         int insert = tableMapper.insert(table);
         log.info("插入新的表单索引数据,主键编号:{}",table.getTableId());
+
+        String mainTableName = MAIN_TABLE + table.getTableId();
+        table.setTableDataName(mainTableName);
+        tableMapper.updateById(table);
+        log.info("创建主表:表名=>{}",mainTableName);
+
+        formDDLMapper.createTable(mainTableName, FormDDLMapper.MAIN);
+        for (int i = 0; i < table.getDetailCount(); i++) {
+            String detailTableName = mainTableName + DETAIL_LAG + i;
+            formDDLMapper.createTable(detailTableName, FormDDLMapper.DETAIL);
+            log.info("创建明细表:表名=>{}",detailTableName);
+        }
+
         return insert;
     }
 
     @Override
+    @Transactional
     public Integer updateTable(Table abstracts, Long userId) throws ParameterException {
-        TableView table = (TableView) abstracts;
+        TableEntity table = (TableEntity) abstracts;
 
         log.info("用户:编号=>{}执行更新表单操作\ntable=>{}",userId,table);
 
-        TableView old = tableMapper.selectById(table.getTableId());
+        TableEntity old = tableMapper.selectById(table.getTableId());
         if (old == null) {
             log.error("该数据不存在tableId=>{}",table.getTableId());
             throw new ParameterException("tableId",table.getTableId().toString(),"该数据编号的表单不存在或未进行修改");
         }
-
+        log.info("历史数据=>{}",table);
+        if (!old.getTableDataName().equals(table.getTableDataName())) {
+            log.error("数据库存储名不一致,保存名字=>{},要修改的名字=>{}",old.getTableDataName(),table.getTableDataName());
+            throw new ParameterException("TableDataName",table.getTableDataName(),"不允许修改存储数据表名");
+        }
         table.setCreateTime(old.getCreateTime())
                 .setCreator(old.getCreator());
         int update = tableMapper.updateById(table);
         log.info("更新完成,新的数据=>{}",table);
+
+        for (int i = old.getDetailCount(); i < table.getDetailCount(); i++) {
+            String detailTableName = table.getTableDataName() + DETAIL_LAG + i;
+            formDDLMapper.createTable(detailTableName, FormDDLMapper.DETAIL);
+            log.info("创建新的明细表,表名=>{}",detailTableName);
+        }
 
         return update;
     }
@@ -87,7 +115,7 @@ public class TableViewModuleBackServiceImpl implements TableModuleBackService {
     @Override
     public Table getTableById(Long tableId, Long userId) {
         log.info("用户:编号=>{}执行查询表单操作\ntableId=>{}",userId,tableId);
-        TableView table = tableMapper.selectById(tableId);
+        TableEntity table = tableMapper.selectById(tableId);
         log.info("查询完成,结果数量=>{}",table==null?0:1);
         return table;
     }
@@ -95,16 +123,17 @@ public class TableViewModuleBackServiceImpl implements TableModuleBackService {
     @Override
     public List<? extends Table> getTableFromModule(Long moduleId, Long userId) {
         log.info("用户:编号=>{}执行查询表单操作\nmoduleId=>{}",userId,moduleId);
-        List<TableView> tables = tableMapper.selectList(new QueryWrapper<TableView>().eq("moduleId", moduleId));
+        List<TableEntity> tables = tableMapper.selectList(new QueryWrapper<TableEntity>().eq("moduleId", moduleId));
         log.info("查询完成,结果数量=>{}",tables.size());
         return tables;
     }
 
     @Override
     public Integer addColumn(Column base, Long userId) throws ParameterException {
-        ColumnView column = (ColumnView) base;
-        log.info("用户:编号=>{}执行新建视图字段操作\ncolumn=>{}",userId,column);
-        if (tableMapper.selectById(column.getTableNo()) == null) {
+        ColumnEntity column = (ColumnEntity) base;
+        log.info("用户:编号=>{}执行新建表单字段操作\ncolumn=>{}",userId,column);
+        TableEntity tableEntity = tableMapper.selectById(column.getTableNo());
+        if (tableEntity == null) {
             log.error("不存在表单编号=>{}的表单，操作中断",column.getTableNo());
             throw new ParameterException("tableNo",column.getTableNo().toString(),"不存在该表单编号");
         }
@@ -115,17 +144,32 @@ public class TableViewModuleBackServiceImpl implements TableModuleBackService {
         }
         Integer insert = columnMapper.insert(column);
         log.info("插入完成,插入后数据=>{}",column);
+
+        String dateType = column.createDateType();
+        String tableName;
+        if (column.getColumnDetailNo()!=-1)
+            tableName = tableEntity.getTableDataName();
+        else
+            tableName = tableEntity.getTableDataName()+DETAIL_LAG+column.getColumnDetailNo();
+
+        formDDLMapper.createColumn(tableName,column.getColumnDataName(), dateType);
+
+        log.info("创建字段名=>{},字段类型=>{},在表单=>{}",column.getColumnDataName(),dateType,tableName);
         return insert;
     }
 
     @Override
     public Integer alterColumn(Column base, Long userId) throws ParameterException {
-        ColumnView column = (ColumnView) base;
-        log.info("用户:编号=>{}执行修改视图字段操作\ncolumn=>{}",userId,column);
-        ColumnView old = columnMapper.selectById(column.getColumnId());
+        ColumnEntity column = (ColumnEntity) base;
+        log.info("用户:编号=>{}执行修改表单字段操作\ncolumn=>{}",userId,column);
+        ColumnEntity old = columnMapper.selectById(column.getColumnId());
         if (old == null) {
             log.error("不存在字段编号=>{}的表单，操作中断",column.getColumnId());
             throw new ParameterException("columnId",column.getColumnId().toString(),"不存在该字段编号");
+        }
+        if (!old.getColumnType().equals(column.getColumnType())) {
+            log.error("不允许修改字段类型,原字段类型=>{},新字段类型=>{}",old.getColumnType(),column.getColumnType());
+            throw new ParameterException("tableNo",column.getTableNo().toString(),"不允许修改字段类型");
         }
         if (!old.getTableNo().equals(column.getTableNo())) {
             log.error("不允许修改字段所属的表单,原表单编号=>{},新表单编号=>{}",old.getTableNo(),column.getTableNo());
@@ -138,8 +182,8 @@ public class TableViewModuleBackServiceImpl implements TableModuleBackService {
 
     @Override
     public Integer deleteColumn(Long columnId, Long userId) throws ParameterException {
-        log.info("用户:编号=>{}执行删除视图字段操作\ncolumnId=>{}",userId,columnId);
-        ColumnView old = columnMapper.selectById(columnId);
+        log.info("用户:编号=>{}执行删除表单字段操作\ncolumnId=>{}",userId,columnId);
+        ColumnEntity old = columnMapper.selectById(columnId);
         if (old == null) {
             log.error("不存在字段编号=>{}的表单，操作中断",columnId);
             throw new ParameterException("columnId",columnId.toString(),"不存在该字段编号");
@@ -158,9 +202,9 @@ public class TableViewModuleBackServiceImpl implements TableModuleBackService {
     }
 
     @Override
-    public List<ColumnView> getColumnByTable(Long tableId, Long userId) {
+    public List<ColumnEntity> getColumnByTable(Long tableId, Long userId) {
         log.info("用户:编号=>{}执行查询表单操作\ntableId=>{}",userId,tableId);
-        List<ColumnView> columns = columnMapper.selectList(new QueryWrapper<ColumnView>().eq("tableId", tableId));
+        List<ColumnEntity> columns = columnMapper.selectList(new QueryWrapper<ColumnEntity>().eq("tableId", tableId));
         log.info("查询完成,结果数量=>{}",columns.size());
         return columns;
     }

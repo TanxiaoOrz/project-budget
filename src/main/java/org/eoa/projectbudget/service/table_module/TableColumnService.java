@@ -1,8 +1,7 @@
-package org.eoa.projectbudget.service;
+package org.eoa.projectbudget.service.table_module;
 
 import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Table;
-import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.exception.ParameterException;
 
 import java.util.List;
@@ -11,11 +10,11 @@ import java.util.List;
  * @Author 张骏山
  * @Date 2023/10/8 15:30
  * @PackageName: org.eoa.projectbudget.service.table_module
- * @ClassName: TableModuleBackService
- * @Description: TODO
+ * @ClassName: TableColumnService
+ * @Description: 表单字段操作业务类
  * @Version 1.0
  */
-public interface TableModuleBackService {
+public interface TableColumnService {
 
     /**
      *
