@@ -13,9 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author 张骏山
@@ -44,10 +43,23 @@ public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
         }
         Form<ColumnView, TableView> form = new Form<ColumnView, TableView>().setTable(table);
 
-        List<ColumnView> columns = columnMapper.selectList(new QueryWrapper<ColumnView>().eq("tableNo", tableId));
+        List<ColumnView> mainColumns = columnMapper.selectList(
+                new QueryWrapper<ColumnView>().eq("tableNo", tableId)
+                        .orderByAsc("columnViewNo"));
+        //视图不存在明细表单,直接使用,实体表需要过滤
 
-        Stream<ColumnView> columnStream = columns.stream();
-        Integer groupLength = columnMapper.getColumnViewNoNew(tableId);
+        Integer groupCount = table.getGroupCount();
+        Map<String, Object> mainValues = formDMLMapper.getMainFormById(dataId,table.getTableDataName());
+        String[] groupNames = table.getGroupName().split(",");
+        for (int i = 0; i < groupCount; i++) {
+            int groupNo = i;
+            Map<ColumnView, Object> columnMap = mainColumns.stream().filter(column -> column.getColumnGroupNo().equals(groupNo))
+                    .collect(Collectors.toMap(column -> column, column -> mainValues.get(column.getColumnDataName())));
+            if (columnMap.isEmpty()) {
+                continue;
+            }
+            form.addGroup(groupNo,groupNames[groupNo],columnMap);
+        }
 
 
 

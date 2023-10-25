@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -33,11 +34,24 @@ public class Form<C extends Column , T extends Table> {
     List<Detail> details;
     T table;
 
+    public void addGroup(Integer groupId, String groupName, Map<C, Object> columns) {
+        if (groups == null) {
+            groups = new ArrayList<>();
+        }
+        groups.add(new Group(groupId,groupName,columns));
+    }
+
 
     public class Group {
         Integer groupId;
         String groupName;
         Map<C,Object> columns;
+
+        public Group(Integer groupId, String groupName, Map<C, Object> columns) {
+            this.groupId = groupId;
+            this.groupName = groupName;
+            this.columns = columns;
+        }
 
         public Integer getGroupId() {
             return groupId;
@@ -70,7 +84,7 @@ public class Form<C extends Column , T extends Table> {
     public class Detail {
         Integer detailId;
         String detailName;
-        Map<T,Object> columns;
+        Map<C,List<Map<Integer,Object>>> columns;
 
         public Integer getDetailId() {
             return detailId;
@@ -90,11 +104,11 @@ public class Form<C extends Column , T extends Table> {
             return this;
         }
 
-        public Map<T, Object> getColumns() {
+        public Map<C,List<Map<Integer,Object>>> getColumns() {
             return columns;
         }
 
-        public Detail setColumns(Map<T, Object> columns) {
+        public Detail setColumns(Map<C,List<Map<Integer,Object>>> columns) {
             this.columns = columns;
             return this;
         }
