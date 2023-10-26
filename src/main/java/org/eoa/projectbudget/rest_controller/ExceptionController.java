@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.restController;
+package org.eoa.projectbudget.rest_controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eoa.projectbudget.exception.EoaException;

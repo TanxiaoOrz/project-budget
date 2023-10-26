@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.restController;
+package org.eoa.projectbudget.rest_controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/v1/module")
 @Tag(name = "模块应用")
 @CrossOrigin
-public class ModuleController {
+public class TableBackController {
     @Autowired
     ModuleService moduleService;
     @Autowired
