@@ -119,3 +119,46 @@ create view `human_view` as (
     select *,TIMESTAMPDIFF(YEAR, birth, CURDATE()) as age from human_resource
 );
 -- 人员添加年龄数据查看视图
+
+create table `depart_resource` (
+    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,部门唯一id',
+    `departName` varchar(100) null comment  '部门名称',
+    `departCode` varchar(100) null comment  '部门编号',
+    `fullName` varchar(100) null comment  '部门全称',
+    `belongDepart` BIGINT(64) UNSIGNED NOT NULL comment  '上级部门',
+    `belongSection` BIGINT(64) UNSIGNED NOT NULL comment  '上级分部',
+    `departManager` BIGINT(64) UNSIGNED NOT NULL comment  '部门负责人',
+    `departIntroduction` varchar(1000) NULL comment  '上级介绍',
+    `createTime` datetime null default now() comment '创建时间',
+    `photo` BIGINT(64) UNSIGNED NOT NULL comment  '照片文件编号',
+    PRIMARY KEY (`dataId`),
+    UNIQUE INDEX `departName_Unique` (`departName` ASC),
+    UNIQUE INDEX `departCodeName_Unique` (`departCode` ASC),
+    UNIQUE INDEX `fullNameName_Unique` (`fullNameName` ASC)
+) comment = '部门表单';
+
+create table `section_resource` (
+    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,部门唯一id',
+    `sectionName` varchar(100) null comment  '部门名称',
+    `sectionCode` varchar(100) null comment  '部门编号',
+    `fullName` varchar(100) null comment  '部门全称',
+    `belongSection` BIGINT(64) UNSIGNED NOT NULL comment  '上级分部',
+    `sectionManager` BIGINT(64) UNSIGNED NOT NULL comment  '部门负责人',
+    `sectionIntroduction` varchar(1000) NULL comment  '上级介绍',
+    `createTime` datetime null default now() comment '创建时间',
+    `photo` BIGINT(64) UNSIGNED NOT NULL comment  '照片文件编号',
+    PRIMARY KEY (`dataId`),
+    UNIQUE INDEX `sectionName_Unique` (`sectionName` ASC),
+    UNIQUE INDEX `sectionCodeName_Unique` (`sectionCode` ASC),
+    UNIQUE INDEX `fullName` (`fullName` ASC)
+) comment = '分部表单';
+
+create table `character` (
+    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
+    `characterName` varchar(100) null comment  '角色名称',
+    `characterDescription` varchar(100) null comment  '角色描述',
+    `createTime` datetime null default now() comment '创建时间',
+    `creator` BIGINT(64) UNSIGNED NOT NULL COMMENT '创建者id',
+    PRIMARY KEY (`dataId`),
+    UNIQUE INDEX `characterName_Unique` (`characterName` ASC)
+) comment = "角色表单";
