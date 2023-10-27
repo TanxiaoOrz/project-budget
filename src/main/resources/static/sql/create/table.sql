@@ -107,6 +107,7 @@ create table `human_resource` (
     `photo` bigint(64) unsigned not null comment '头像文件编号',
     `signature` varchar(100) null comment '个性签名',
     `lastLogin` datetime null comment '最后登录时间',
+    `safety` INTEGER null default 0 comment '安全等级',
     PRIMARY KEY (`dataId`),
     UNIQUE INDEX `loginName_Unique` (`loginName` ASC),
     INDEX `section_FOREIGN` (`section` ASC),
