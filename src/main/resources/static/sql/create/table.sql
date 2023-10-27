@@ -11,7 +11,7 @@ COMMENT = '模块表单 __module_type__';
 -- 应用模块表单
 
 CREATE TABLE `table_index` (
-  `tableId` BIGINT(64) UNSIGNED NOT NULL COMMENT '表单编号',
+  `tableId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '表单编号',
   `tableViewName` VARCHAR(100) NOT NULL COMMENT '表单显示名称',
   `tableDataName` VARCHAR(100) NOT NULL COMMENT '表单存储名称',
   `moduleNo` BIGINT(100) UNSIGNED NULL COMMENT '所属模块',
@@ -30,12 +30,12 @@ CREATE TABLE `table_index` (
   PRIMARY KEY (`tableId`),
   UNIQUE INDEX `tableViewName_UNIQUE` (`tableViewName` ASC),
   UNIQUE INDEX `tableDataName_UNIQUE` (`tableDataName` ASC),
-  INDEX `workFlowId_Foreign_Index` (`workFlowNo` ASC) COMMENT '流程搜索加速索引',
-  INDEX `ModuleNo_Foreign_Index` (`moduleNo` ASC) COMMENT '模块搜索加速索引')
+  INDEX `workFlowId_Foreign` (`workFlowNo` ASC) COMMENT '流程搜索加速索引',
+  INDEX `ModuleNo_Foreign` (`moduleNo` ASC) COMMENT '模块搜索加速索引')
 COMMENT = '表单数据索引表（table_index）';
 
 CREATE TABLE `table_column_index` (
-  `columnId` BIGINT(64) UNSIGNED NOT NULL COMMENT '字段id',
+  `columnId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '字段id',
   `columnViewName` VARCHAR(100) NOT NULL COMMENT '字段显示名称',
   `columnDataName` VARCHAR(100) NOT NULL COMMENT '字段数据库存储名称',
   `columnType` VARCHAR(100) NOT NULL COMMENT '字段类型',
@@ -43,15 +43,15 @@ CREATE TABLE `table_column_index` (
   `tableNo` BIGINT(64) UNSIGNED NOT NULL COMMENT '对应存储数据库表',
   `columnGroupNo` INT NULL DEFAULT -1 COMMENT '格式分组',
   `columnDetailNo` INT NULL DEFAULT -1 COMMENT '明细字段分组',
-  `columnViewNo` INT NULL AUTO_INCREMENT COMMENT '顺序序号',
+  `columnViewNo` INT NULL COMMENT '顺序序号',
   `creator` BIGINT(64) UNSIGNED NULL COMMENT '创建人',
   `createTime` DATETIME NULL DEFAULT now() COMMENT '创建时间',
   PRIMARY KEY (`columnId`),
-  UNIQUE INDEX `columnViewNo_UNIQUE` (`columnViewNo` ASC))
-COMMENT = '字段数据索引表（table_column_index）';
+  INDEX `tableNo_FOREIGN` (`tableNo` ASC) comment '所属表单索引加速'
+) COMMENT = '字段数据索引表（table_column_index）';
 
 CREATE TABLE `table_view_index` (
-  `tableId` BIGINT(64) UNSIGNED NOT NULL COMMENT '表单编号',
+  `tableId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '表单编号',
   `tableViewName` VARCHAR(100) NOT NULL COMMENT '表单显示名称',
   `tableDataName` VARCHAR(100) NOT NULL COMMENT '表单存储名称',
   `moduleNo` BIGINT(100) UNSIGNED NULL COMMENT '所属模块',
@@ -63,24 +63,24 @@ CREATE TABLE `table_view_index` (
   PRIMARY KEY (`tableId`),
   UNIQUE INDEX `tableViewName_UNIQUE` (`tableViewName` ASC),
   UNIQUE INDEX `tableDataName_UNIQUE` (`tableDataName` ASC),
-  INDEX `ModuleNo_Foreign_Index` (`moduleNo` ASC) COMMENT '模块搜索加速索引')
+  INDEX `ModuleNo_Foreign` (`moduleNo` ASC) COMMENT '模块搜索加速索引')
 COMMENT = '表单数据索引表（table_index）';
 
 CREATE TABLE `table_view_column_index` (
-  `columnId` BIGINT(64) UNSIGNED NOT NULL COMMENT '字段id',
+  `columnId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '字段id',
   `columnViewName` VARCHAR(100) NOT NULL COMMENT '字段显示名称',
   `columnDataName` VARCHAR(100) NOT NULL COMMENT '字段数据库存储名称',
   `columnType` VARCHAR(100) NOT NULL COMMENT '字段类型',
   `columnTypeDescription` VARCHAR(1000) NULL COMMENT '附带格式描述',
   `tableNo` BIGINT(64) UNSIGNED NOT NULL COMMENT '对应存储数据库表',
   `columnGroupNo` INT NULL DEFAULT -1 COMMENT '格式分组',
-  `columnViewNo` INT NULL AUTO_INCREMENT COMMENT '顺序序号',
+  `columnViewNo` INT NULL COMMENT '顺序序号',
   `creator` BIGINT(64) UNSIGNED NULL COMMENT '创建人',
   `createTime` DATETIME NULL DEFAULT now() COMMENT '创建时间',
   `columnViewDisplay` TINYINT NULL DEFAULT 1 COMMENT '展示时是否显示(0否，1是)',
   PRIMARY KEY (`columnId`),
-  UNIQUE INDEX `columnViewNo_UNIQUE` (`columnViewNo` ASC))
-COMMENT = '字段数据索引表（table_column_index）';
+  INDEX `tableNo_FOREIGN` (`tableNo` ASC) comment '所属表单索引加速'
+)COMMENT = '字段数据索引表（table_column_index）';
 
 -- 表单模块创建基础表单
 
@@ -88,7 +88,7 @@ create view module_view as (select *, 1 as tableCounts, 1 as flowCounts, 1 as se
 -- 模块应用查看视图
 
 create table `human_resource` (
-    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,人员唯一id',
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,人员唯一id',
     `loginName` varchar(100) NOT NULL COMMENT '登录名',
     `password` varchar(100) NOT NULL COMMENT '密码',
     `name` varchar(100) not null comment '姓名',
@@ -109,9 +109,9 @@ create table `human_resource` (
     `lastLogin` datetime null comment '最后登录时间',
     PRIMARY KEY (`dataId`),
     UNIQUE INDEX `loginName_Unique` (`loginName` ASC),
-    UNIQUE INDEX `section_Unique` (`section` ASC),
-    UNIQUE INDEX `depart_Unique` (`depart` ASC),
-    UNIQUE INDEX `directorLeader_Unique` (`directorLeader` ASC)
+    INDEX `section_FOREIGN` (`section` ASC),
+    INDEX `depart_FOREIGN` (`depart` ASC),
+    INDEX `directorLeader_FOREIGN` (`directorLeader` ASC)
 ) comment = '人员索引表,构建对应虚拟视图';
 -- 人员表单
 
@@ -120,8 +120,10 @@ create view `human_view` as (
 );
 -- 人员添加年龄数据查看视图
 
+-- 组织权限表单
+
 create table `depart_resource` (
-    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,部门唯一id',
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,部门唯一id',
     `departName` varchar(100) null comment  '部门名称',
     `departCode` varchar(100) null comment  '部门编号',
     `fullName` varchar(100) null comment  '部门全称',
@@ -132,9 +134,7 @@ create table `depart_resource` (
     `createTime` datetime null default now() comment '创建时间',
     `photo` BIGINT(64) UNSIGNED NOT NULL comment  '照片文件编号',
     PRIMARY KEY (`dataId`),
-    UNIQUE INDEX `departName_Unique` (`departName` ASC),
-    UNIQUE INDEX `departCodeName_Unique` (`departCode` ASC),
-    UNIQUE INDEX `fullNameName_Unique` (`fullNameName` ASC)
+    unique INDEX `departCode_Unique` (`departCode` ASC)
 ) comment = '部门表单';
 
 create table `section_resource` (
@@ -149,12 +149,11 @@ create table `section_resource` (
     `photo` BIGINT(64) UNSIGNED NOT NULL comment  '照片文件编号',
     PRIMARY KEY (`dataId`),
     UNIQUE INDEX `sectionName_Unique` (`sectionName` ASC),
-    UNIQUE INDEX `sectionCodeName_Unique` (`sectionCode` ASC),
-    UNIQUE INDEX `fullName` (`fullName` ASC)
+    UNIQUE INDEX `sectionCode_Unique` (`sectionCode` ASC)
 ) comment = '分部表单';
 
 create table `character` (
-    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,角色唯一id',
     `characterName` varchar(100) null comment  '角色名称',
     `characterDescription` varchar(100) null comment  '角色描述',
     `createTime` datetime null default now() comment '创建时间',
@@ -164,14 +163,14 @@ create table `character` (
 ) comment = "角色表单";
 
 create table `character_human` (
-    `humanId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,人员唯一id',
+    `humanId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,人员唯一id',
     `characterId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
     `grade` int not null default 0 comment '角色作用级别',
     PRIMARY KEY (`humanId`,`characterId`)
 ) comment = "角色人员索引表";
 
 create table `authority` (
-    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,权限唯一id',
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,权限唯一id',
     `authorityName` varchar(100) null comment  '权限名称',
     `authorityDescription` varchar(100) null comment  '权限描述',
     `authorityRemark` varchar(100) null comment  '权限备注,用来描述那些角色或人员拥有该权限',
@@ -188,4 +187,37 @@ create table `authority_human` (
     `humanId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,人员唯一id',
     `authorityId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,权限唯一id',
     PRIMARY KEY (`humanId`,`authorityId`)
-) comment = "角色权限索引表";
+) comment = "人员权限索引表";
+
+-- 文件目录表单
+
+create table `file_storage` (
+    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,文件唯一id',
+    `isDeprecated` tinyInt null default 0 comment '0否1是废弃',
+    `fileName` varchar(100) null comment  '文件名',
+    `fileRoute` varchar(1000) not null comment  '文件路径',
+    `creator`  BIGINT(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+    `createTime` datetime null comment  '创建时间',
+    `editAuthority` json null comment  '编辑权限描述',
+    `viewAuthority` json null comment  '查看权限描述',
+    `deleteAuthority` json null comment  '删除权限描述',
+    `leadContent` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,所在目录唯一id',
+    primary key (`dataId`),
+    INDEX `leadContent_FOREIGN` (`leadContent` ASC)
+) COMMENT = '文件存储';
+
+create table `content_list` (
+    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,目录唯一id',
+    `isDeprecated` tinyInt null default 0 comment '0否1是废弃',
+    `contentName` varchar(100) null comment  '目录名',
+    `contentRemark` varchar(1000) not null comment  '目录描述',
+    `creator`  BIGINT(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+    `createTime` datetime null comment  '创建时间',
+    `defaultEdit` json null comment  '编辑权限描述',
+    `defaultCreate` json null comment  '创建权限描述',
+    `defaultDelete` json null comment  '删除权限描述',
+    `defaultShare` json null comment  '共享权限描述',
+    `leadContent` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,所在目录唯一id',
+    primary key (`dataId`),
+    INDEX `leadContent_FOREIGN` (`leadContent` ASC)
+) COMMENT = '目录';
