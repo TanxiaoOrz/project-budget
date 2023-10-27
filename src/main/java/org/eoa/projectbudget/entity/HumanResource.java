@@ -45,5 +45,6 @@ public class HumanResource {
     Long photo;
     String signature;
     Date lastLogin;
+    Integer safety;
 
 }
