@@ -1,4 +1,4 @@
-insert into `human_resource` (dataId, loginName, password,name, sex, birth, telephone, mail, phone, fax, workCode, section, depart, job, directorLeader, supporter, photo, signature, lastLogin)
+INSERT INTO `human_resource` (dataId, loginName, password,name, sex, birth, telephone, mail, phone, fax, workCode, section, depart, job, directorLeader, supporter, photo, signature, lastLogin)
         VALUE (1,'sysadmin','eoa','系统管理员',null,null,null,null,null,null,null,0,0,'系统管理员',0,0,0,null,null);
 -- 添加管理员
 
@@ -22,6 +22,37 @@ INSERT INTO `authority` (`dataId`,`authorityName`,`authorityDescription`,`author
     ('8','监控权限','流程数据的监控操作','默认监控管理员享有该权限'),
     ('9','图表权限','图表展示的配置操作','默认图表管理员享有该权限'),
     ('10','页面权限','页面菜单的配置操作','默认页面管理员享有该权限');
+-- 添加系统后端权限
 
+INSERT INTO `character` (`dataId`,`characterName`,`characterDescription`,`createTime`,`creator`)
+    values ('1','系统管理员','拥有所有后端的操作权限','2023-10-27 00:00:00','1'),
+    ('2','表单管理员','拥有表单字段的操作权限','2023-10-27 00:00:00','1'),
+    ('3','组织管理员','拥有组织结构的操作权限','2023-10-27 00:00:00','1'),
+    ('4','目录管理员','拥有目录配置的操作权限','2023-10-27 00:00:00','1'),
+    ('5','角色管理员','拥有角色配置的操作权限','2023-10-27 00:00:00','1'),
+    ('6','授权管理员','拥有权限授予的操作权限','2023-10-27 00:00:00','1'),
+    ('7','流程管理员','拥有流程配置的操作权限','2023-10-27 00:00:00','1'),
+    ('8','监控管理员','拥有流程监控的操作权限','2023-10-27 00:00:00','1'),
+    ('9','图表管理员','拥有图表配置的操作权限','2023-10-27 00:00:00','1'),
+    ('10','页面管理员','拥有页面配置的操作权限','2023-10-27 00:00:00','1');
+
+-- 添加系统默认角色
+
+INSERT INTO `authority_character` (`characterId`,`authorityId`)
+    values ('1','1'),
+    ('2','2'),
+    ('3','3'),
+    ('4','4'),
+    ('5','5'),
+    ('6','6'),
+    ('7','7'),
+    ('8','8'),
+    ('9','9'),
+    ('10','10');
+-- 链接角色与权限
+
+INSERT INTO `character_human` (`characterId`,`humanId`)
+    values ('1','1');
+-- 链接系统管理员人员与角色
 
 
