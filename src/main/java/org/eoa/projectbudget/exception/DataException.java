@@ -18,8 +18,14 @@ public class DataException extends EoaException{
      * @param attribute 错误数据所在属性
      * @param data 错误数据明细
      */
-    public DataException(String table, String id, String attribute, String data) {
+
+
+    public DataException(String table, String id, String attribute, String data,String description) {
         code = Vo.STORE_DATA_ERROR;
-        description = String.format("存储数据出错,请检查数据库\n\t表单:%s\t编号:%s\t属性:%s\t值:%s",table,id,attribute,data);
+        this.description = String.format("存储数据出错,请检查数据库\n\t表单:%s\t编号:%s\t属性:%s\t值:%s,错误原因:%s",table,id,attribute,data,description);
+    }
+
+    public DataException(String table, String id, String attribute,AuthoritySolveException authoritySolveException) {
+        this(table,id,attribute, authoritySolveException.authorityString, authoritySolveException.description);
     }
 }

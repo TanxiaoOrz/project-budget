@@ -49,7 +49,7 @@ public class CacheServiceImpl implements CacheService{
         try {
             return new ObjectMapper().readValue(s,clazz);
         } catch (JsonProcessingException e) {
-            throw new DataException("redis",flag,key,s);
+            throw new DataException("redis",flag,key,s,"json转换出错");
         }
     }
 
