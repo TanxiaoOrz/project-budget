@@ -37,9 +37,10 @@ public interface FormDMLMapper {
     List<Map<String,Object>> getDetailFormByDataId(@Param("detailMainId")Long detailMainId
             ,@Param("formDetailTableName")String formDetailTableName);
 
+    @SuppressWarnings("all")
     @Update("""
             <script>
-                update `${formTableName}`
+                update `${formTableName}` 
                     <set>
                         <foreach collection="columns.entrySet()" index="key" item="value">
                                 ${key} = #{value},
@@ -71,11 +72,11 @@ public interface FormDMLMapper {
     @Insert("""
             <script>
                 insert into `${formTableName}`
-                    <foreach collection="columns.keySet()" index="index" item="value", open="(" separator="," close=")">
+                    <foreach collection="columns.keySet()" index="index" item="value" open="(" separator="," close=")">
                                 `${value}`
                     </foreach>
                     value
-                    <foreach collection="columns.values()" index="index" item="value", open="(" separator="," close=")">
+                    <foreach collection="columns.values()" index="index" item="value" open="(" separator="," close=")">
                                 #{value}
                     </foreach>
             </script>
@@ -86,11 +87,11 @@ public interface FormDMLMapper {
     @Insert("""
             <script>
                 insert into `${formDetailTableName}`
-                    <foreach collection="columns.keySet()" index="index" item="value", open="(" separator="," close=")">
+                    <foreach collection="columns.keySet()" index="index" item="value" open="(" separator="," close=")">
                                 `${value}`
                     </foreach>
                     value
-                    <foreach collection="columns.values()" index="index" item="value", open="(" separator="," close=")">
+                    <foreach collection="columns.values()" index="index" item="value" open="(" separator="," close=")">
                                 #{value}
                     </foreach>
             </script>    
