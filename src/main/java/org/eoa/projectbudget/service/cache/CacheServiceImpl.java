@@ -24,7 +24,7 @@ import java.util.Date;
  **/
 
 @Service
-public class CacheServiceImpl {
+public class CacheServiceImpl implements CacheService{
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 

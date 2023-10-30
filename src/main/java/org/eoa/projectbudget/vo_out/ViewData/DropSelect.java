@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo.ViewData;
+package org.eoa.projectbudget.vo_out.ViewData;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

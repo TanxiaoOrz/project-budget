@@ -8,5 +8,5 @@ package org.eoa.projectbudget.service.organization_module;
  * @Description: TODO
  * @Version 1.0
  */
-public class OrganizationService {
+public interface OrganizationService {
 }

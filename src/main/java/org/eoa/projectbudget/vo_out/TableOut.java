@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo;
+package org.eoa.projectbudget.vo_out;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.eoa.projectbudget.entity.TableEntity;
-import org.eoa.projectbudget.vo.ViewData.DropSelect;
+import org.eoa.projectbudget.vo_out.ViewData.DropSelect;
 
 import java.util.ArrayList;
 import java.util.List;
