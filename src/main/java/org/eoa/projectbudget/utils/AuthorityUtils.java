@@ -2,12 +2,15 @@ package org.eoa.projectbudget.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.val;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.entity.Column;
+import org.eoa.projectbudget.entity.Form;
+import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.AuthoritySolveException;
+import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
-
-import java.util.Map;
+import org.eoa.projectbudget.utils.authority.FormSolve;
+import org.eoa.projectbudget.vo_in.constriant.Constraint;
 
 /**
  * @Author 张骏山
@@ -23,38 +26,61 @@ public class AuthorityUtils {
 
     public static final String[] types = {"AllConstraint","CreateConstraint","CharacterConstraint","MatrixConstraint","ProposedConstraint","AuthorityConstraint"};
 
-    public static boolean checkAuthority(HumanDto user, HumanDto creator, String authorityString) throws AuthoritySolveException, ClassNotFoundException {
-        AuthorityConstraint authorityConstraint;
-        try {
-            authorityConstraint = new ObjectMapper().readValue(authorityString, AuthorityConstraint.class);
-        } catch (JsonProcessingException e) {
-            throw new AuthoritySolveException(authorityString, "无法解析");
-        }
+    public static boolean checkAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint) throws AuthoritySolveException, ClassNotFoundException {
         Integer index = authorityConstraint.index();
 
         switch (index) {
-            case null -> throw new AuthoritySolveException(authorityString, "类型设置错误");
+            case null -> throw new AuthoritySolveException(authorityConstraint.getType(), "类型设置错误");
             case -1 -> {
                 boolean returns = false;
                 for (int i = 1; i < types.length; i++) {
-                    if (inType(user,creator,authorityString,authorityConstraint,i))
+                    if (inTypeAuthority(user, creator, authorityConstraint, i))
                         return true;
                 }
                 return returns;
             }
             default -> {
-                return inType(user, creator, authorityString, authorityConstraint, index);
+                return inTypeAuthority(user, creator, authorityConstraint, index);
             }
         }
     }
 
-    private static boolean inType(HumanDto user, HumanDto creator, String authorityString, AuthorityConstraint authorityConstraint, int index) throws ClassNotFoundException, AuthoritySolveException {
-        String constraint = authorityConstraint.body.get(types[index]);
+    public static boolean checkTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint) throws EoaException, ClassNotFoundException {
+        Integer index = authorityConstraint.index();
+
+        switch (index) {
+            case null -> throw new AuthoritySolveException(authorityConstraint.getType(), "类型设置错误");
+            case -1 -> {
+                boolean returns = false;
+                for (int i = 1; i < types.length; i++) {
+                    if (inTypeTable(user, form, authorityConstraint, i))
+                        return true;
+                }
+                return returns;
+            }
+            default -> {
+                return inTypeTable(user, form, authorityConstraint, index);
+            }
+        }
+    }
+
+    public static Constraint getConstraint(String authorityString) throws AuthoritySolveException {
+        Constraint authorityConstraint;
+        try {
+            authorityConstraint = new ObjectMapper().readValue(authorityString, Constraint.class);
+        } catch (JsonProcessingException e) {
+            throw new AuthoritySolveException(authorityString, "无法解析");
+        }
+        return authorityConstraint;
+    }
+
+    private static boolean inTypeAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint, int index) throws ClassNotFoundException, AuthoritySolveException {
+        String constraint = authorityConstraint.getBody().get(types[index]);
         AuthoritySolve solve;
         try {
             solve = (AuthoritySolve) new ObjectMapper().readValue(constraint, Class.forName("org.eoa.projectbudget.utils.AuthorityUtils$" + types[index]));
         } catch (JsonProcessingException e) {
-            throw new AuthoritySolveException(authorityString, "无法解析");
+            throw new AuthoritySolveException(constraint, "无法解析");
         }
         if (solve == null) {
             return false;
@@ -62,21 +88,18 @@ public class AuthorityUtils {
         return solve.solve(user, creator);
     }
 
-    public static class AuthorityConstraint {
-        String type;    //解析类型选择
-        Map<String,String> body;
-
-
-        Integer index() {
-            type = DataProcessUtil.nullToString(type);
-            if (type.equals(""))
-                return -1;
-            for (int i = 0; i < types.length; i++) {
-                if (types[i].equals(type))
-                    return i;
-            }
-            return null;
+    private static boolean inTypeTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint, int index) throws ClassNotFoundException, EoaException {
+        String constraint = authorityConstraint.getBody().get(types[index]);
+        FormSolve solve;
+        try {
+            solve = (FormSolve) new ObjectMapper().readValue(constraint, Class.forName("org.eoa.projectbudget.utils.AuthorityUtils$" + types[index]));
+        } catch (JsonProcessingException e) {
+            throw new AuthoritySolveException(constraint, "无法解析");
         }
+        if (solve == null) {
+            return false;
+        }
+        return solve.solve(user, form);
     }
 
 
