@@ -4,11 +4,11 @@ package org.eoa.projectbudget.utils;
  * @Author 张骏山
  * @Date 2023/10/7 16:02
  * @PackageName: org.eoa.projectbudget.utils
- * @ClassName: TableProcessUtil
+ * @ClassName: DataProcessUtil
  * @Description: 处理数据库中获取的数据
  * @Version 1.0
  */
-public class TableProcessUtil {
+public class DataProcessUtil {
     /**
      *
      * @param x 传入的tinyInt
