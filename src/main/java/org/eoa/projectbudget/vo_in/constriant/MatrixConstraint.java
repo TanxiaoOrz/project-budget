@@ -1,6 +1,7 @@
-package org.eoa.projectbudget.utils.authority;
+package org.eoa.projectbudget.vo_in.constriant;
 
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.utils.authority.AuthoritySolve;
 
 /**
  * @Author: 张骏山
@@ -10,7 +11,7 @@ import org.eoa.projectbudget.dto.HumanDto;
  * @Description: TODO
  * @Version 1.0
  **/
-public class Matrix implements AuthoritySolve{
+public class MatrixConstraint implements AuthoritySolve {
     @Override
     public boolean solve(HumanDto user, HumanDto creator) {
         return false;

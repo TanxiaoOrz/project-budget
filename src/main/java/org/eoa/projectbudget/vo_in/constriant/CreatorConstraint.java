@@ -1,7 +1,8 @@
-package org.eoa.projectbudget.utils.authority;
+package org.eoa.projectbudget.vo_in.constriant;
 
 import lombok.Data;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.utils.authority.AuthoritySolve;
 
 /**
  * @Author: 张骏山
@@ -12,7 +13,7 @@ import org.eoa.projectbudget.dto.HumanDto;
  * @Version 1.0
  **/
 @Data
-public class Creator implements AuthoritySolve {
+public class CreatorConstraint implements AuthoritySolve {
     Boolean self;
     Boolean leader;
     Boolean leaderRecursion;

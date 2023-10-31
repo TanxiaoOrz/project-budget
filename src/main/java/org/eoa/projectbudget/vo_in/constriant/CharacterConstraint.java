@@ -1,7 +1,8 @@
-package org.eoa.projectbudget.utils.authority;
+package org.eoa.projectbudget.vo_in.constriant;
 
 import lombok.Data;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.utils.authority.AuthoritySolve;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @Version 1.0
  **/
 @Data
-public class Character implements AuthoritySolve {
+public class CharacterConstraint implements AuthoritySolve {
     List<Group> characters;
 
     @Override
