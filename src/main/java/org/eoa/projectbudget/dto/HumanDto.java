@@ -2,6 +2,8 @@ package org.eoa.projectbudget.dto;
 
 import org.eoa.projectbudget.entity.HumanResourceView;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -14,43 +16,43 @@ import java.util.Map;
  * @Version 1.0
  **/
 public class HumanDto extends HumanResourceView {
-    Map<Long,Integer> characters;
-    List<Integer> authorities;
-    List<Long> leaderRecursion;
-    List<Long> sectionRecursion;
+    HashMap<Long,Integer> characters;
+    HashSet<Integer> authorities;
+    HashSet<Long> leaderRecursion;
+    HashSet<Long> sectionRecursion;
 
-    public Map<Long, Integer> getCharacters() {
+    public HashMap<Long, Integer> getCharacters() {
         return characters;
     }
 
-    public HumanDto setCharacters(Map<Long, Integer> characters) {
+    public HumanDto setCharacters(HashMap<Long, Integer> characters) {
         this.characters = characters;
         return this;
     }
 
-    public List<Integer> getAuthorities() {
+    public HashSet<Integer> getAuthorities() {
         return authorities;
     }
 
-    public HumanDto setAuthorities(List<Integer> authorities) {
+    public HumanDto setAuthorities(HashSet<Integer> authorities) {
         this.authorities = authorities;
         return this;
     }
 
-    public List<Long> getLeaderRecursion() {
+    public HashSet<Long> getLeaderRecursion() {
         return leaderRecursion;
     }
 
-    public HumanDto setLeaderRecursion(List<Long> leaderRecursion) {
+    public HumanDto setLeaderRecursion(HashSet<Long> leaderRecursion) {
         this.leaderRecursion = leaderRecursion;
         return this;
     }
 
-    public List<Long> getSectionRecursion() {
+    public HashSet<Long> getSectionRecursion() {
         return sectionRecursion;
     }
 
-    public HumanDto setSectionRecursion(List<Long> sectionRecursion) {
+    public HumanDto setSectionRecursion(HashSet<Long> sectionRecursion) {
         this.sectionRecursion = sectionRecursion;
         return this;
     }
