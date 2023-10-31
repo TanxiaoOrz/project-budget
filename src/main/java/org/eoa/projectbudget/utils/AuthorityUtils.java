@@ -2,6 +2,7 @@ package org.eoa.projectbudget.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.val;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 public class AuthorityUtils {
 
-    public static final String[] types = {"All","Create","Character","Matrix","Proposed"};
+    public static final String[] types = {"AllConstraint","CreateConstraint","CharacterConstraint","MatrixConstraint","ProposedConstraint","AuthorityConstraint"};
 
     public static boolean checkAuthority(HumanDto user, HumanDto creator, String authorityString) throws AuthoritySolveException, ClassNotFoundException {
         AuthorityConstraint authorityConstraint;
@@ -29,14 +30,14 @@ public class AuthorityUtils {
         } catch (JsonProcessingException e) {
             throw new AuthoritySolveException(authorityString, "无法解析");
         }
-        int index = authorityConstraint.index();
+        Integer index = authorityConstraint.index();
 
         switch (index) {
-            case -1 -> throw new AuthoritySolveException(authorityString, "类型设置错误");
-            case 0 -> {
+            case null -> throw new AuthoritySolveException(authorityString, "类型设置错误");
+            case -1 -> {
                 boolean returns = false;
                 for (int i = 1; i < types.length; i++) {
-                    if (inType(user,creator,authorityString,authorityConstraint,index))
+                    if (inType(user,creator,authorityString,authorityConstraint,i))
                         return true;
                 }
                 return returns;
@@ -66,12 +67,15 @@ public class AuthorityUtils {
         Map<String,String> body;
 
 
-        int index() {
+        Integer index() {
+            type = DataProcessUtil.nullToString(type);
+            if (type.equals(""))
+                return -1;
             for (int i = 0; i < types.length; i++) {
                 if (types[i].equals(type))
                     return i;
             }
-            return -1;
+            return null;
         }
     }
 
