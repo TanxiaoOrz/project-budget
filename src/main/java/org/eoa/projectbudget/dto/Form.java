@@ -1,7 +1,9 @@
-package org.eoa.projectbudget.entity;
+package org.eoa.projectbudget.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.eoa.projectbudget.entity.Column;
+import org.eoa.projectbudget.entity.Table;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.Map;
 
 @Data
 @Accessors(chain = true)
-public class Form<C extends Column , T extends Table> {
+public class Form<C extends Column, T extends Table> {
     Long dataId;
     Long requestId;
     Integer requestStatus;

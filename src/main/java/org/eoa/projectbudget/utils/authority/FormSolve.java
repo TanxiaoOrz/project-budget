@@ -2,7 +2,7 @@ package org.eoa.projectbudget.utils.authority;
 
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.entity.Form;
+import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.EoaException;
 

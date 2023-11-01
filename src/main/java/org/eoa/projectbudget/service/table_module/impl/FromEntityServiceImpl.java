@@ -1,7 +1,7 @@
 package org.eoa.projectbudget.service.table_module.impl;
 
 import org.eoa.projectbudget.entity.ColumnEntity;
-import org.eoa.projectbudget.entity.Form;
+import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.service.table_module.FormService;
 import org.springframework.stereotype.Service;
