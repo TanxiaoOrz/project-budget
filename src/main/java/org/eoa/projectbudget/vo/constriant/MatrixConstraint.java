@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo_in.constriant;
+package org.eoa.projectbudget.vo.constriant;
 
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;

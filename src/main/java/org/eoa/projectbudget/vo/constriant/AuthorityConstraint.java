@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo_in.constriant;
+package org.eoa.projectbudget.vo.constriant;
 
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
@@ -9,7 +9,6 @@ import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
 import org.eoa.projectbudget.utils.authority.FormSolve;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +27,15 @@ public class AuthorityConstraint implements AuthoritySolve, FormSolve {
 
     @Override
     public boolean solve(HumanDto user, HumanDto creator) {
+        if (user.getAuthorities().contains(0))
+            return true;
         return new HashSet<>(user.getAuthorities()).containsAll(authorities.stream().map(Long::intValue).toList());
     }
 
     @Override
     public boolean solve(HumanDto user, Form<Column, Table> form) throws EoaException {
+        if (user.getAuthorities().contains(0))
+            return true;
         for (Long authority:
              authorities) {
             Set<Integer> asked = new HashSet<>();

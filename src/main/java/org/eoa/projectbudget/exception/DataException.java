@@ -1,6 +1,6 @@
 package org.eoa.projectbudget.exception;
 
-import org.eoa.projectbudget.vo_out.Vo;
+import org.eoa.projectbudget.vo.out.Vo;
 
 /**
  * @Author 张骏山

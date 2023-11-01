@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo_out;
+package org.eoa.projectbudget.vo.out;
 
 
 import java.util.Date;

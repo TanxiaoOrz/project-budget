@@ -6,7 +6,7 @@ import org.eoa.projectbudget.exception.ParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import org.eoa.projectbudget.vo_out.Vo;
+import org.eoa.projectbudget.vo.out.Vo;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;

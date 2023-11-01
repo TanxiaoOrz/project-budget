@@ -10,7 +10,7 @@ import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
 import org.eoa.projectbudget.utils.authority.FormSolve;
-import org.eoa.projectbudget.vo_in.constriant.Constraint;
+import org.eoa.projectbudget.vo.constriant.Constraint;
 
 /**
  * @Author 张骏山

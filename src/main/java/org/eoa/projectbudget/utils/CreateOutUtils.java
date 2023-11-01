@@ -2,7 +2,7 @@ package org.eoa.projectbudget.utils;
 
 import org.eoa.projectbudget.entity.ModuleView;
 import org.eoa.projectbudget.mapper.HumanMapper;
-import org.eoa.projectbudget.vo_out.ModuleOut;
+import org.eoa.projectbudget.vo.out.ModuleOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

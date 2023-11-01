@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo_out.ViewData;
+package org.eoa.projectbudget.vo.out.ViewData;
 
 /**
  * @Author 张骏山
