@@ -1,6 +1,7 @@
 package org.eoa.projectbudget.vo.constraint;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.dto.Form;
@@ -23,6 +24,7 @@ import java.util.Set;
  * @Version 1.0
  **/
 @Data
+@Accessors(chain = true)
 public class CharacterConstraint implements AuthoritySolve, FormSolve {
     List<Group> characters;
 
@@ -83,9 +85,26 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
         return false;
     }
 
-    @Data
-    static class Group {
+    public static class Group {
         Long characterId;
         Integer grade;
+
+        public Long getCharacterId() {
+            return characterId;
+        }
+
+        public Group setCharacterId(Long characterId) {
+            this.characterId = characterId;
+            return this;
+        }
+
+        public Integer getGrade() {
+            return grade;
+        }
+
+        public Group setGrade(Integer grade) {
+            this.grade = grade;
+            return this;
+        }
     }
 }
