@@ -10,7 +10,10 @@ import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
 import org.eoa.projectbudget.utils.authority.FormSolve;
-import org.eoa.projectbudget.vo.constraint.Constraint;
+import org.eoa.projectbudget.vo.constraint.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @Author 张骏山
@@ -24,44 +27,54 @@ import org.eoa.projectbudget.vo.constraint.Constraint;
 
 public class AuthorityUtils {
 
-    public static final String[] types = {"AllConstraint","CreateConstraint","CharacterConstraint","MatrixConstraint","ProposedConstraint","AuthorityConstraint"};
+    public static final String[] types = {
+            "allConstraint",
+            "createConstraint",
+            "characterConstraint",
+            "matrixConstraint",
+            "proposedConstraint",
+            "authorityConstraint"
+    };
 
-    public static boolean checkAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint) throws AuthoritySolveException, ClassNotFoundException {
-        Integer index = authorityConstraint.index();
+    public static final Class<?>[] clazz = {
+            AllConstraint.class,
+            CreatorConstraint.class,
+            CharacterConstraint.class,
+            MatrixConstraint.class,
+            ProposedConstraint.class,
+            AuthorityConstraint.class
+    };
+    public static final List<String> typeList = Arrays.asList(types);
 
-        switch (index) {
-            case null -> throw new AuthoritySolveException(authorityConstraint.getType(), "类型设置错误");
-            case -1 -> {
-                boolean returns = false;
-                for (int i = 1; i < types.length; i++) {
-                    if (inTypeAuthority(user, creator, authorityConstraint, i))
-                        return true;
-                }
-                return returns;
-            }
-            default -> {
-                return inTypeAuthority(user, creator, authorityConstraint, index);
-            }
+
+    public static boolean checkAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint) throws AuthoritySolveException {
+        String bodyType = authorityConstraint.getBodyType();
+        if (bodyType == null || bodyType.equals("")) {
+            return false;
         }
+        for (String type:
+                bodyType.split(",")) {
+            if (!typeList.contains(type))
+                throw new AuthoritySolveException(authorityConstraint.getBodyType(), "类型设置错误");
+            else if (inTypeAuthority(user, creator, authorityConstraint, typeList.indexOf(type)))
+                return true;
+        }
+        return false;
     }
 
-    public static boolean checkTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint) throws EoaException, ClassNotFoundException {
-        Integer index = authorityConstraint.index();
-
-        switch (index) {
-            case null -> throw new AuthoritySolveException(authorityConstraint.getType(), "类型设置错误");
-            case -1 -> {
-                boolean returns = false;
-                for (int i = 1; i < types.length; i++) {
-                    if (inTypeTable(user, form, authorityConstraint, i))
-                        return true;
-                }
-                return returns;
-            }
-            default -> {
-                return inTypeTable(user, form, authorityConstraint, index);
-            }
+    public static boolean checkTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint) throws EoaException {
+        String tableType = authorityConstraint.getBodyType();
+        if (tableType == null || tableType.equals("")) {
+            return false;
         }
+        for (String type:
+             tableType.split(",")) {
+            if (!typeList.contains(type))
+                throw new AuthoritySolveException(authorityConstraint.getBodyType(), "类型设置错误");
+            else if (inTypeTable(user, form, authorityConstraint, typeList.indexOf(type)))
+                return true;
+        }
+        return false;
     }
 
     public static Constraint getConstraint(String authorityString) throws AuthoritySolveException {
@@ -74,11 +87,11 @@ public class AuthorityUtils {
         return authorityConstraint;
     }
 
-    private static boolean inTypeAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint, int index) throws ClassNotFoundException, AuthoritySolveException {
+    private static boolean inTypeAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint, int index) throws AuthoritySolveException {
         String constraint = authorityConstraint.getBody().get(types[index]);
         AuthoritySolve solve;
         try {
-            solve = (AuthoritySolve) new ObjectMapper().readValue(constraint, Class.forName("org.eoa.projectbudget.vo.constraint." + types[index]));
+            solve = (AuthoritySolve) new ObjectMapper().readValue(constraint,clazz[index]);
         } catch (JsonProcessingException e) {
             throw new AuthoritySolveException(constraint, "无法解析");
         }
@@ -88,11 +101,11 @@ public class AuthorityUtils {
         return solve.solve(user, creator);
     }
 
-    private static boolean inTypeTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint, int index) throws ClassNotFoundException, EoaException {
+    private static boolean inTypeTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint, int index) throws EoaException {
         String constraint = authorityConstraint.getBody().get(types[index]);
         FormSolve solve;
         try {
-            solve = (FormSolve) new ObjectMapper().readValue(constraint, Class.forName("org.eoa.projectbudget.vo.constraint." + types[index]));
+            solve = (FormSolve) new ObjectMapper().readValue(constraint, clazz[index]);
         } catch (JsonProcessingException e) {
             throw new AuthoritySolveException(constraint, "无法解析");
         }

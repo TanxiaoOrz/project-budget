@@ -1,8 +1,5 @@
 package org.eoa.projectbudget.vo.constraint;
 
-import org.eoa.projectbudget.utils.AuthorityUtils;
-import org.eoa.projectbudget.utils.DataProcessUtil;
-
 import java.util.Map;
 
 /**
@@ -14,32 +11,34 @@ import java.util.Map;
  * @Version: 1.0
  */
 public class Constraint {
-    String type;    //解析类型选择
+    String bodyType;    //默认解析类型选择
     Map<String, String> body;
-
+    String tableType;   //表单解析类型选择
     Map<String, String> table;
 
     /**
      * null代表错误,-1代表全部,0+代表正常序号
      * @return constraint的类型选择数字
      */
-    public Integer index() {
-        type = DataProcessUtil.nullToString(type);
-        if (type.equals(""))
-            return -1;
-        for (int i = 0; i < AuthorityUtils.types.length; i++) {
-            if (AuthorityUtils.types[i].equals(type))
-                return i;
-        }
-        return null;
+//    public List<String> index(String s) {
+//        s = DataProcessUtil.nullToString(s);
+//        if (s.equals(""))
+//            return null;
+//        ArrayList<String> types = new ArrayList<>();
+//        for (String type:
+//             s.split(",")) {
+//
+//        }
+//
+//        return null;
+//    }
+
+    public String getBodyType() {
+        return bodyType;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public Constraint setType(String type) {
-        this.type = type;
+    public Constraint setBodyType(String bodyType) {
+        this.bodyType = bodyType;
         return this;
     }
 
@@ -49,6 +48,15 @@ public class Constraint {
 
     public Constraint setBody(Map<String, String> body) {
         this.body = body;
+        return this;
+    }
+
+    public String getTableType() {
+        return tableType;
+    }
+
+    public Constraint setTableType(String tableType) {
+        this.tableType = tableType;
         return this;
     }
 
