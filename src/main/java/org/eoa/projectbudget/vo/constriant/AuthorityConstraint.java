@@ -39,24 +39,24 @@ public class AuthorityConstraint implements AuthoritySolve, FormSolve {
         for (Long authority:
              authorities) {
             Set<Integer> asked = new HashSet<>();
-            AtomicBoolean isFound = new AtomicBoolean(false);
-            form.getGroups().forEach(
-                group -> group.getColumns().forEach((column, o) -> {
-                    if (column.getColumnId().equals(authority)) {
-                        asked.add(Integer.valueOf(o.toString()));
-                        isFound.set(true);
-                    }
-                })
-            );
-            form.getDetails().forEach(
-                detail -> detail.getColumns().forEach(((column, maps) -> {
-                    if (column.getColumnId().equals(authority)) {
-                        asked.addAll(maps.stream().map(integerObjectMap -> integerObjectMap.g))
-                    }
-                }))
-            );
+            boolean isFound = false;
+            Object mainValue = form.getMainValue(authority);
+
+            if (mainValue != null) {
+                asked.add((Integer) mainValue);
+                isFound = true;
+            }
+
+            if (!isFound) {
+                List<Object> detailsValues = form.getDetailsValues(authority);
+                if (detailsValues != null) {
+                    asked.addAll(detailsValues.stream().map(o -> (Integer) o).toList());
+                    isFound = true;
+                }
+            }
+
             // 判断列是否在表单中
-            if (!isFound.get()) {
+            if (!isFound) {
                 throw new DataException(form.getTable().getTableDataName(),form.getDataId().toString(),"authority",authorities.toString(),
                         String.format("%d不在该表单的字段中",authority));
             }
