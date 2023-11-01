@@ -3,7 +3,7 @@ package org.eoa.projectbudget.vo.constriant;
 import lombok.Data;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.entity.Form;
+import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
@@ -13,7 +13,6 @@ import org.eoa.projectbudget.utils.authority.FormSolve;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author: 张骏山
@@ -55,21 +54,31 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
         for (Group character:
              characters) {
             Set<Long> asked = new HashSet<>();
-            AtomicBoolean isFound = new AtomicBoolean(false);
-            form.getGroups().forEach(
-                group -> group.getColumns().forEach(((column, o) -> {
-                    if (column.getColumnId().equals(character.getCharacterId())) {
-                        asked.add(Long.valueOf(o.toString()));
-                        isFound.set(true);
-                    }
-                }))
-            );
-            if (!isFound.get()) {
-                throw new DataException(form.getTable().getTableDataName(),form.getDataId().toString(),"authority",authorities.toString(),
+            boolean isFound = false;
+            Object mainValue = form.getMainValue(character.getCharacterId());
+
+            if (mainValue != null) {
+                asked.add((Long) mainValue);
+                isFound = true;
+            }
+
+            if (!isFound) {
+                List<Object> detailsValues = form.getDetailsValues(character.getCharacterId());
+                if (detailsValues != null) {
+                    asked.addAll(detailsValues.stream().map(o -> (Long) o).toList());
+                    isFound = true;
+                }
+            }
+            if (!isFound) {
+                throw new DataException(form.getTable().getTableDataName(),form.getDataId().toString(),"authority",character.getCharacterId().toString(),
                         String.format("%d不在该表单的字段中",character.getCharacterId()));
             }
-            if (!user.getCharacters().containsAll(asked))
-                return false;
+            for (Long characterId:
+                 asked) {
+                Integer userGrade = user.getCharacters().get(characterId);
+                if (userGrade != null && userGrade <= character.getGrade())
+                    return true;
+            }
         }
         return false;
     }
