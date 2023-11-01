@@ -10,7 +10,7 @@ import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
 import org.eoa.projectbudget.utils.authority.FormSolve;
-import org.eoa.projectbudget.vo.constriant.Constraint;
+import org.eoa.projectbudget.vo.constraint.Constraint;
 
 /**
  * @Author 张骏山
@@ -78,7 +78,7 @@ public class AuthorityUtils {
         String constraint = authorityConstraint.getBody().get(types[index]);
         AuthoritySolve solve;
         try {
-            solve = (AuthoritySolve) new ObjectMapper().readValue(constraint, Class.forName("org.eoa.projectbudget.utils.AuthorityUtils$" + types[index]));
+            solve = (AuthoritySolve) new ObjectMapper().readValue(constraint, Class.forName("org.eoa.projectbudget.vo.constraint." + types[index]));
         } catch (JsonProcessingException e) {
             throw new AuthoritySolveException(constraint, "无法解析");
         }
@@ -92,7 +92,7 @@ public class AuthorityUtils {
         String constraint = authorityConstraint.getBody().get(types[index]);
         FormSolve solve;
         try {
-            solve = (FormSolve) new ObjectMapper().readValue(constraint, Class.forName("org.eoa.projectbudget.utils.AuthorityUtils$" + types[index]));
+            solve = (FormSolve) new ObjectMapper().readValue(constraint, Class.forName("org.eoa.projectbudget.vo.constraint." + types[index]));
         } catch (JsonProcessingException e) {
             throw new AuthoritySolveException(constraint, "无法解析");
         }

@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo.constriant;
+package org.eoa.projectbudget.vo.constraint;
 
 import lombok.Data;
 import org.eoa.projectbudget.dto.Form;

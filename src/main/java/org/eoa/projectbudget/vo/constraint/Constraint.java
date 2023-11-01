@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo.constriant;
+package org.eoa.projectbudget.vo.constraint;
 
 import org.eoa.projectbudget.utils.AuthorityUtils;
 import org.eoa.projectbudget.utils.DataProcessUtil;

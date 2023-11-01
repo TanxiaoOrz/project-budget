@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo.constriant;
+package org.eoa.projectbudget.vo.constraint;
 
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
@@ -12,7 +12,6 @@ import org.eoa.projectbudget.utils.authority.FormSolve;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author: 张骏山
