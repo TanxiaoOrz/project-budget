@@ -1,5 +1,6 @@
 INSERT INTO `human_resource` (dataId, loginName, password,name, sex, birth, telephone, mail, phone, fax, workCode, section, depart, job, directorLeader, supporter, photo, signature, lastLogin)
-        VALUE (1,'sysadmin','eoa','系统管理员',null,null,null,null,null,null,null,0,0,'系统管理员',0,0,0,null,null);
+        VALUES (1,'sysadmin','eoa','系统管理员',null,null,null,null,null,null,null,0,0,'系统管理员',0,0,0,null,null),
+               (2,'tourist','eoa','游客用户',null,null,null,null,null,null,null,0,0,'游客',1,0,0,null,null);
 -- 添加管理员
 
 
