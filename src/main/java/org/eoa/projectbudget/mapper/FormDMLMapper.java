@@ -23,7 +23,7 @@ public interface FormDMLMapper {
      * @param formTableName 主表名称
      * @return map键值对,列名=>值
      */
-    @Select("select * from `${formTableName}` where `dataId` = #{dataId}")
+    @Select("select * from ${formTableName} where `dataId` = #{dataId}")
     Map<String,Object> getMainFormById(@Param("dataId")Long dataId
             ,@Param("formTableName")String formTableName);
 
@@ -33,76 +33,29 @@ public interface FormDMLMapper {
      * @param formDetailTableName 明细表名
      * @return map键值对数组,列名=>值
      */
-    @Select("select * from `${formDetailTableName}` where `detailMainId` = #{detailMainId}")
+    @Select("select * from ${formDetailTableName} where `detailMainId` = #{detailMainId}")
     List<Map<String,Object>> getDetailFormByDataId(@Param("detailMainId")Long detailMainId
             ,@Param("formDetailTableName")String formDetailTableName);
 
-    @SuppressWarnings("all")
-    @Update("""
-            <script>
-                update `${formTableName}` 
-                    <set>
-                        <foreach collection="columns.entrySet()" index="key" item="value">
-                                ${key} = #{value},
-                        </foreach>
-                        latestEditTime = now()
-                    </set>
-                where `dataId` = #{dataId}
-            </script>
-            """)
     Integer updateMainForm(@Param("columns") Map<String,Object> columns
             ,@Param("dataId") Long dataId
             ,@Param("formTableName")String formTableName);
 
-    @Update("""
-            <script>
-                update `${formDetailTableName}`
-                    <set>
-                        <foreach collection="columns.entrySet()" index="key" item="value">
-                                ${key} = #{value},
-                        </foreach>
-                    </set>
-                where `detailMainId` = #{detailMainId}
-            </script>
-            """)
+
     Integer updateDetailForm(@Param("columns") Map<String,Object> columns
             ,@Param("detailMainId") Long detailMainId
             ,@Param("formDetailTableName")String formDetailTableName);
 
-    @Insert("""
-            <script>
-                insert into `${formTableName}`
-                    <foreach collection="columns.keySet()" index="index" item="value" open="(" separator="," close=")">
-                                `${value}`
-                    </foreach>
-                    value
-                    <foreach collection="columns.values()" index="index" item="value" open="(" separator="," close=")">
-                                #{value}
-                    </foreach>
-            </script>
-            """)
     Integer insertMainForm(@Param("columns") Map<String,Object> columnsWithBaseData
             ,@Param("formTableName")String formTableName);
 
-    @Insert("""
-            <script>
-                insert into `${formDetailTableName}`
-                    <foreach collection="columns.keySet()" index="index" item="value" open="(" separator="," close=")">
-                                `${value}`
-                    </foreach>
-                    value
-                    <foreach collection="columns.values()" index="index" item="value" open="(" separator="," close=")">
-                                #{value}
-                    </foreach>
-            </script>    
-            """)
     Integer insertDetailForm(@Param("columns") Map<String,Object> columnsWithBaseData
             ,@Param("formDetailTableName")String formDetailTableName);
-    @Delete("delete from `${formTableName}` where `dataId` = #{dataId}")
+    @Delete("delete from ${formTableName} where `dataId` = #{dataId}")
     Integer deleteMainForm(@Param("dataId") Long dataId
             ,@Param("formTableName")String formTableName);
 
-    @Delete("delete from `${formDetailTableName}` where `detailMainId` = #{detailMainId}")
+    @Delete("delete from ${formDetailTableName} where `detailMainId` = #{detailMainId}")
     Integer deleteDetailForm(@Param("detailMainId") Long detailMainId
             ,@Param("formDetailTableName")String formDetailTableName);
 
