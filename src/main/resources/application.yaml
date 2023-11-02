@@ -36,5 +36,5 @@ mybatis-plus:
     map-underscore-to-camel-case: false
 
 eoa:
-  cache-time: 5 //单位分钟
+  cache-time: 5  # 单位分钟
 

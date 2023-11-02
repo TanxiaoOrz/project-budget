@@ -1,5 +1,7 @@
 package org.eoa.projectbudget.service.organization_module;
 
+import org.eoa.projectbudget.dto.HumanDto;
+
 import java.util.List;
 
 /**
@@ -34,5 +36,11 @@ public interface AuthorityService {
     Integer characterLinkUser(Long characterId,Long userId);
 
     Integer userLinkAuthority(Long authorityId,Long userId);
+
+    String[] getTokens(HumanDto user);
+
+    String[] checkTokens(String[] tokens);
+
+    HumanDto getUser(String[] tokens);
 
 }
