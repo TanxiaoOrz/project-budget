@@ -105,4 +105,6 @@ public interface FormDMLMapper {
     @Delete("delete from `${formDetailTableName}` where `detailMainId` = #{detailMainId}")
     Integer deleteDetailForm(@Param("detailMainId") Long detailMainId
             ,@Param("formDetailTableName")String formDetailTableName);
+
+    Integer test();
 }

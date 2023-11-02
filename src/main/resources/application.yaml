@@ -34,6 +34,8 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:static/sql/mapper/*.xml
 
 eoa:
   cache-time: 5  # 单位分钟
