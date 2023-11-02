@@ -13,6 +13,7 @@ import org.eoa.projectbudget.service.table_module.FormService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
  * @Description: 表单模块自定义视图前端操作处理业务类
  * @Version 1.0
  */
+
+@Service
 public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
     @Autowired
     TableViewMapper tableMapper;
@@ -84,5 +87,10 @@ public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
     public Integer deleteForm(Long tableId, Long dataId, Long userId) throws EoaException {
         log.error("用户=>{}违规尝试删除视图formDataId=>{}",userId,dataId);
         throw new AuthorityException(userId,"删除视图form","系统禁止行为");
+    }
+
+    @Override
+    public List<Form<ColumnView, TableView>> getFormSort(Long tableId, Map<Long, Object> orders, Long userId) {
+        return null;
     }
 }

@@ -5,6 +5,9 @@ import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.EoaException;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author 张骏山
  * @Date 2023/10/8 15:31
@@ -22,5 +25,7 @@ public interface FormService<C extends Column,T extends Table> {
     Integer createForm(Form<C,T> form,Long userId) throws EoaException;
 
     Integer deleteForm(Long tableId,Long dataId,Long userId) throws EoaException;
+
+    List<Form<C,T>> getFormSort(Long tableId, Map<Long,Object> orders, Long userId) throws EoaException;
 
 }

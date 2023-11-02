@@ -6,6 +6,9 @@ import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.service.table_module.FormService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author 张骏山
  * @Date 2023/10/23 16:15
@@ -34,6 +37,11 @@ public class FromEntityServiceImpl implements FormService<ColumnEntity, TableEnt
 
     @Override
     public Integer deleteForm(Long tableId, Long dataId, Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<Form<ColumnEntity, TableEntity>> getFormSort(Long tableId, Map<Long, Object> orders, Long userId) {
         return null;
     }
 
