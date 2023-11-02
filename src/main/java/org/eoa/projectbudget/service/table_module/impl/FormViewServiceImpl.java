@@ -45,6 +45,15 @@ public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
         if (table == null) {
             throw new ParameterException("tableId",tableId.toString(),"不能存在该编号视图");
         }
+        Form<ColumnView, TableView> form = consistForm(tableId, dataId, table);
+        if (form == null) {
+            throw new ParameterException("dataId",dataId.toString(),"在"+table.getTableDataName()+"不能存在该编号数据");
+        }
+        log.info("查找到一条数据,数据编号=>{}",dataId);
+        return form;
+    }
+
+    private Form<ColumnView, TableView> consistForm(Long tableId, Long dataId, TableView table) {
         Form<ColumnView, TableView> form = new Form<ColumnView, TableView>().setTable(table);
 
         List<ColumnView> mainColumns = columnMapper.selectList(
@@ -53,7 +62,10 @@ public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
         //视图不存在明细表单,直接使用,实体表需要过滤
 
         Integer groupCount = table.getGroupCount();
-        Map<String, Object> mainValues = formDMLMapper.getMainFormById(dataId,table.getTableDataName());
+        Map<String, Object> mainValues = formDMLMapper.getMainFormById(dataId, table.getTableDataName());
+        if (mainValues == null) {
+            return null;
+        }
         String[] groupNames = table.getGroupName().split(",");
         for (int i = 0; i < groupCount; i++) {
             int groupNo = i;
@@ -64,10 +76,6 @@ public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
             }
             form.addGroup(groupNo,groupNames[groupNo],columnMap);
         }
-
-
-
-
         return form;
     }
 
