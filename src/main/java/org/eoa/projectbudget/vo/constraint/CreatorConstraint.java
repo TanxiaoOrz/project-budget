@@ -17,7 +17,7 @@ import org.eoa.projectbudget.utils.authority.FormSolve;
  * @Description: TODO
  * @Version 1.0
  **/
-@Data
+
 public class CreatorConstraint implements AuthoritySolve, FormSolve {
     Boolean self;
     Boolean leader;
@@ -45,5 +45,59 @@ public class CreatorConstraint implements AuthoritySolve, FormSolve {
     @Override
     public boolean solve(HumanDto user, Form<Column, Table> form) throws EoaException {
         return false;
+    }
+
+    public Boolean getSelf() {
+        return self;
+    }
+
+    public CreatorConstraint setSelf(Boolean self) {
+        this.self = self;
+        return this;
+    }
+
+    public Boolean getLeader() {
+        return leader;
+    }
+
+    public CreatorConstraint setLeader(Boolean leader) {
+        this.leader = leader;
+        return this;
+    }
+
+    public Boolean getLeaderRecursion() {
+        return leaderRecursion;
+    }
+
+    public CreatorConstraint setLeaderRecursion(Boolean leaderRecursion) {
+        this.leaderRecursion = leaderRecursion;
+        return this;
+    }
+
+    public Boolean getDepart() {
+        return depart;
+    }
+
+    public CreatorConstraint setDepart(Boolean depart) {
+        this.depart = depart;
+        return this;
+    }
+
+    public Boolean getSection() {
+        return section;
+    }
+
+    public CreatorConstraint setSection(Boolean section) {
+        this.section = section;
+        return this;
+    }
+
+    public Boolean getSectionRecursive() {
+        return sectionRecursive;
+    }
+
+    public CreatorConstraint setSectionRecursive(Boolean sectionRecursive) {
+        this.sectionRecursive = sectionRecursive;
+        return this;
     }
 }

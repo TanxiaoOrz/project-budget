@@ -41,4 +41,22 @@ public class AllConstraint implements FormSolve, AuthoritySolve {
         }
         return (user.getSafety()>=start && user.getSafety() <= end);
     }
+
+    public Long getStart() {
+        return start;
+    }
+
+    public AllConstraint setStart(Long start) {
+        this.start = start;
+        return this;
+    }
+
+    public Long getEnd() {
+        return end;
+    }
+
+    public AllConstraint setEnd(Long end) {
+        this.end = end;
+        return this;
+    }
 }

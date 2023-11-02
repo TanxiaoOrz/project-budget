@@ -16,22 +16,6 @@ public class Constraint {
     String tableType;   //表单解析类型选择
     Map<String, String> table;
 
-    /**
-     * null代表错误,-1代表全部,0+代表正常序号
-     * @return constraint的类型选择数字
-     */
-//    public List<String> index(String s) {
-//        s = DataProcessUtil.nullToString(s);
-//        if (s.equals(""))
-//            return null;
-//        ArrayList<String> types = new ArrayList<>();
-//        for (String type:
-//             s.split(",")) {
-//
-//        }
-//
-//        return null;
-//    }
 
     public String getBodyType() {
         return bodyType;

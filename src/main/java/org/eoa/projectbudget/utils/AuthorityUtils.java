@@ -31,7 +31,7 @@ public class AuthorityUtils {
             "allConstraint",
             "createConstraint",
             "characterConstraint",
-            "matrixConstraint",
+            // "matrixConstraint",
             "proposedConstraint",
             "authorityConstraint"
     };
@@ -40,11 +40,13 @@ public class AuthorityUtils {
             AllConstraint.class,
             CreatorConstraint.class,
             CharacterConstraint.class,
-            MatrixConstraint.class,
+            // MatrixConstraint.class,
             ProposedConstraint.class,
             AuthorityConstraint.class
     };
     public static final List<String> typeList = Arrays.asList(types);
+
+    public static final List<Class<?>> clazzList = Arrays.asList(clazz);
 
 
     public static boolean checkAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint) throws AuthoritySolveException {
