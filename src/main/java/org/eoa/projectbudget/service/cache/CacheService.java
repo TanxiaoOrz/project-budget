@@ -29,7 +29,7 @@ public interface CacheService {
 
     /**
      *
-     * @param flag hash标志
+     * @param flag hash标志(缓存内容对象为单位)
      * @param method 方法
      * @param userId 用户编号
      * @param changeFlag 结构体变化时间
@@ -50,4 +50,9 @@ public interface CacheService {
      * @throws EoaException json转换错误
      */
     CacheService setCache(String flag, String method, String userId, Object object) throws EoaException;
+
+    /**
+     * 清楚field中的过期数据
+     */
+    void flashOutField() throws JsonProcessingException;
 }

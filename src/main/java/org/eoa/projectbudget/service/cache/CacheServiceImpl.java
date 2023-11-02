@@ -11,9 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,6 +31,8 @@ import java.util.concurrent.TimeUnit;
  **/
 
 @Service
+@EnableScheduling
+@EnableAsync
 public class CacheServiceImpl implements CacheService{
 
     @Value("${eoa.cache-time}")
@@ -76,6 +83,20 @@ public class CacheServiceImpl implements CacheService{
         log.info("存储:Flag=>{}的缓存:=>{}success=>true",flag,key);
         return this;
     }
+
+    @Override
+    @Scheduled(cron = "0 24 * * * *")
+    public void flashOutField() throws JsonProcessingException {
+        Set<String> keys = redisTemplate.keys("*");
+        if (keys == null) {
+            log.info("无缓存需要清理");
+            return;
+        }
+        for (String key : keys) {
+            flashFlagCache(key);
+        }
+    }
+
 
     private static class WithTime {
         String object;
