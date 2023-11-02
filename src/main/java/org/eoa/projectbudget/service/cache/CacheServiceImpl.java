@@ -8,11 +8,13 @@ import org.eoa.projectbudget.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: 张骏山
@@ -25,6 +27,10 @@ import java.util.Date;
 
 @Service
 public class CacheServiceImpl implements CacheService{
+
+    @Value("${eoa.cache-time}")
+    Long cacheTime;
+
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -66,6 +72,7 @@ public class CacheServiceImpl implements CacheService{
         if (Boolean.TRUE.equals(hashFlag.hasKey(key)))
             hashFlag.delete(key);
         hashFlag.put(key, new WithTime(value));
+        hashFlag.expire(cacheTime, TimeUnit.MINUTES);
         log.info("存储:Flag=>{}的缓存:=>{}success=>true",flag,key);
         return this;
     }
