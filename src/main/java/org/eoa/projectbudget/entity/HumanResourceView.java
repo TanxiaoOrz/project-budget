@@ -47,4 +47,28 @@ public class HumanResourceView {
     String signature;
     Date lastLogin;
     Integer safety;
+
+    public HumanResourceView(HumanResourceView humanResourceView) {
+        this.dataId = humanResourceView.dataId;
+        this.loginName = humanResourceView.loginName;
+        this.password = humanResourceView.password;
+        this.name = humanResourceView.name;
+        this.sex = humanResourceView.sex;
+        this.birth = humanResourceView.birth;
+        this.telephone = humanResourceView.telephone;
+        this.mail = humanResourceView.mail;
+        this.phone = humanResourceView.phone;
+        this.fax = humanResourceView.fax;
+        this.workCode = humanResourceView.workCode;
+        this.section = humanResourceView.section;
+        this.depart = humanResourceView.depart;
+        this.job = humanResourceView.job;
+        this.directorLeader = humanResourceView.directorLeader;
+        this.supporter = humanResourceView.supporter;
+        this.photo = humanResourceView.photo;
+        this.signature = humanResourceView.signature;
+        this.lastLogin = humanResourceView.lastLogin;
+        this.safety = humanResourceView.safety;
+        this.age = humanResourceView.age;
+    }
 }
