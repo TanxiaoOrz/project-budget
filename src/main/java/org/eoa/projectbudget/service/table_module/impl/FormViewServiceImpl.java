@@ -45,7 +45,11 @@ public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
         if (table == null) {
             throw new ParameterException("tableId",tableId.toString(),"不能存在该编号视图");
         }
-        Form<ColumnView, TableView> form = consistForm(tableId, dataId, table);
+        List<ColumnView> mainColumns = columnMapper.selectList(
+                new QueryWrapper<ColumnView>().eq("tableNo", tableId)
+                        .orderByAsc("columnViewNo"));
+        //视图不存在明细表单,直接使用,实体表需要过滤
+        Form<ColumnView, TableView> form = consistForm(dataId, table,mainColumns);
         if (form == null) {
             throw new ParameterException("dataId",dataId.toString(),"在"+table.getTableDataName()+"不能存在该编号数据");
         }
@@ -53,13 +57,36 @@ public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
         return form;
     }
 
-    private Form<ColumnView, TableView> consistForm(Long tableId, Long dataId, TableView table) {
-        Form<ColumnView, TableView> form = new Form<ColumnView, TableView>().setTable(table);
-
+    @Override
+    public List<Form<ColumnView, TableView>> getFormSort(Long tableId, Map<Long, Object> orders, Long userId) throws ParameterException {
+        log.info("用户=>{}读取视图,表单编号=>{},数据要求=>{}",userId,tableId,orders);
+        TableView table = tableMapper.selectById(tableId);
+        if (table == null) {
+            throw new ParameterException("tableId",tableId.toString(),"不能存在该编号视图");
+        }
         List<ColumnView> mainColumns = columnMapper.selectList(
                 new QueryWrapper<ColumnView>().eq("tableNo", tableId)
                         .orderByAsc("columnViewNo"));
-        //视图不存在明细表单,直接使用,实体表需要过滤
+        //视图不存在明细表单,且不存在权限控制部分,直接使用,实体表需要过滤
+        Set<Long> orderIds = orders.keySet();
+
+        Map<String, Object> columnMap = mainColumns.stream().filter(
+                columnView -> orderIds.contains(columnView.getColumnId())
+        ).collect(
+                Collectors.toMap(
+                        Column::getColumnDataName,
+                        columnView -> orders.get(columnView.getColumnId()))
+        );
+        List<Long> ids = formDMLMapper.getIdsByMap(table.getTableDataName(), columnMap);
+        ArrayList<Form<ColumnView, TableView>> forms = new ArrayList<>(ids.size());
+        ids.forEach(id->consistForm(id,table,mainColumns));
+        log.info("查找到{}条数据,数据编号=>{}",ids.size(),ids);
+        return forms;
+    }
+
+    private Form<ColumnView, TableView> consistForm(Long dataId, TableView table, List<ColumnView> mainColumns) {
+        Form<ColumnView, TableView> form = new Form<ColumnView, TableView>().setTable(table);
+
 
         Integer groupCount = table.getGroupCount();
         Map<String, Object> mainValues = formDMLMapper.getMainFormById(dataId, table.getTableDataName());
@@ -97,8 +124,4 @@ public class FormViewServiceImpl implements FormService<ColumnView, TableView> {
         throw new AuthorityException(userId,"删除视图form","系统禁止行为");
     }
 
-    @Override
-    public List<Form<ColumnView, TableView>> getFormSort(Long tableId, Map<Long, Object> orders, Long userId) {
-        return null;
-    }
 }
