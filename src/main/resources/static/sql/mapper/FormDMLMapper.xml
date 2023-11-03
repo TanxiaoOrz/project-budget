@@ -5,10 +5,6 @@
 <!-- namespace为映射的地址，也就是只有在这个接口中才能使用下边的内容-->
 <mapper namespace="org.eoa.projectbudget.mapper.FormDMLMapper">
     <!-- id 外部为调用的名字 resultType 为和数据库表中映射的类名，parameterType就是传递进来的参数id的类型-->
-    <select id="test" resultType="Integer" >
-        select 1;
-    </select>
-    
     <update id="updateDetailForm">
         update ${formDetailTableName}
         <set>
@@ -16,7 +12,7 @@
                 ${key} = #{value},
             </foreach>
         </set>
-        where `detailMainId` = #{detailMainId}
+        where `detailDataId` = #{detailDataId}
     </update>
     
     <update id="updateMainForm">
@@ -30,7 +26,7 @@
         where `dataId` = #{dataId}
     </update>
     
-    <insert id="insertDetailForm">
+    <insert id="insertDetailForm" keyColumn="detailDataId" keyProperty="columns.detailDataId" useGeneratedKeys="true">
         insert into ${formDetailTableName}
         <foreach collection="columns.keySet()" index="index" item="value" open="(" separator="," close=")">
             `${value}`
@@ -41,7 +37,7 @@
         </foreach>
     </insert>
     
-    <insert id="insertMainForm">
+    <insert id="insertMainForm" keyColumn="dataId" keyProperty="columns.dataId" useGeneratedKeys="true">
         insert into ${formTableName}
         <foreach collection="columns.keySet()" index="index" item="value" open="(" separator="," close=")">
             `${value}`
@@ -51,6 +47,15 @@
             #{value}
         </foreach>
     </insert>
+
+    <select id="getIdsByMap" resultType="Integer">
+        select dataId from ${formTableName}
+        <where>
+            <foreach collection="columnMap.entrySet()" index="key" item="value" separator=" and ">
+                ${key} = #{value}
+            </foreach>
+        </where>
+    </select>
 
 
 

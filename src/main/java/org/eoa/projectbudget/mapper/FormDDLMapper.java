@@ -22,8 +22,8 @@ public class FormDDLMapper {
     public final static int MAIN = 1;
     public final String MAIN_TABLE_CREATE = """
             CREATE TABLE `%s` (
-              `dataId` BIGINT(64) UNSIGNED NOT NULL,
-              `requestId` BIGINT(64) NOT NULL,
+              `dataId` BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+              `requestId` BIGINT(64) NULL,
               `requestStatus` INT NULL,
               `creator` BIGINT(64) NULL,
               `createTime` DATETIME NULL,
@@ -38,11 +38,11 @@ public class FormDDLMapper {
 
     public final String DETAIL_TABLE_CREATE = """
             CREATE TABLE `%s` (
-              `detailDataId` BIGINT(64) UNSIGNED NOT NULL,
+              `detailDataId` BIGINT(64)  UNSIGNED NOT NULL AUTO_INCREMENT,
               `detailMainId` BIGINT(64) NOT NULL,
               PRIMARY KEY (`detailDataId`),
               UNIQUE INDEX `detailDataId_UNIQUE` (`detailDataId` ASC),
-              UNIQUE INDEX `detailMainId_UNIQUE` (`detailMainId` ASC));
+              INDEX `detailMainId_UNIQUE` (`detailMainId` ASC));
             """;
 
     public final String COLUMN_CREATE = """
