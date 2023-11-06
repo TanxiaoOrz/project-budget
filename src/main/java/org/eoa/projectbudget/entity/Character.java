@@ -1,5 +1,7 @@
 package org.eoa.projectbudget.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,11 +15,13 @@ import java.util.Date;
  * @PackageName: org.eoa.projectbudget.entity
  * @ClassName: Character
  * @Description: TODO
- * @Version 1.0
+ * @Version 1.1
  */
 
 @TableName("character")
 public class Character {
+
+    @TableId(type = IdType.AUTO)
     Long dataId;
     String characterName;
     String characterDescription;

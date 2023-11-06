@@ -1,5 +1,7 @@
 package org.eoa.projectbudget.dto;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.eoa.projectbudget.entity.Column;
@@ -24,6 +26,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @Data
 @Accessors(chain = true)
 public class Form<C extends Column, T extends Table> {
+
+    @TableId(type = IdType.AUTO)
     Long dataId;
     Long requestId;
     Integer requestStatus;
