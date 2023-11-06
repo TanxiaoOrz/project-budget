@@ -2,6 +2,8 @@ package org.eoa.projectbudget.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.eoa.projectbudget.entity.HumanResourceView;
 
 /**
@@ -15,4 +17,7 @@ import org.eoa.projectbudget.entity.HumanResourceView;
 
 @Mapper
 public interface HumanViewMapper extends BaseMapper<HumanResourceView> {
+
+    @Select("select directorLeader from human_resource where dataId = #{dataId}")
+    Long getLeader(@Param("dataId")Long humanId);
 }
