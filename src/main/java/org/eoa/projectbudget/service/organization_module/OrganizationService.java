@@ -1,9 +1,11 @@
 package org.eoa.projectbudget.service.organization_module;
 
+import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Depart;
 import org.eoa.projectbudget.entity.HumanResource;
 import org.eoa.projectbudget.entity.HumanResourceView;
 import org.eoa.projectbudget.entity.Section;
+import org.eoa.projectbudget.exception.ParameterException;
 
 /**
  * @Author 张骏山
@@ -35,10 +37,25 @@ public interface OrganizationService {
      * 获取人力资源
      * @param humanId 人力资源标号
      * @param userId 操作人员编号
-     * @param isDto 是否dto包装
      * @return 结果
      */
-    HumanResourceView getHuman(Long humanId, Long userId, boolean isDto);
+    HumanResourceView getHuman(Long humanId, Long userId);
+
+    /**
+     * 用户登录
+     * @param userName 用户名
+     * @param password 密码
+     * @return 结果
+     */
+    HumanDto getHumanDto(String userName, String password) throws ParameterException;
+
+    /**
+     * 缓存过期时获取用户数据
+     * @param userId 用户名
+     * @return 人员
+     * @throws ParameterException
+     */
+    HumanDto getHumanDto(Long humanId, Long userId) throws ParameterException;
 
     /**
      * 删除人力资源

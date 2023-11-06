@@ -2,6 +2,9 @@ package org.eoa.projectbudget.service.organization_module;
 
 import jakarta.annotation.Nullable;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.exception.LoginException;
+import org.eoa.projectbudget.exception.ParameterException;
+import org.eoa.projectbudget.vo.Tokens;
 
 import java.util.List;
 
@@ -14,6 +17,7 @@ import java.util.List;
  * @Version 1.0
  */
 public interface  AuthorityService {
+
     /**
      * 回记录权限解析的日志的同时调用
      * @param authority 权限描述字符串
@@ -90,28 +94,36 @@ public interface  AuthorityService {
      * @param user 用户
      * @return 字符串数组
      */
-    String[] getTokens(HumanDto user);
+    Tokens getTokens(Long user);
 
     /**
      * 检查token合法性并获取对象
      * @param tokens 用户授权码
      * @return UserWithToken
      */
-    UserWithToken getUser(String[] tokens);
+    UserWithToken getUser(Tokens tokens) throws ParameterException, LoginException;
 
     class UserWithToken {
-        String[] tokens;
-        HumanDto user;
+        protected boolean update;
+        protected Long userId;
 
-        public String[] getTokens() {
-            return tokens;
+        public UserWithToken setUpdate(boolean update) {
+            this.update = update;
+            return this;
         }
 
-        public HumanDto getUser() {
-            return user;
+        public UserWithToken setUserId(Long userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public boolean isUpdate() {
+            return update;
+        }
+
+        public Long getUserId() {
+            return userId;
         }
     }
-
-
-
 }
+
