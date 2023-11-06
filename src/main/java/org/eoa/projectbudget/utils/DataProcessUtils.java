@@ -8,7 +8,7 @@ package org.eoa.projectbudget.utils;
  * @Description: 处理数据库中获取的数据
  * @Version 1.0
  */
-public class DataProcessUtil {
+public class DataProcessUtils {
     /**
      *
      * @param x 传入的tinyInt
