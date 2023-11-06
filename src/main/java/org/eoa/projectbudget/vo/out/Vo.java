@@ -16,7 +16,7 @@ import org.eoa.projectbudget.exception.EoaException;
 @Schema(name = "Vo",description = "数据传输实体类")
 public class Vo<Entity> {
     public static Integer SUCCESS = 0;
-    public static Integer LOGIN = -2;
+    public static Integer TOKEN_ERROR = -1;
     public static Integer UPDATE_TOKEN = -2;
     public static Integer WRONG_PARAMETER = 1;
     public static Integer NO_AUTHORITY = -3;
