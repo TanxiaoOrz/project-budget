@@ -17,8 +17,8 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/module")
-@Tag(name = "模块应用")
+@RequestMapping("/api/v1/module/back")
+@Tag(name = "模块应用后端接口")
 @CrossOrigin
 public class TableBackController {
     @Autowired
