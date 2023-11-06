@@ -39,4 +39,8 @@ mybatis-plus:
 
 eoa:
   cache-time: 5  # 单位分钟
+  token-short-time: 5  # 单位分钟
+  token-long-time: 30 # 单位分钟
+  token-pass: test-token
+  secret-pass: test-secret
 
