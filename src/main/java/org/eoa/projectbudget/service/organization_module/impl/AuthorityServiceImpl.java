@@ -144,13 +144,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
         } catch (JWTVerificationException e) {
             throw new LoginException(false);
         }
-
         Long userId = decodeLong.getClaim("dataId").asLong();
-        if (!userId.equals(decodeShort.getClaim("dataId").asLong())) {
-            throw new LoginException(false);
-        }
-
-
         return new UserWithToken().setUserId(userId).setUpdate(shortOut);
     }
 

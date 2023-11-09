@@ -11,6 +11,7 @@ import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.service.cache.CacheService;
 import org.eoa.projectbudget.service.organization_module.AuthorityService;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
+import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.vo.Tokens;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.InitializingBean;
@@ -46,8 +47,8 @@ public class TokenController implements InitializingBean {
     @Autowired
     CacheService cacheService;
 
-    final String flag = "HUMAN";
-    final String method = "TOKEN";
+    String flag;
+    String method = "TOKEN";
 
     @PostMapping
     public Vo<String> newTokens(@RequestParam("loginName") String loginName, @RequestParam("password") String password)
@@ -61,5 +62,6 @@ public class TokenController implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         algorithm = Algorithm.HMAC256(secretPass);
+        flag = ChangeFlagUtils.Flags[ChangeFlagUtils.HUMAN];
     }
 }

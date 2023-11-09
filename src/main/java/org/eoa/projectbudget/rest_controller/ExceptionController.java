@@ -1,11 +1,12 @@
 package org.eoa.projectbudget.rest_controller;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.eoa.projectbudget.vo.out.Vo;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -23,6 +24,8 @@ import java.util.Arrays;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionController {
+    @Value("${eoa.release}")
+    private boolean isRelease;
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public Vo<String> handleViolateUniqueConstraint(SQLIntegrityConstraintViolationException e) {
@@ -41,6 +44,8 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public Vo<Exception> handleException(Exception e) {
+        if (!isRelease)
+            e.printStackTrace();
         log.error("系统运行异常,error_message:{}",e.getMessage());
         return new Vo<>(Vo.SERVER_ERROR,e.getMessage());
     }

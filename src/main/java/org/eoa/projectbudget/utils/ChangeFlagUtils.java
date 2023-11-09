@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.utils;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -15,9 +16,11 @@ import java.util.HashMap;
  **/
 
 @Component
-public class ChangeFlagUtils {
+public class ChangeFlagUtils implements InitializingBean {
 
-    private HashMap<String, Date> map;
+    public static final int HUMAN = 0;
+    public static final String[] Flags = {"HUMAN"};
+    private final HashMap<String, Date> map = new HashMap<>();
 
     public Date getDate(String flag) {
         Date date = map.get(flag);
@@ -27,8 +30,25 @@ public class ChangeFlagUtils {
         return date;
     }
 
+    public Date getDate(int flag) {
+        return getDate(Flags[flag]);
+    }
+
     public ChangeFlagUtils setDate(String flag, Date date) {
         map.put(flag, date);
         return this;
+    }
+
+    public ChangeFlagUtils setDate(int flag, Date date) {
+        return setDate(Flags[flag], date);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Date date = new Date();
+        for (String flag:
+             Flags) {
+            map.put(flag,date);
+        }
     }
 }

@@ -2,13 +2,12 @@ package org.eoa.projectbudget.interceptor;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.val;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.service.cache.CacheService;
@@ -22,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,7 +44,8 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
 
     @Value("${eoa.secret-pass}")
     String secretPass;
-
+    @Value("${eoa.release}")
+    private boolean isRelease;
     Algorithm algorithm;
 
     @Autowired
@@ -56,8 +59,8 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
     @Resource
     RedisTemplate<Long,Date> redisTemplate;
 
-    final String flag = "HUMAN";
-    final String method = "TOKEN";
+    String flag = "HUMAN";
+    String method = "TOKEN";
 
 
 
@@ -82,12 +85,18 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
         AuthorityService.UserWithToken gets = authorityService.getUser(tokens);
         Long userId = gets.getUserId();
 
-        ValueOperations<Long, Date> ops = redisTemplate.opsForValue();
-        Date last = ops.getAndDelete(userId);
-        if (last != null&&last.after(tokens.getTimeStamp())) {
-            throw new LoginException(false);
+        if (isRelease) {
+            ValueOperations<Long, Date> ops = redisTemplate.opsForValue();
+            Date last = null;
+            if (Boolean.TRUE.equals(redisTemplate.hasKey(userId))) {
+                last = ops.get(userId);
+                redisTemplate.delete(userId);
+            }
+            if (last != null && last.after(tokens.getTimeStamp())) {
+                throw new LoginException(false);
+            }
+            ops.set(userId, new Date());
         }
-        ops.set(userId,new Date());
 
         HumanDto cache = cacheService.getCache(flag, method, userId.toString(), changeFlagUtils.getDate("HUMAN"), HumanDto.class);
         if (cache == null) {
@@ -118,5 +127,10 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         algorithm = Algorithm.HMAC256(secretPass);
+        redisTemplate.setKeySerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setHashKeySerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        flag = ChangeFlagUtils.Flags[ChangeFlagUtils.HUMAN];
     }
 }

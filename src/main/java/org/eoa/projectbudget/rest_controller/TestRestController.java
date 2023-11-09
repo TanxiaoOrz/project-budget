@@ -1,11 +1,8 @@
 package org.eoa.projectbudget.rest_controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.vo.out.Vo;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,6 +45,12 @@ public class TestRestController {
     public Integer bodyParamHeaderPath(@PathVariable("id") String id, @RequestHeader("token") String token,
             @RequestParam("name") String name) {
         return 1;
+    }
+
+    @Operation(summary = "RequestAttribute")
+    @PostMapping("/humanDto")
+    public Vo<HumanDto> getHumanDto(@RequestAttribute("HumanDto") HumanDto humanDto) {
+        return new Vo<>(humanDto);
     }
 
 //    @Operation(summary = "日志测试服务")
