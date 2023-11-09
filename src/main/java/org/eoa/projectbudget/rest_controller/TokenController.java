@@ -1,5 +1,9 @@
 package org.eoa.projectbudget.rest_controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.EoaException;
@@ -9,7 +13,9 @@ import org.eoa.projectbudget.service.organization_module.AuthorityService;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.vo.Tokens;
 import org.eoa.projectbudget.vo.out.Vo;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,7 +30,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/token")
 @Tag(name = "token相关操作控制器")
-public class TokenController {
+public class TokenController implements InitializingBean {
+
+    @Value("${eoa.secret-pass}")
+    String secretPass;
+
+    Algorithm algorithm;
 
     @Autowired
     OrganizationService organizationService;
@@ -39,11 +50,16 @@ public class TokenController {
     final String method = "TOKEN";
 
     @PostMapping
-    public Vo<Tokens> newTokens(@RequestParam("loginName") String loginName, @RequestParam("password") String password)
-            throws EoaException {
+    public Vo<String> newTokens(@RequestParam("loginName") String loginName, @RequestParam("password") String password)
+            throws EoaException, JsonProcessingException {
         HumanDto humanDto = organizationService.getHumanDto(loginName,password);
         cacheService.setCache(flag,method,humanDto.getDataId().toString(),humanDto);
         Tokens tokens = authorityService.getTokens(humanDto.getDataId());
-        return new Vo<>(tokens);
+        return new Vo<>(JWT.create().withClaim("tokens",new ObjectMapper().writeValueAsString(tokens)).sign(algorithm));
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        algorithm = Algorithm.HMAC256(secretPass);
     }
 }

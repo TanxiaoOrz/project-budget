@@ -112,7 +112,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
                     .withClaim("type","short")
                     .withExpiresAt(shortToken.getTime())
                     .sign(algorithm))
-        .setShortToken(JWT.create()
+        .setLongToken(JWT.create()
                     .withClaim("dataId",userId)
                     .withClaim("type","long")
                     .withExpiresAt(longTime.getTime())

@@ -9,7 +9,7 @@ springdoc:
   group-configs:
     - group: 'api'
       paths-to-match: '/api/v1/**'
-      packages-to-scan: org.eoa.projectbudget.restController
+      packages-to-scan: org.eoa.projectbudget.rest_controller
 # knife4j的增强配置，不需要增强可以不配
 knife4j:
   enable: true

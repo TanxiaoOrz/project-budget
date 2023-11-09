@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eoa.projectbudget.dto.HumanDto;
@@ -52,9 +53,7 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
     CacheService cacheService;
     @Autowired
     ChangeFlagUtils changeFlagUtils;
-
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
+    @Resource
     RedisTemplate<Long,Date> redisTemplate;
 
     final String flag = "HUMAN";
