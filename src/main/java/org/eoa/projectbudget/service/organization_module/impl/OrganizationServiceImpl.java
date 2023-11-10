@@ -85,7 +85,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         HashSet<Integer> authorities = new HashSet<>(authorityMapper.getIdsFormHuman(humanId));
         characterIdFromHuman.forEach(grade -> authorities.addAll(authorityMapper.getIdsFormCharacter(grade.getCharacterId())));
         HashSet<Long> leaderRecursion = new HashSet<>();
-        Long nextLeader = humanResourceView.getDepart();
+        Long nextLeader = humanResourceView.getDirectorLeader();
         while (nextLeader!=0) {
             leaderRecursion.add(nextLeader);
             nextLeader = humanViewMapper.getLeader(nextLeader);
