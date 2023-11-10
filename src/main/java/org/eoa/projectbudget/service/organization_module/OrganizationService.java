@@ -51,9 +51,10 @@ public interface OrganizationService {
 
     /**
      * 缓存过期时获取用户数据
-     * @param userId 用户名
+     * @param humanId 想要获取的人员id
+     * @param userId 操作人
      * @return 人员
-     * @throws ParameterException
+     * @throws ParameterException 人员id不存在
      */
     HumanDto getHumanDto(Long humanId, Long userId) throws ParameterException;
 
