@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.AuthoritySolveException;
+import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.HumanMapper;
 import org.eoa.projectbudget.mapper.HumanViewMapper;
+import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.vo.constraint.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ class AuthorityUtilsTest {
 
     @Autowired
     HumanViewMapper humanMapper;
+    @Autowired
+    OrganizationService organizationService;
 
     Constraint constraint;
     CharacterConstraint characterConstraint;
@@ -39,13 +43,13 @@ class AuthorityUtilsTest {
 
     String constraintStr = """
             {
-                "bodyType":"allConstraint,createConstraint,characterConstraint,matrixConstraint,proposedConstraint,authorityConstraint",
+                "bodyType":"allConstraint,createConstraint,characterConstraint,proposedConstraint,authorityConstraint",
                 "body":{
-                    "characterConstraint":"{\\"characters\\":[{\\"characterId\\":1,\\"grade\\":0}]}",
-                    "proposedConstraint":"{\\"humans\\":[0,1,2],\\"departs\\":[0,1,2],\\"sections\\":[0,1,2]}",
-                    "allConstraint":"{\\"start\\":0,\\"end\\":100}",
+                    "characterConstraint":"{\\"characters\\":[{\\"characterId\\":2,\\"grade\\":0}]}",
+                    "proposedConstraint":"{\\"humans\\":[0,2],\\"departs\\":[1,2],\\"sections\\":[1,2]}",
+                    "allConstraint":"{\\"start\\":5,\\"end\\":100}",
                     "authorityConstraint":"{\\"authorities\\":[1]}",
-                    "createConstraint":"{\\"self\\":true,\\"leader\\":null,\\"leaderRecursion\\":true,\\"depart\\":true,\\"section\\":true,\\"sectionRecursive\\":true}"
+                    "createConstraint":"{\\"self\\":true,\\"leader\\":false,\\"leaderRecursion\\":false,\\"depart\\":false,\\"section\\":false,\\"sectionRecursive\\":false}"
                 },
                 "tableType":null,
                 "table":null
@@ -68,7 +72,7 @@ class AuthorityUtilsTest {
 
         allConstraint = new AllConstraint().setStart(0L).setEnd(100L);
 
-        creatorConstraint = new CreatorConstraint().setSelf(true).setDepart(true).setSection(true).setLeaderRecursion(true).setSectionRecursive(true);
+        creatorConstraint = new CreatorConstraint().setSelf(true).setDepart(true).setSection(true).setLeaderRecursion(true).setSectionRecursive(true).setLeader(true);
 
         List<Long> longList = Arrays.asList(0L, 1L, 2L);
         proposedConstraint = new ProposedConstraint().setHumans(longList).setDeparts(longList).setSections(longList);
@@ -103,21 +107,23 @@ class AuthorityUtilsTest {
     }
 
     @Test
-    void getConstraint() throws AuthoritySolveException {
-        AuthorityUtils.getConstraint(constraintStr);
-        List<Long> longList = Arrays.asList(0L, 1L, 2L);
-
-        HashMap<Long, Integer> character = new HashMap<>();
-        HashSet<Integer> authorities = new HashSet<>();
-        authorities.add(1);
-        HashSet<Long> leaderRecursion = new HashSet<>(Arrays.asList(1L, 2L, 3L));
-        HashSet<Long> sectionRecursion = new HashSet<>(Arrays.asList(1L, 2L, 3L));
-        HumanDto humanDto = new HumanDto(humanMapper.selectById(1L), character, authorities, leaderRecursion, sectionRecursion);
+    void getConstraint() throws AuthoritySolveException, ParameterException {
+        constraint = AuthorityUtils.getConstraint(constraintStr);
+//        List<Long> longList = Arrays.asList(0L, 1L, 2L);
+//
+//        HashMap<Long, Integer> character = new HashMap<>();
+//        HashSet<Integer> authorities = new HashSet<>();
+//        authorities.add(1);
+//        HashSet<Long> leaderRecursion = new HashSet<>(Arrays.asList(1L, 2L, 3L));
+//        HashSet<Long> sectionRecursion = new HashSet<>(Arrays.asList(1L, 2L, 3L));
 
     }
 
     @Test
-    void checkAuthority() {
+    void checkAuthority() throws AuthoritySolveException, ParameterException {
+        HumanDto sysadmin = organizationService.getHumanDto(1L, 1L);
+        HumanDto tourist = organizationService.getHumanDto(2L,1L);
+        System.out.println("AuthorityUtils.checkAuthority(sysadmin,tourist,constraint) = " + AuthorityUtils.checkAuthority(sysadmin, tourist, constraint));
     }
 
     @Test
