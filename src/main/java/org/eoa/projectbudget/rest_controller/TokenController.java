@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.EoaException;
@@ -20,12 +22,16 @@ import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.eoa.projectbudget.vo.Tokens;
+import org.eoa.projectbudget.vo.in.Login;
 import org.eoa.projectbudget.vo.out.LoginConfigOut;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * @Author: 张骏山
@@ -61,13 +67,11 @@ public class TokenController implements InitializingBean {
 
     @PostMapping
     @Operation(summary = "获取token认证", description = "输入登入名和密码,回传token字符串")
-    @Parameters({
-            @Parameter(name = "loginName",description = "登录名",required = true,in = ParameterIn.QUERY),
-            @Parameter(name = "password",description = "密码",required = true,in = ParameterIn.QUERY)
-    })
-    public Vo<String> newTokens(@RequestParam("loginName") String loginName, @RequestParam("password") String password)
+    public Vo<String> newTokens(
+            @RequestBody Login login)
             throws EoaException, JsonProcessingException {
-        HumanDto humanDto = organizationService.getHumanDto(loginName,password);
+        login.checkSelf();
+        HumanDto humanDto = organizationService.getHumanDto(login.getLoginName(),login.getPassword());
         cacheService.setCache(flag,method,humanDto.getDataId().toString(),humanDto);
         Tokens tokens = authorityService.getTokens(humanDto.getDataId());
         return new Vo<>(JWT.create().withClaim("tokens",new ObjectMapper().writeValueAsString(tokens)).sign(algorithm));
