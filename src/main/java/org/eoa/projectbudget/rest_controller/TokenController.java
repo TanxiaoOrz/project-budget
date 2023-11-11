@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/token")
 @Tag(name = "token相关操作控制器")
+@CrossOrigin
 public class TokenController implements InitializingBean {
 
     @Value("${eoa.secret-pass}")
