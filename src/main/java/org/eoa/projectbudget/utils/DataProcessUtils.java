@@ -10,7 +10,7 @@ package org.eoa.projectbudget.utils;
  */
 public class DataProcessUtils {
     /**
-     *
+     * int转换为boolean
      * @param x 传入的tinyInt
      * @return 转换后的boolean值
      */
@@ -19,11 +19,18 @@ public class DataProcessUtils {
     }
 
     /**
-     *
+     * 可能的null转换成空字符串
      * @param s 传入的判断字符串
      * @return 若为空则将其转换为""
      */
     public static String nullToString(String s) {
         return s==null?"":s;
     }
+
+    /**
+     * 检查字符穿是否为空
+     * @param s 需要检查的字符串
+     * @return 是否null或者空
+     */
+    public static boolean isEmpty(String s) {return s==null || s.equals("");}
 }
