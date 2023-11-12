@@ -65,7 +65,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         if (humanResourceView == null) {
             log.info("未检索到符合输入用户名与密码的人员");
-            throw new ParameterException("longinName + password",loginName,"用户名或密码不正确");
+            throw new ParameterException("longinName",loginName,"用户名或密码不正确");
         }
 
         Long humanId = humanResourceView.getDataId();
