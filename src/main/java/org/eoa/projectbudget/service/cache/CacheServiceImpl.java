@@ -59,6 +59,9 @@ public class CacheServiceImpl implements CacheService{
         }
         log.info("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>true",flag,changeFlag,key);
         String s = (withTime).valueEffective(changeFlag);
+        if (s == null) {
+            return null;
+        }
         try {
             return new ObjectMapper().readValue(s,clazz);
         } catch (JsonProcessingException e) {
