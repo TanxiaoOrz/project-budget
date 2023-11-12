@@ -2,6 +2,8 @@ package org.eoa.projectbudget.rest_controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +25,7 @@ import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.eoa.projectbudget.vo.Tokens;
 import org.eoa.projectbudget.vo.in.Login;
+import org.eoa.projectbudget.vo.in.TokensIn;
 import org.eoa.projectbudget.vo.out.LoginConfigOut;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.InitializingBean;
@@ -68,6 +71,7 @@ public class TokenController implements InitializingBean {
     @PostMapping
     @Operation(summary = "获取token认证", description = "输入登入名和密码,回传token字符串")
     public Vo<String> newTokens(
+            @Parameter(description = "登录结构体")
             @RequestBody Login login)
             throws EoaException, JsonProcessingException {
         login.checkSelf();
@@ -84,17 +88,19 @@ public class TokenController implements InitializingBean {
         return new Vo<>(null);
     }
 
-    @GetMapping("/check")
-    @Operation(summary = "验证token是否登录")
-    @Parameter(name = "tokens",description = "tokens字符串",required = true,in = ParameterIn.QUERY)
-    public Vo<Boolean> checkToken(@RequestParam("tokens")String tokens) {
+    @PostMapping("/check")
+    @Operation(summary = "验证token是否登录",description = "post方法的RequestBody之间传输tokens字符串")
+    public Vo<Boolean> checkToken(
+            @Parameter(description = "tokens字符串")
+            @RequestBody(required = false) TokensIn tokensIn) {
+        String tokens = tokensIn.getTokens();
         try {
             String jwt = DataProcessUtils.nullToString(tokens);
             String tokensString = JWT.require(algorithm).build().verify(jwt).getClaim("tokens").asString();
             Tokens t = new ObjectMapper().readValue(tokensString, Tokens.class);
             authorityService.getUser(t);
             return new Vo<>(true);
-        } catch (ParameterException | JsonProcessingException | LoginException e) {
+        } catch (ParameterException | JsonProcessingException | LoginException | JWTVerificationException e) {
             return new Vo<>(false);
         }
     }

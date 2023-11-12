@@ -66,7 +66,7 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (request.getMethod().equals("OPTIONS"))
+        if (request.getMethod().equalsIgnoreCase("OPTIONS"))
             return true;
         String jwt = DataProcessUtils.nullToString(request.getHeader("tokens"));
         String tokensString;
