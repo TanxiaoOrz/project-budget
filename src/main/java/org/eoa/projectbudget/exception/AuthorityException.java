@@ -15,6 +15,7 @@ public class AuthorityException extends EoaException{
 
 
     public AuthorityException(Long userId,String action,String reason) {
+        super();
         code = Vo.NO_AUTHORITY;
         description = String.format("用户编号=>%d,尝试进行操作=>%s,拦截原因=>%s",userId,action,reason);
     }

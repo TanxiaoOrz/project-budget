@@ -13,6 +13,7 @@ public class AuthoritySolveException extends EoaException{
     String description;
 
     public AuthoritySolveException(String authorityString, String description) {
+        super();
         this.authorityString = authorityString;
         this.description = description;
     }

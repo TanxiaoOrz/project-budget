@@ -29,6 +29,9 @@ public class ExceptionController {
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public Vo<String> handleViolateUniqueConstraint(SQLIntegrityConstraintViolationException e) {
+        if (!isRelease) {
+            e.printStackTrace();
+        }
         String[] strings = (String[]) Arrays.stream(
                 e.getMessage().split(" "))
                 .filter(s -> s.startsWith("'")).toArray();
@@ -39,6 +42,9 @@ public class ExceptionController {
 
     @ExceptionHandler(EoaException.class)
     public Vo<String> handleEoaException(EoaException e) {
+        if (!isRelease) {
+            e.printStackTrace();
+        }
         return new Vo<>(e);
     }
 

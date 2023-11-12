@@ -18,7 +18,8 @@ public class ParameterException extends EoaException{
      * @param description 错误描述
      */
      public ParameterException(String attribute, String value, String description) {
-        code = Vo.WRONG_PARAMETER;
-        this.description = String.format("传入参数 %s = %s 不符合要求,错误原因: %s",attribute,value,description);
+         super();
+         code = Vo.WRONG_PARAMETER;
+         this.description = String.format("传入参数 %s = %s 不符合要求,错误原因: %s",attribute,value,description);
     }
 }

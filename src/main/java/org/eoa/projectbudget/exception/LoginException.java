@@ -13,6 +13,7 @@ import org.eoa.projectbudget.vo.out.Vo;
 public class LoginException extends EoaException{
 
     public LoginException(boolean isOut) {
+        super();
         code = Vo.TOKEN_ERROR;
         description = isOut?"token过期,重新登录":"token异常,重新登录";
     }

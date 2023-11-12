@@ -21,6 +21,7 @@ public class DataException extends EoaException{
 
 
     public DataException(String table, String id, String attribute, String data,String description) {
+        super();
         code = Vo.STORE_DATA_ERROR;
         this.description = String.format("存储数据出错,请检查数据库\n\t表单:%s\t编号:%s\t属性:%s\t值:%s,错误原因:%s",table,id,attribute,data,description);
     }

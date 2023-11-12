@@ -11,4 +11,8 @@ package org.eoa.projectbudget.exception;
 public class EoaException extends Exception{
     public int code;
     public String description;
+
+    public EoaException() {
+        super();
+    }
 }
