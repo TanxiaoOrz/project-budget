@@ -11,7 +11,10 @@ import org.eoa.projectbudget.exception.ParameterException;
  * @Version: 1.0
  */
 public interface CheckParameter {
+
+    int NEW = 0;
+    int UPDATE = 1;
+
     void checkSelf(int type) throws ParameterException;
 
-    void checkSelf() throws ParameterException;
 }

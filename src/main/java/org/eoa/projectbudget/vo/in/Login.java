@@ -14,7 +14,7 @@ import org.eoa.projectbudget.utils.DataProcessUtils;
  * @Version: 1.0
  */
 
-@Schema(name = "登录结构体" , description = "登录传入结构体")
+@Schema(name = "Login" , description = "登录传入结构体")
 public class Login implements CheckParameter{
     @Schema(name = "loginName",description = "用户名",type = "string")
     String loginName;
@@ -30,11 +30,6 @@ public class Login implements CheckParameter{
         if (DataProcessUtils.isEmpty(password)) {
             throw new ParameterException("password","","没有password");
         }
-    }
-
-    @Override
-    public void checkSelf() throws ParameterException {
-        checkSelf(0);
     }
 
     public String getLoginName() {

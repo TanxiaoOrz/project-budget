@@ -30,8 +30,4 @@ public class TokensIn implements CheckParameter{
     @Override
     public void checkSelf(int type) throws ParameterException {
     }
-
-    @Override
-    public void checkSelf() throws ParameterException {
-    }
 }
