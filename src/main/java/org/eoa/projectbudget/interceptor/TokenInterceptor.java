@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.val;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.service.cache.CacheService;
@@ -22,13 +21,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author 张骏山
@@ -84,18 +83,24 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
 
         AuthorityService.UserWithToken gets = authorityService.getUser(tokens);
         Long userId = gets.getUserId();
-
+        boolean has = false;
         if (isRelease) {
             ValueOperations<Long, Date> ops = redisTemplate.opsForValue();
             Date last = null;
-            if (Boolean.TRUE.equals(redisTemplate.hasKey(userId))) {
+            has = Boolean.TRUE.equals(redisTemplate.hasKey(userId));
+            if (has) {
                 last = ops.get(userId);
-                redisTemplate.delete(userId);
+            }
+            if (last == null) {
+                Calendar instance = Calendar.getInstance();
+                instance.add(Calendar.MINUTE,-5);
+                if (tokens.getTimeStamp().before(instance.getTime())) {
+                    throw new LoginException(false);
+                }
             }
             if (last != null && last.after(tokens.getTimeStamp())) {
                 throw new LoginException(false);
             }
-            ops.set(userId, new Date());
         }
 
         HumanDto cache = cacheService.getCache(flag, method, userId.toString(), changeFlagUtils.getDate("HUMAN"), HumanDto.class);
@@ -103,8 +108,15 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
             cache = organizationService.getHumanDto(userId, userId);
             cacheService.setCache(flag,method,userId.toString(),HumanDto.class);
         }
-        if (gets.isUpdate())
+        if (gets.isUpdate()) {
             tokens = authorityService.getTokens(userId);
+            if (isRelease) {
+                if (has) {
+                    redisTemplate.delete(userId);
+                }
+                redisTemplate.opsForValue().set(userId,new Date(),5, TimeUnit.MINUTES);
+            }
+        }
         else
             tokens.setTimeStamp(new Date());
         String s = new ObjectMapper().writeValueAsString(tokens);
@@ -125,7 +137,7 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         algorithm = Algorithm.HMAC256(secretPass);
         redisTemplate.setKeySerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setHashKeySerializer(new GenericJackson2JsonRedisSerializer());
