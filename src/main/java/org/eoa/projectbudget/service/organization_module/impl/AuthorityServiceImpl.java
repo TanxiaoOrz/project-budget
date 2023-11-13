@@ -6,11 +6,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.service.organization_module.AuthorityService;
 import org.eoa.projectbudget.vo.Tokens;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * @Author: 张骏山
@@ -41,6 +43,8 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     String tokenPass;
 
     Algorithm algorithm;
+
+    Logger log = LoggerFactory.getLogger("AuthorityModule");
 
 
     @Override
@@ -99,6 +103,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
 
     @Override
     public Tokens getTokens(Long userId) {
+        log.info("用户=>{}申请tokens",userId);
         Calendar shortToken = Calendar.getInstance();
         shortToken.add(Calendar.MINUTE,tokenShortTime);
         Calendar longTime = Calendar.getInstance();
@@ -145,6 +150,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
             throw new LoginException(false);
         }
         Long userId = decodeLong.getClaim("dataId").asLong();
+        log.info("token解析成功,获取用户=>{},是否更新=>{}",userId,shortOut);
         return new UserWithToken().setUserId(userId).setUpdate(shortOut);
     }
 
