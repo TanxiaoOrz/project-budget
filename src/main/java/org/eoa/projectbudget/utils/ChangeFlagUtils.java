@@ -1,6 +1,8 @@
 package org.eoa.projectbudget.utils;
 
+import org.eoa.projectbudget.service.cache.CacheService;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -19,8 +21,12 @@ import java.util.HashMap;
 public class ChangeFlagUtils implements InitializingBean {
 
     public static final int HUMAN = 0;
-    public static final String[] Flags = {"HUMAN"};
+    public static final int MODULE = 1;
+    public static final String[] Flags = {"HUMAN","MODUlE"};
     private final HashMap<String, Date> map = new HashMap<>();
+
+    @Autowired
+    CacheService cacheService;
 
     public Date getDate(String flag) {
         Date date = map.get(flag);
@@ -39,8 +45,8 @@ public class ChangeFlagUtils implements InitializingBean {
         return this;
     }
 
-    public ChangeFlagUtils setDate(int flag, Date date) {
-        return setDate(Flags[flag], date);
+    public ChangeFlagUtils freshDate(int flag) {
+        return setDate(Flags[flag],new Date());
     }
 
     @Override

@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.ModuleType;
 import org.eoa.projectbudget.entity.ModuleView;
+import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.service.cache.CacheService;
 import org.eoa.projectbudget.service.table_module.ModuleService;
+import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.factory.ModuleOutFactory;
 import org.eoa.projectbudget.vo.in.ModuleIn;
 import org.eoa.projectbudget.vo.out.ModuleOut;
@@ -17,6 +19,7 @@ import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -28,7 +31,8 @@ import java.util.List;
 public class TableBackController {
     @Autowired
     CacheService cacheService;
-
+    @Autowired
+    ChangeFlagUtils changeFlagUtils;
     @Autowired
     ModuleService moduleService;
     @Autowired
@@ -36,16 +40,38 @@ public class TableBackController {
 
     @Operation(summary = "获取所有模块信息")
     @GetMapping("/module")
-    public Vo<List<ModuleOut>> getAllModule(@RequestAttribute("HumanDto") HumanDto humanDto) {
-        return new Vo<>(moduleOutFactory.outs(moduleService.getAll(humanDto.getDataId())));
+    public Vo<List<ModuleOut>> getAllModule(@RequestAttribute("HumanDto") HumanDto humanDto) throws EoaException {
+        final String method = "all";
+        final String userIdCache = "";
+
+        List<ModuleOut> outs;
+
+        ModuleOut[] cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, userIdCache, ModuleOut[].class);
+        if (cache == null) {
+            outs = moduleOutFactory.outs(moduleService.getAll(humanDto.getDataId()));
+            cacheService.setCache(ChangeFlagUtils.Flags[ChangeFlagUtils.MODULE], method, userIdCache,outs);
+        }else {
+            outs = Arrays.asList(cache);
+        }
+
+        return new Vo<>(outs);
     }
 
     @Operation(summary = "获取所有模块信息")
     @GetMapping("/module/{id}")
     public Vo<ModuleOut> getModule(@RequestAttribute("HumanDto") HumanDto humanDto,
-                                   @PathVariable("id") Long id) throws ParameterException {
-        ModuleView moduleView = moduleService.getOne(id, humanDto.getDataId());
-        return new Vo<>(moduleOutFactory.out(moduleView));
+                                   @PathVariable("id") Long id) throws EoaException {
+        final String method = "one";
+        String userIdCache = id.toString();
+        ModuleOut cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, userIdCache, ModuleOut.class);
+        ModuleOut out;
+        if (cache == null) {
+            ModuleView moduleView = moduleService.getOne(id, humanDto.getDataId());
+            out = moduleOutFactory.out(moduleView);
+        }else {
+            out = cache;
+        }
+        return new Vo<>(out);
     }
 
     @Operation(summary = "创建模块应用")
@@ -68,9 +94,10 @@ public class TableBackController {
                                    @PathVariable("id")Long id) throws ParameterException {
         ModuleType entity = moduleIn.toEntity(id);
         Integer integer = moduleService.update(entity, humanDto.getDataId());
-        if (integer==1)
+        if (integer==1) {
+            changeFlagUtils.freshDate(ChangeFlagUtils.MODULE);
             return new Vo<>("修改成功");
-        else
+        } else
             return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
     }
 
@@ -80,9 +107,10 @@ public class TableBackController {
     public Vo<String> deleteModule(@RequestAttribute("HumanDto") HumanDto humanDto,
                                    @PathVariable("id") Long id) {
         Integer delete = moduleService.delete(id, humanDto.getDataId());
-        if (delete==1)
+        if (delete==1) {
+            changeFlagUtils.freshDate(ChangeFlagUtils.MODULE);
             return new Vo<>("删除成功");
-        else
+        } else
             return new Vo<>(Vo.SERVER_ERROR,"未进行删除,该数据不存在");
     }
 
