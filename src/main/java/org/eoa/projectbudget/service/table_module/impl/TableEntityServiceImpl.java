@@ -22,7 +22,7 @@ import java.util.List;
  * @Date 2023/10/8 15:24
  * @PackageName: org.eoa.projectbudget.service.table_module
  * @ClassName: TableEntityServiceImpl
- * @Description: 表单模块后端操作处理业务类
+ * @Description: 表单模块后端操作处理业务类,实体表部分
  * @Version 1.0
  */
 @Service
