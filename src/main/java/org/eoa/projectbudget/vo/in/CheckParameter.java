@@ -10,11 +10,11 @@ import org.eoa.projectbudget.exception.ParameterException;
  * @Description: 传入结构体完成检查接口
  * @Version: 1.0
  */
-public interface CheckParameter {
+public interface CheckParameter<Entity> {
 
-    int NEW = 0;
-    int UPDATE = 1;
 
-    void checkSelf(int type) throws ParameterException;
+    void checkSelf() throws ParameterException;
+
+    Entity toEntity(Long dataId) throws ParameterException;
 
 }

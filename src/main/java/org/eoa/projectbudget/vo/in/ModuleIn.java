@@ -1,6 +1,7 @@
 package org.eoa.projectbudget.vo.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.eoa.projectbudget.entity.ModuleType;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 
@@ -14,22 +15,11 @@ import org.eoa.projectbudget.utils.DataProcessUtils;
  **/
 
 @Schema(name = "ModuleIn",description = "模块传入结构体")
-public class ModuleIn implements CheckParameter{
-    @Schema(required = false, description = "唯一id")
-    Long moduleTypeId;
+public class ModuleIn implements CheckParameter<ModuleType>{
     @Schema(description = "应用名称")
     String moduleTypeName;
     @Schema(description = "应用备注")
     String workflowRemark;
-
-    public Long getModuleTypeId() {
-        return moduleTypeId;
-    }
-
-    public ModuleIn setModuleTypeId(Long moduleTypeId) {
-        this.moduleTypeId = moduleTypeId;
-        return this;
-    }
 
     public String getModuleTypeName() {
         return moduleTypeName;
@@ -50,13 +40,20 @@ public class ModuleIn implements CheckParameter{
     }
 
     @Override
-    public void checkSelf(int type) throws ParameterException {
+    public void checkSelf() throws ParameterException {
         if (DataProcessUtils.isEmpty(moduleTypeName)) {
             throw new ParameterException("moduleTypeName","","没有应用名称");
         }
-        if (type == UPDATE && (DataProcessUtils.isEmpty(String.valueOf(moduleTypeId)))) {
-            throw new ParameterException("moduleTypeId","","没有唯一编号");
-        }
-
     }
+
+    @Override
+    public ModuleType toEntity(Long dataId) throws ParameterException {
+        checkSelf();
+        ModuleType moduleType = new ModuleType();
+        moduleType.setModuleTypeId(dataId)
+                .setModuleTypeName(moduleTypeName)
+                .setWorkflowRemark(workflowRemark);
+        return moduleType;
+    }
+
 }

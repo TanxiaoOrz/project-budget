@@ -13,7 +13,7 @@ import org.eoa.projectbudget.exception.ParameterException;
  */
 
 @Schema(name = "TokensIn", description = "需要检查是否合法登录的tokens字符串")
-public class TokensIn implements CheckParameter{
+public class TokensIn implements CheckParameter<TokensIn>{
 
     @Schema(description = "tokens字符串")
     String tokens;
@@ -28,6 +28,11 @@ public class TokensIn implements CheckParameter{
     }
 
     @Override
-    public void checkSelf(int type) throws ParameterException {
+    public void checkSelf() throws ParameterException {
+    }
+
+    @Override
+    public TokensIn toEntity(Long dataId) throws ParameterException {
+        return this;
     }
 }
