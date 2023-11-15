@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ServerException;
+import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @PackageName: org.eoa.projectbudget.cache
  * @ClassName: BaseCache
  * @Description: redis缓存直接操作类
- * @Version 1.0
+ * @Version 2.0
  **/
 
 @Service
@@ -37,6 +37,9 @@ public class CacheServiceImpl implements CacheService{
 
     @Value("${eoa.cache-time}")
     Long cacheTime;
+
+    @Autowired
+    private ChangeFlagUtils changeFlagUtils;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -85,6 +88,16 @@ public class CacheServiceImpl implements CacheService{
         hashFlag.expire(cacheTime, TimeUnit.MINUTES);
         log.info("存储:Flag=>{}的缓存:=>{}success=>true",flag,key);
         return this;
+    }
+
+    @Override
+    public <T> T getCache(int flag, String method, String userId, Class<T> clazz) throws EoaException {
+        return getCache(ChangeFlagUtils.Flags[flag],method,userId,changeFlagUtils.getDate(flag),clazz);
+    }
+
+    @Override
+    public CacheService setCache(int flag, String method, String userId, Object object) throws EoaException {
+        return setCache(ChangeFlagUtils.Flags[flag],method,userId,object);
     }
 
     @Override

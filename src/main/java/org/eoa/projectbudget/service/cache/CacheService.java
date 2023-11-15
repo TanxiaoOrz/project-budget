@@ -1,12 +1,7 @@
 package org.eoa.projectbudget.service.cache;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
-import org.eoa.projectbudget.exception.ServerException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundHashOperations;
 
 import java.util.Date;
 
@@ -16,7 +11,7 @@ import java.util.Date;
  * @PackageName: org.eoa.projectbudget.service.cache
  * @ClassName: CacheService
  * @Description: 缓存业务类声明接口
- * @Version 1.0
+ * @Version 2.0
  **/
 
 public interface CacheService {
@@ -31,7 +26,7 @@ public interface CacheService {
      *
      * @param flag hash标志(缓存内容对象为单位)
      * @param method 方法
-     * @param userId 用户编号
+     * @param userId 用户编号,若是不会因为用户导致偏移的设置为空即可
      * @param changeFlag 结构体变化时间
      * @param clazz 数据类
      * @return 缓存的结构体
@@ -42,7 +37,7 @@ public interface CacheService {
 
     /**
      *
-     * @param flag hash标志
+     * @param flag hash标志的数组位置
      * @param method 方法
      * @param userId 用户
      * @param object 对象
@@ -50,6 +45,19 @@ public interface CacheService {
      * @throws EoaException json转换错误
      */
     CacheService setCache(String flag, String method, String userId, Object object) throws EoaException;
+
+    <T> T  getCache(int flag, String method, String userId, Class<T> clazz) throws EoaException;
+
+    /**
+     *
+     * @param flag hash标志的数组位置
+     * @param method 方法
+     * @param userId 用户,若是不会因为用户导致偏移的设置为空即可
+     * @param object 对象
+     * @return 自身
+     * @throws EoaException json转换错误
+     */
+    CacheService setCache(int flag, String method, String userId, Object object) throws EoaException;
 
     /**
      * 清楚field中的过期数据
