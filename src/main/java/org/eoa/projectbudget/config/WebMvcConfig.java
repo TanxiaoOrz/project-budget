@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.config;
 
+import org.eoa.projectbudget.interceptor.BackInterceptor;
 import org.eoa.projectbudget.interceptor.TokenInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -22,5 +23,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(tokenInterceptor).addPathPatterns("/api/v1/**")
                 .excludePathPatterns("/api/v1/token")
                 .excludePathPatterns("/api/v1/token/**");
+        registry.addInterceptor(new BackInterceptor(new Long[]{2L})).addPathPatterns("/api/v1/table/back/**");
     }
 }
