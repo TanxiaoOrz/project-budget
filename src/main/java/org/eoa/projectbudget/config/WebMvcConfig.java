@@ -23,6 +23,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(tokenInterceptor).addPathPatterns("/api/v1/**")
                 .excludePathPatterns("/api/v1/token")
                 .excludePathPatterns("/api/v1/token/**");
-        registry.addInterceptor(new BackInterceptor(new Long[]{2L})).addPathPatterns("/api/v1/table/back/**");
+        registry.addInterceptor(new BackInterceptor(new Long[]{2L}, "操作表单模块","需要表单模块操作权限,权限id=>2,请联系相关管理员添加"))
+                .addPathPatterns("/api/v1/table/back/**");
     }
 }
