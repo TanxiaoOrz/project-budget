@@ -26,7 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/table/back")
-@Tag(name = "模块应用后端接口",description = "需要拥有表单权限的登录用户进行操作")
+@Tag(name = "表单应用后端接口",description = "需要拥有表单权限的登录用户进行操作")
 @CrossOrigin
 public class TableBackController {
     @Autowired
