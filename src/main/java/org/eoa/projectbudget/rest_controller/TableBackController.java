@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Map;
 
 
 @RestController
@@ -40,8 +40,9 @@ public class TableBackController {
 
     @Operation(summary = "获取所有模块信息")
     @GetMapping("/module")
-    public Vo<List<ModuleOut>> getAllModule(@RequestAttribute("HumanDto") HumanDto humanDto) throws EoaException {
-        final String method = "all";
+    public Vo<List<ModuleOut>> getAllModule(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                            @RequestBody Map<String,String> filter) throws EoaException {
+        final String method = filter.toString();
         final Long userIdCache = null;
 
         List<ModuleOut> outs;
