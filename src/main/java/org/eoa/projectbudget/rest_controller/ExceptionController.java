@@ -4,12 +4,12 @@ package org.eoa.projectbudget.rest_controller;
 import lombok.extern.slf4j.Slf4j;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ParameterException;
+import org.eoa.projectbudget.vo.out.Vo;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.beans.factory.annotation.Value;
-import org.eoa.projectbudget.vo.out.Vo;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 
 /**
@@ -27,17 +27,18 @@ public class ExceptionController {
     @Value("${eoa.release}")
     private boolean isRelease;
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public Vo<String> handleViolateUniqueConstraint(SQLIntegrityConstraintViolationException e) {
+    @ExceptionHandler(DuplicateKeyException.class)
+    public Vo<String> handleViolateUniqueConstraint(DuplicateKeyException e) {
         if (!isRelease) {
             e.printStackTrace();
         }
-        String[] strings = (String[]) Arrays.stream(
-                e.getMessage().split(" "))
-                .filter(s -> s.startsWith("'")).toArray();
-        String attribute = strings[0];
-        String value = strings[1];
-        return new Vo<>(new ParameterException(attribute,value,e.getMessage()));
+        Object[] strings = Arrays.stream(
+                e.getMessage().toString().split(" "))
+                .filter(s -> s.startsWith("'"))
+                .toArray();
+        String attribute =((String) strings[1]).split("_")[0].replace('\'',' ');
+        String value =(String) strings[0];
+        return new Vo<>(new ParameterException(attribute,value,"违反唯一键约束"));
     }
 
     @ExceptionHandler(EoaException.class)
