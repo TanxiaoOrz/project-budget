@@ -14,7 +14,7 @@ public interface ModuleService {
 
     Integer update(ModuleType moduleType,Long userId) throws ParameterException;
 
-    Integer newOne(ModuleType moduleType,Long userId);
+    Long newOne(ModuleType moduleType, Long userId);
 
     Integer delete(Long moduleTypeId,Long userId);
 

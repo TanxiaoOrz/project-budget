@@ -57,7 +57,7 @@ public class TableBackController {
         return new Vo<>(outs);
     }
 
-    @Operation(summary = "获取所有模块信息")
+    @Operation(summary = "获取单个模块信息")
     @GetMapping("/module/{id}")
     public Vo<ModuleOut> getModule(@RequestAttribute("HumanDto") HumanDto humanDto,
                                    @PathVariable("id") Long id) throws EoaException {
@@ -75,12 +75,12 @@ public class TableBackController {
 
     @Operation(summary = "创建模块应用")
     @PostMapping("/module")
-    public Vo<String> newModule(@RequestAttribute("HumanDto") HumanDto humanDto,
+    public Vo<Long> newModule(@RequestAttribute("HumanDto") HumanDto humanDto,
                                 @RequestBody ModuleIn moduleIn) throws ParameterException {
         ModuleType entity = moduleIn.toEntity(null);
-        Integer integer = moduleService.newOne(entity, humanDto.getDataId());
-        if (integer==1)
-            return new Vo<>("新建成功");
+        Long id = moduleService.newOne(entity, humanDto.getDataId());
+        if (id!=null)
+            return new Vo<>(id);
         else
             return new Vo<>(Vo.SERVER_ERROR,"未进行新建,请联系管理员");
     }

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,11 +67,12 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public Integer newOne(ModuleType moduleType, Long userId) {
+    public Long newOne(ModuleType moduleType, Long userId) {
         log.info("用户=>{}新建模块=>{}",userId,moduleType);
+        moduleType.setCreateTime(new Date()).setCreator(userId);
         int i = typeMapper.insert(moduleType);
         log.info("新建完成,数量=>{}",i);
-        return i;
+        return moduleType.getModuleTypeId();
     }
 
     @Override
