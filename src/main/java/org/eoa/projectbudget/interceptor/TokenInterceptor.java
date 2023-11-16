@@ -123,6 +123,7 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
         String jwtN = JWT.create().withClaim("tokens", s).sign(algorithm);
         response.setHeader("tokens", jwtN);
         request.setAttribute("HumanDto", cache);
+        response.setHeader("Access-Control-Expose-Headers", "tokens");
         return true;
     }
 

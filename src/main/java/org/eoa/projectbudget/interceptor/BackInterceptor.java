@@ -15,7 +15,7 @@ import java.util.List;
  * @PackageName: IntelliJ IDEA
  * @ClassName: BackInterceptor
  * @Description: TODO
- * @Version: 1.0
+ * @Version: 1.1
  */
 public class BackInterceptor implements HandlerInterceptor {
 
@@ -32,6 +32,8 @@ public class BackInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getMethod().equalsIgnoreCase("OPTIONS"))
+            return true;
         HumanDto humanDto =(HumanDto) request.getAttribute("HumanDto");
         if (!constraint.solve(humanDto, humanDto))
             throw new AuthorityException(humanDto.getDataId(), action, reason);
