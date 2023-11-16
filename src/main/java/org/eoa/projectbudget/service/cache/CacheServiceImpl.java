@@ -53,8 +53,8 @@ public class CacheServiceImpl implements CacheService{
         return this;
     }
 
-    public <T> T  getCache(String flag, String method,String userId, Date changeFlag,Class<T> clazz) throws EoaException {
-        String key = String.format("%s-%s", userId, method);
+    public <T> T  getCache(String flag, String method,Long userId, Date changeFlag,Class<T> clazz) throws EoaException {
+        String key = String.format("%d-%s", userId, method);
         WithTime withTime = (WithTime) redisTemplate.boundHashOps(flag).get(key);
         if (withTime == null) {
             log.info("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>false",flag,changeFlag,key);
@@ -72,8 +72,8 @@ public class CacheServiceImpl implements CacheService{
         }
     }
 
-    public CacheServiceImpl setCache(String flag, String method, String userId, Object object) throws EoaException {
-        String key = String.format("%s-%s", userId, method);
+    public CacheServiceImpl setCache(String flag, String method, Long userId, Object object) throws EoaException {
+        String key = String.format("%d-%s", userId, method);
         String value;
         try {
             value = new ObjectMapper().writeValueAsString(object);
@@ -91,12 +91,12 @@ public class CacheServiceImpl implements CacheService{
     }
 
     @Override
-    public <T> T getCache(int flag, String method, String userId, Class<T> clazz) throws EoaException {
-        return getCache(ChangeFlagUtils.Flags[flag],method,userId,changeFlagUtils.getDate(flag),clazz);
+    public <T> T getCache(int flag, String method, Long userId, Class<T> clazz) throws EoaException {
+        return getCache(ChangeFlagUtils.Flags[flag],method,userId,changeFlagUtils.getDate(flag,userId),clazz);
     }
 
     @Override
-    public CacheService setCache(int flag, String method, String userId, Object object) throws EoaException {
+    public CacheService setCache(int flag, String method, Long userId, Object object) throws EoaException {
         return setCache(ChangeFlagUtils.Flags[flag],method,userId,object);
     }
 

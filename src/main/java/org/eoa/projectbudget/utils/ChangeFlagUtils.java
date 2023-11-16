@@ -1,8 +1,5 @@
 package org.eoa.projectbudget.utils;
 
-import org.eoa.projectbudget.service.cache.CacheService;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -18,43 +15,93 @@ import java.util.HashMap;
  **/
 
 @Component
-public class ChangeFlagUtils implements InitializingBean {
-
+public class ChangeFlagUtils {
+    /**
+     * Flag字符串数组位置常量
+     */
     public static final int HUMAN = 0;
     public static final int MODULE = 1;
     public static final String[] Flags = {"HUMAN","MODUlE"};
-    private final HashMap<String, Date> map = new HashMap<>();
+    private final HashMap<String, Date> flagMap = new HashMap<>();
+    private final HashMap<Long, Date> userMap = new HashMap<>();
+    /**
+     * 初始化时间
+     */
+    private final Date initialTime = new Date();
 
-    @Autowired
-    CacheService cacheService;
-
+    /**
+     * 获取flag对应的更新时间
+     * @param flag flag字符串
+     * @return 更新时间
+     */
     public Date getDate(String flag) {
-        Date date = map.get(flag);
+        if (flag == null) {
+            return initialTime;
+        }
+        Date date = flagMap.get(flag);
         if (date == null) {
-            date =new Date(0);
+            date = initialTime;
         }
         return date;
     }
 
+    /**
+     * 获取人员对应的更新时间
+     * @param userId 人员编号
+     * @return 更新时间
+     */
+    public Date getDate(Long userId) {
+        if (userId == null) {
+            return initialTime;
+        }
+        Date date = userMap.get(userId);
+        if (date == null) {
+            date = initialTime;
+        }
+        return date;
+    }
+
+    /**
+     * 获取flag对应的更新时间
+     * @param flag 字符串位置常量
+     * @return 更新时间
+     */
     public Date getDate(int flag) {
         return getDate(Flags[flag]);
     }
 
-    public ChangeFlagUtils setDate(String flag, Date date) {
-        map.put(flag, date);
+    /**
+     * 获取flag和userID的双重更新时间
+     * @param flag 字符串位置常量
+     * @param userId 人员编号
+     * @return 最新更新时间
+     */
+    public Date getDate(int flag,Long userId) {
+        Date flagDate = getDate(flag);
+        Date userDate = getDate(userId);
+        return userDate.before(flagDate)?flagDate:userDate;
+    }
+
+    /**
+     * 更新flag时间
+     * @param flag 字符串位置
+     * @return this
+     */
+    public ChangeFlagUtils freshDate(int flag) {
+        Date date = new Date();
+        flagMap.put(Flags[flag], date);
         return this;
     }
 
-    public ChangeFlagUtils freshDate(int flag) {
-        return setDate(Flags[flag],new Date());
+    /**
+     * 更新user时间
+     * @param userId 字符串位置
+     * @return this
+     */
+    public ChangeFlagUtils freshDate(Long userId) {
+        Date date = new Date();
+        userMap.put(userId, date);
+        return this;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Date date = new Date();
-        for (String flag:
-             Flags) {
-            map.put(flag,date);
-        }
-    }
 }

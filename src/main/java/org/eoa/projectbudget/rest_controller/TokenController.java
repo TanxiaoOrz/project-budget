@@ -3,16 +3,10 @@ package org.eoa.projectbudget.rest_controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.EoaException;
@@ -32,9 +26,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-import java.util.Stack;
 
 /**
  * @Author: 张骏山
@@ -76,7 +67,7 @@ public class TokenController implements InitializingBean {
             throws EoaException, JsonProcessingException {
         login.checkSelf();
         HumanDto humanDto = organizationService.getHumanDto(login.getLoginName(),login.getPassword());
-        cacheService.setCache(flag,method,humanDto.getDataId().toString(),humanDto);
+        cacheService.setCache(flag,method,humanDto.getDataId(),humanDto);
         Tokens tokens = authorityService.getTokens(humanDto.getDataId());
         return new Vo<>(JWT.create().withClaim("tokens",new ObjectMapper().writeValueAsString(tokens)).sign(algorithm));
     }

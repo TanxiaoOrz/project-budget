@@ -29,17 +29,17 @@ class CacheServiceImplTest {
         cacheService.flashFlagCache("Test");
         Date date = new Date();
         Thread.sleep(1000);
-        cacheService.setCache("Test","test1","test1",new Date());
-        System.out.println(cacheService.getCache("Test","test1","test1",date,Date.class));
+        cacheService.setCache("Test","test1",1L,new Date());
+        System.out.println(cacheService.getCache("Test","test1",1L,date,Date.class));
         Thread.sleep(100);
-        cacheService.setCache("Test","test1","test2",new Date());
-        System.out.println(cacheService.getCache("Test","test1","test2",date,Date.class));
+        cacheService.setCache("Test","test1",1L,new Date());
+        System.out.println(cacheService.getCache("Test","test1",1L,date,Date.class));
         Thread.sleep(100);
-        cacheService.setCache("Test","test1","test2",new Date());
-        System.out.println(cacheService.getCache("Test","test1","test2",date,Date.class));
+        cacheService.setCache("Test","test1",1L,new Date());
+        System.out.println(cacheService.getCache("Test","test1",1L,date,Date.class));
         Thread.sleep(100);
         cacheService.flashFlagCache("Test");
-        System.out.println(cacheService.getCache("Test","test1","test2",date,Date.class));
+        System.out.println(cacheService.getCache("Test","test1",1L,date,Date.class));
         Thread.sleep(100);
     }
 

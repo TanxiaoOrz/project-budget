@@ -42,7 +42,7 @@ public class TableBackController {
     @GetMapping("/module")
     public Vo<List<ModuleOut>> getAllModule(@RequestAttribute("HumanDto") HumanDto humanDto) throws EoaException {
         final String method = "all";
-        final String userIdCache = "";
+        final Long userIdCache = null;
 
         List<ModuleOut> outs;
 
@@ -62,8 +62,7 @@ public class TableBackController {
     public Vo<ModuleOut> getModule(@RequestAttribute("HumanDto") HumanDto humanDto,
                                    @PathVariable("id") Long id) throws EoaException {
         final String method = "one";
-        String userIdCache = id.toString();
-        ModuleOut cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, userIdCache, ModuleOut.class);
+        ModuleOut cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, id, ModuleOut.class);
         ModuleOut out;
         if (cache == null) {
             ModuleView moduleView = moduleService.getOne(id, humanDto.getDataId());

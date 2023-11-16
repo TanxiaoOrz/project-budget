@@ -33,7 +33,7 @@ public interface CacheService {
      * @param <T> 获取数据的结构体
      * @throws EoaException 存储数据一场
      */
-    <T> T  getCache(String flag, String method, String userId, Date changeFlag, Class<T> clazz) throws EoaException;
+    <T> T  getCache(String flag, String method, Long userId, Date changeFlag, Class<T> clazz) throws EoaException;
 
     /**
      *
@@ -44,9 +44,9 @@ public interface CacheService {
      * @return 自身
      * @throws EoaException json转换错误
      */
-    CacheService setCache(String flag, String method, String userId, Object object) throws EoaException;
+    CacheService setCache(String flag, String method, Long userId, Object object) throws EoaException;
 
-    <T> T  getCache(int flag, String method, String userId, Class<T> clazz) throws EoaException;
+    <T> T  getCache(int flag, String method, Long userId, Class<T> clazz) throws EoaException;
 
     /**
      *
@@ -57,7 +57,7 @@ public interface CacheService {
      * @return 自身
      * @throws EoaException json转换错误
      */
-    CacheService setCache(int flag, String method, String userId, Object object) throws EoaException;
+    CacheService setCache(int flag, String method, Long userId, Object object) throws EoaException;
 
     /**
      * 清楚field中的过期数据
