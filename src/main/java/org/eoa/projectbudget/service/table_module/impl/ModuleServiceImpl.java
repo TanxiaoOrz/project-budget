@@ -1,10 +1,11 @@
 package org.eoa.projectbudget.service.table_module.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.entity.ModuleType;
+import org.eoa.projectbudget.entity.ModuleView;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.ModuleTypeMapper;
 import org.eoa.projectbudget.mapper.ModuleViewMapper;
-import org.eoa.projectbudget.entity.ModuleView;
 import org.eoa.projectbudget.service.table_module.ModuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author 张骏山
@@ -37,8 +37,8 @@ public class ModuleServiceImpl implements ModuleService {
 
 
     @Override
-    public List<ModuleView> getAll(Long userId, Map<String, String> filter) {
-        List<ModuleView> moduleViews = viewMapper.selectList(filter);
+    public List<ModuleView> getAll(Long userId, QueryWrapper<ModuleView> wrapper) {
+        List<ModuleView> moduleViews = viewMapper.selectList(wrapper);
         log.info("用户=>{}查询模块列表",userId);
         return moduleViews;
     }
