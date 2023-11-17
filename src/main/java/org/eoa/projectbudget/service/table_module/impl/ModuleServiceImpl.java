@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 张骏山
@@ -36,8 +37,8 @@ public class ModuleServiceImpl implements ModuleService {
 
 
     @Override
-    public List<ModuleView> getAll(Long userId) {
-        List<ModuleView> moduleViews = viewMapper.selectList(null);
+    public List<ModuleView> getAll(Long userId, Map<String, String> filter) {
+        List<ModuleView> moduleViews = viewMapper.selectList(filter);
         log.info("用户=>{}查询模块列表",userId);
         return moduleViews;
     }
