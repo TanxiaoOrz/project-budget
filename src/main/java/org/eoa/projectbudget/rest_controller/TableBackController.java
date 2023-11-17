@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.ModuleType;
 import org.eoa.projectbudget.entity.ModuleView;
@@ -12,6 +13,7 @@ import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.service.cache.CacheService;
 import org.eoa.projectbudget.service.table_module.ModuleService;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
+import org.eoa.projectbudget.utils.FilterUtils;
 import org.eoa.projectbudget.utils.factory.ModuleOutFactory;
 import org.eoa.projectbudget.vo.in.ModuleIn;
 import org.eoa.projectbudget.vo.out.ModuleOut;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -41,21 +42,20 @@ public class TableBackController {
     @Operation(summary = "获取所有模块信息")
     @GetMapping("/module")
     public Vo<List<ModuleOut>> getAllModule(@RequestAttribute("HumanDto") HumanDto humanDto,
-                                            @RequestBody Map<String,String> filter) throws EoaException {
-        final String method = filter.toString();
-        final Long userIdCache = null;
-
+                                            HttpServletRequest request) throws EoaException {
+        FilterUtils<ModuleView> filter = new FilterUtils<>(request.getParameterMap(), ModuleView.class);
         List<ModuleOut> outs;
-
+        String method = filter.getDescription();
+        Long userIdCache = 0L;
         ModuleOut[] cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, userIdCache, ModuleOut[].class);
         if (cache == null) {
-            outs = moduleOutFactory.outs(moduleService.getAll(humanDto.getDataId()));
+            outs = moduleOutFactory.outs(moduleService.getAll(humanDto.getDataId(),filter.getWrapper()));
             cacheService.setCache(ChangeFlagUtils.Flags[ChangeFlagUtils.MODULE], method, userIdCache,outs);
         }else {
             outs = Arrays.asList(cache);
         }
-
-        return new Vo<>(outs);
+        List<ModuleOut> returns = outs.subList(filter.getPage().getStart(), filter.getPage().getEnd(outs.size()));
+        return new Vo<>(returns,outs.size());
     }
 
     @Operation(summary = "获取单个模块信息")
