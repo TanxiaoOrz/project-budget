@@ -10,7 +10,7 @@ import org.eoa.projectbudget.exception.EoaException;
  * @PackageName: org.eoa.projectbudget.vo
  * @ClassName: Vo
  * @Description: 数据回传的包装实体
- * @Version 1.0
+ * @Version 1.3
  */
 @Data
 @Schema(name = "Vo",description = "数据传输实体类")
@@ -25,26 +25,50 @@ public class Vo<Entity> {
 
     @Schema(name = "成功状态",description = "0:成功,-1:重新登录,-2:更新token,-3:无权限,1:入参错误,2:运行错误,3:存储数据错误")
     private Integer code;
-    @Schema(name = "结果描述")
+    @Schema(name = "结果描述,批量获取数据时为数据的数量")
     private String description;
     @Schema(name = "结果类")
     private Entity entity;
     @Schema(name = "更新token",description = "先是短token,后是长token")
     private String[] newToken;
 
+    /**
+     * 异常返回
+     * @param e 自定义异常类
+     */
     public Vo(EoaException e) {
         this.code = e.code;
         this.description = e.description;
     }
 
+    /**
+     * 错误返回
+     * @param code 错误码
+     * @param description 错误描述
+     */
     public Vo(Integer code, String description) {
         this.code = code;
         this.description = description;
     }
 
+    /**
+     * 正常返回
+     * @param entity 返回结果
+     */
     public Vo(Entity entity) {
         this.code = SUCCESS;
         this.description = "操作成功";
+        this.entity = entity;
+    }
+
+    /**
+     * 批量获取数据的创建方法
+     * @param entity 数据几
+     * @param counts 数据的数量
+     */
+    public Vo(Entity entity,Integer counts) {
+        this.code = SUCCESS;
+        this.description = counts.toString();
         this.entity = entity;
     }
 }
