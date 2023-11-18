@@ -1,7 +1,10 @@
 package org.eoa.projectbudget.service.table_module.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.entity.*;
+import org.eoa.projectbudget.entity.Column;
+import org.eoa.projectbudget.entity.ColumnView;
+import org.eoa.projectbudget.entity.Table;
+import org.eoa.projectbudget.entity.TableView;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.ColumnViewMapper;
 import org.eoa.projectbudget.mapper.ModuleTypeMapper;
@@ -26,7 +29,7 @@ import java.util.List;
 
 
 @Service
-public class TableViewServiceImpl implements TableColumnService {
+public class TableViewServiceImpl implements TableColumnService<ColumnView,TableView> {
 
     @Autowired
     ModuleTypeMapper moduleTypeMapper;
@@ -92,9 +95,9 @@ public class TableViewServiceImpl implements TableColumnService {
     }
 
     @Override
-    public List<? extends Table> getTableFromModule(Long moduleId, Long userId) {
-        log.info("用户:编号=>{}执行查询表单操作\nmoduleId=>{}",userId,moduleId);
-        List<TableView> tables = tableMapper.selectList(new QueryWrapper<TableView>().eq("moduleId", moduleId));
+    public List<TableView> getTableList(QueryWrapper<TableView> wrapper, Long userId) {
+        log.info("用户:编号=>{}执行查询表单操作",userId);
+        List<TableView> tables = tableMapper.selectList(wrapper);
         log.info("查询完成,结果数量=>{}",tables.size());
         return tables;
     }
@@ -107,7 +110,7 @@ public class TableViewServiceImpl implements TableColumnService {
             log.error("不存在表单编号=>{}的表单，操作中断",column.getTableNo());
             throw new ParameterException("tableNo",column.getTableNo().toString(),"不存在该表单编号");
         }
-        if (column.getTableNo() == null) {
+        if (column.getColumnViewNo() == null) {
             Integer columnViewNo = columnMapper.getColumnViewNoNew(column.getTableNo());
             log.info("该字段的显示顺序编号=>{}",columnViewNo);
             column.setColumnViewNo(columnViewNo);
@@ -157,9 +160,9 @@ public class TableViewServiceImpl implements TableColumnService {
     }
 
     @Override
-    public List<ColumnView> getColumnByTable(Long tableId, Long userId) {
-        log.info("用户:编号=>{}执行查询表单操作\ntableId=>{}",userId,tableId);
-        List<ColumnView> columns = columnMapper.selectList(new QueryWrapper<ColumnView>().eq("tableId", tableId));
+    public List<ColumnView> getColumnList(QueryWrapper<ColumnView> wrapper, Long userId) {
+        log.info("用户:编号=>{}执行查询表单操作",userId);
+        List<ColumnView> columns = columnMapper.selectList(wrapper);
         log.info("查询完成,结果数量=>{}",columns.size());
         return columns;
     }
