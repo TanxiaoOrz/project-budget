@@ -2,7 +2,6 @@ package org.eoa.projectbudget.utils.factory;
 
 import org.eoa.projectbudget.entity.ModuleView;
 import org.eoa.projectbudget.mapper.HumanMapper;
-import org.eoa.projectbudget.utils.factory.OutFactory;
 import org.eoa.projectbudget.vo.out.ModuleOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ public class ModuleOutFactory implements OutFactory<ModuleView,ModuleOut> {
     }
 
     @Override
-    public List<ModuleOut> outs(List<ModuleView> moduleViews) {
+    public List<ModuleOut> outs(List<? extends ModuleView> moduleViews) {
         return moduleViews.stream().map(this::out).collect(Collectors.toList());
     }
 }
