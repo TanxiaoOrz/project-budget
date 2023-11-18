@@ -21,7 +21,9 @@ public class ChangeFlagUtils {
      */
     public static final int HUMAN = 0;
     public static final int MODULE = 1;
-    public static final String[] Flags = {"HUMAN","MODUlE"};
+    public static final int TABLE_ENTITY = 2;
+    public static final int TABLE_VIEW = 3;
+    public static final String[] Flags = {"HUMAN","MODUlE","TABLE_ENTITY","TABLE_VIEW"};
     private final HashMap<String, Date> flagMap = new HashMap<>();
     private final HashMap<Long, Date> userMap = new HashMap<>();
     /**
