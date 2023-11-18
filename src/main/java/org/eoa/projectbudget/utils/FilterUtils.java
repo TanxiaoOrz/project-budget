@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class FilterUtils<Entity> {
         this.page = new Page(Integer.parseInt(map.get("current")[0]), Integer.parseInt(map.get("pageSize")[0]));
 
         this.wrapper = new QueryWrapper<>();
-
+        StringBuilder stringBuffer = new StringBuilder();
         for (Map.Entry<String, String[]> entry : map.entrySet()) {
             String column = entry.getKey();
             String[] value = entry.getValue();
@@ -60,8 +61,9 @@ public class FilterUtils<Entity> {
                 }
             } else
                 wrapper.eq(column, value[0]);
+            stringBuffer.append(column).append(":").append(Arrays.toString(value));
         }
-        description = wrapper.getSqlSelect();
+        description = stringBuffer.toString();
     }
 
     public Page getPage() {

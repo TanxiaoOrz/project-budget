@@ -6,10 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.entity.TableEntity;
+import org.eoa.projectbudget.entity.TableView;
 import org.eoa.projectbudget.vo.out.ViewData.DropSelect;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,19 +28,60 @@ import java.util.List;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class TableOut {
-    private Long tableId;
-    private String tableViewName;
-    private String tableDataName;
-    private Long moduleNo;
-    private String workFlowNo;
-    private String[] detailNames;
-    private List<DropSelect> detailSelect;
-    private String[] groupNames;
-    private List<DropSelect> groupSelect;
-    private String remark;
+    Long tableId;
+    String tableViewName;
+    String tableDataName;
+    Long moduleNo;
+    String workFlowNo;
+    String[] detailNames;
+    List<DropSelect> detailSelect;
+    String[] groupNames;
+    List<DropSelect> groupSelect;
+    String remark;
+    Boolean virtual;
+    Long creator;
+    String createName;
+    Date createTime;
+
+    public TableOut(Table table){
+        if (table.getClass() == TableEntity.class) {
+            entityCreate((TableEntity) table);
+            virtual = false;
+        }
+        if (table.getClass() == TableView.class) {
+            viewCreate((TableView) table);
+            virtual = true;
+        } else {
+            tableId=table.getTableId();
+            tableViewName=table.getTableViewName();
+            tableDataName=table.getTableDataName();
+            moduleNo=table.getModuleNo();
+            try {
+                groupNames=new ObjectMapper().readValue(table.getGroupName(),String[].class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            remark = table.getRemark();
+        }
+    }
+
+    private void viewCreate(TableView table) {
+        tableId=table.getTableId();
+        tableViewName=table.getTableViewName();
+        tableDataName=table.getTableDataName();
+        moduleNo=table.getModuleNo();
+        try {
+            groupNames=new ObjectMapper().readValue(table.getGroupName(),String[].class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        remark = table.getRemark();
+    }
 
 
-    public TableOut(TableEntity table) {
+    private void entityCreate(TableEntity table) {
         tableId=table.getTableId();
         tableViewName=table.getTableViewName();
         tableDataName=table.getTableDataName();
