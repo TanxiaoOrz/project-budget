@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.service.table_module;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.ParameterException;
@@ -12,9 +13,9 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service.table_module
  * @ClassName: TableColumnService
  * @Description: 表单字段操作业务类
- * @Version 1.0
+ * @Version 1.2
  */
-public interface TableColumnService {
+public interface TableColumnService<C extends Column,T extends Table> {
 
     /**
      *
@@ -48,18 +49,52 @@ public interface TableColumnService {
     /**
      *
      * @param moduleId 模块编号
+     * @param wrapper 筛选构造器
      * @return 该应用模块下的所有表单
      */
-    List<? extends Table> getTableFromModule(Long moduleId, Long userId);
+    List<T> getTableList(QueryWrapper<T> wrapper, Long userId);
 
+    /**
+     * 添加字段
+     * @param column 字段对象
+     * @param userId 用户编号
+     * @return 操作数量
+     * @throws ParameterException column参数异常
+     */
     Integer addColumn(Column column, Long userId) throws ParameterException;
 
+    /**
+     * 编辑字段
+     * @param column 字段对象
+     * @param userId 用户编号
+     * @return 操作数量
+     * @throws ParameterException column参数异常
+     */
     Integer alterColumn(Column column,Long userId) throws ParameterException;
 
+    /**
+     * 删除字段
+     * @param columnId 字段编号
+     * @param userId 用户编号
+     * @return 操作数量
+     * @throws ParameterException column参数异常
+     */
     Integer deleteColumn(Long columnId,Long userId) throws ParameterException;
 
+    /**
+     * 获取Column对象
+     * @param columnId column编号
+     * @param userId 用户编号
+     * @return column对象
+     */
     Column getColumnById(Long columnId,Long userId);
 
-    List<? extends Column> getColumnByTable(Long tableId,Long userId);
+    /**
+     * 获取column数组
+     * @param wrapper 筛选器
+     * @param userId 用户编号
+     * @return 对象数组
+     */
+    List<C> getColumnList(QueryWrapper<C> wrapper, Long userId);
 
 }

@@ -1,7 +1,10 @@
 package org.eoa.projectbudget.service.table_module.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.entity.*;
+import org.eoa.projectbudget.entity.Column;
+import org.eoa.projectbudget.entity.ColumnEntity;
+import org.eoa.projectbudget.entity.Table;
+import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
 import org.eoa.projectbudget.mapper.FormDDLMapper;
@@ -26,7 +29,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
-public class TableEntityServiceImpl implements TableColumnService {
+public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,TableEntity> {
 
     public final String MAIN_TABLE = "form_table_";
     public final String DETAIL_LAG = "_dt_";
@@ -121,9 +124,9 @@ public class TableEntityServiceImpl implements TableColumnService {
     }
 
     @Override
-    public List<? extends Table> getTableFromModule(Long moduleId, Long userId) {
-        log.info("用户:编号=>{}执行查询表单操作\nmoduleId=>{}",userId,moduleId);
-        List<TableEntity> tables = tableMapper.selectList(new QueryWrapper<TableEntity>().eq("moduleId", moduleId));
+    public List<TableEntity> getTableList(QueryWrapper<TableEntity> wrapper, Long userId) {
+        log.info("用户:编号=>{}执行查询表单操作",userId);
+        List<TableEntity> tables = tableMapper.selectList(wrapper);
         log.info("查询完成,结果数量=>{}",tables.size());
         return tables;
     }
@@ -137,7 +140,7 @@ public class TableEntityServiceImpl implements TableColumnService {
             log.error("不存在表单编号=>{}的表单，操作中断",column.getTableNo());
             throw new ParameterException("tableNo",column.getTableNo().toString(),"不存在该表单编号");
         }
-        if (column.getTableNo() == null) {
+        if (column.getColumnViewNo() == null) {
             Integer columnViewNo = columnMapper.getColumnViewNoNew(column.getTableNo());
             log.info("该字段的显示顺序编号=>{}",columnViewNo);
             column.setColumnViewNo(columnViewNo);
@@ -202,9 +205,9 @@ public class TableEntityServiceImpl implements TableColumnService {
     }
 
     @Override
-    public List<ColumnEntity> getColumnByTable(Long tableId, Long userId) {
-        log.info("用户:编号=>{}执行查询表单操作\ntableId=>{}",userId,tableId);
-        List<ColumnEntity> columns = columnMapper.selectList(new QueryWrapper<ColumnEntity>().eq("tableId", tableId));
+    public List<ColumnEntity> getColumnList(QueryWrapper<ColumnEntity> wrapper, Long userId) {
+        log.info("用户:编号=>{}执行查询表单操作",userId);
+        List<ColumnEntity> columns = columnMapper.selectList(wrapper);
         log.info("查询完成,结果数量=>{}",columns.size());
         return columns;
     }

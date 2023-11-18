@@ -8,15 +8,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.ModuleType;
 import org.eoa.projectbudget.entity.ModuleView;
+import org.eoa.projectbudget.entity.TableEntity;
+import org.eoa.projectbudget.entity.TableView;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.service.cache.CacheService;
 import org.eoa.projectbudget.service.table_module.ModuleService;
+import org.eoa.projectbudget.service.table_module.impl.TableEntityServiceImpl;
+import org.eoa.projectbudget.service.table_module.impl.TableViewServiceImpl;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterUtils;
 import org.eoa.projectbudget.utils.factory.ModuleOutFactory;
+import org.eoa.projectbudget.utils.factory.TableFactory;
 import org.eoa.projectbudget.vo.in.ModuleIn;
 import org.eoa.projectbudget.vo.out.ModuleOut;
+import org.eoa.projectbudget.vo.out.TableOut;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +44,12 @@ public class TableBackController {
     ModuleService moduleService;
     @Autowired
     ModuleOutFactory moduleOutFactory;
+    @Autowired
+    TableEntityServiceImpl entityService;
+    @Autowired
+    TableViewServiceImpl viewService;
+    @Autowired
+    TableFactory tableFactory;
 
     @Operation(summary = "获取所有模块信息")
     @GetMapping("/module")
@@ -80,6 +92,7 @@ public class TableBackController {
                                 @RequestBody ModuleIn moduleIn) throws ParameterException {
         ModuleType entity = moduleIn.toEntity(null);
         Long id = moduleService.newOne(entity, humanDto.getDataId());
+        changeFlagUtils.freshDate(ChangeFlagUtils.MODULE);
         if (id!=null)
             return new Vo<>(id);
         else
@@ -113,5 +126,39 @@ public class TableBackController {
         } else
             return new Vo<>(Vo.SERVER_ERROR,"未进行删除,该数据不存在");
     }
+
+    @Operation(summary = "获取表单列表")
+    @GetMapping("/table")
+    @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY)
+    public Vo<List<TableOut>> getTableList(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                           @RequestParam("isVirtual") Boolean isVirtual,
+                                           HttpServletRequest request) throws EoaException {
+        List<TableOut> tableOuts;
+        TableOut[] cache;
+        Long userIdCache = 0L;
+        if (isVirtual) {
+            FilterUtils<TableView> filter = new FilterUtils<>(request.getParameterMap(), TableView.class);
+            String method = filter.getDescription();
+            cache = cacheService.getCache(ChangeFlagUtils.TABLE_VIEW, method,userIdCache,TableOut[].class);
+            if (cache == null) {
+                tableOuts = tableFactory.outs(viewService.getTableList(filter.getWrapper(),humanDto.getDataId()));
+                cacheService.setCache(ChangeFlagUtils.TABLE_VIEW,method,userIdCache,tableOuts);
+            } else {
+                tableOuts = List.of(cache);
+            }
+        }else {
+            FilterUtils<TableEntity> filter = new FilterUtils<>(request.getParameterMap(), TableEntity.class);
+            String method = filter.getDescription();
+            cache = cacheService.getCache(ChangeFlagUtils.TABLE_ENTITY, method,userIdCache,TableOut[].class);
+            if (cache == null) {
+                tableOuts = tableFactory.outs(entityService.getTableList(filter.getWrapper(),humanDto.getDataId()));
+                cacheService.setCache(ChangeFlagUtils.TABLE_ENTITY,method,userIdCache,tableOuts);
+            } else {
+                tableOuts = List.of(cache);
+            }
+        }
+        return new Vo<>(tableOuts);
+    }
+
 
 }
