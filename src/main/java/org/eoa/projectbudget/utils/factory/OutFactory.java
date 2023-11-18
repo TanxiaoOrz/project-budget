@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.utils.factory;
 
+
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * @PackageName: IntelliJ IDEA
  * @ClassName: OutFactory
  * @Description: Vo输出类工厂构造接口
- * @Version: 1.0
+ * @Version: 1.1
  */
 public interface OutFactory<E,O> {
 
@@ -24,5 +25,5 @@ public interface OutFactory<E,O> {
      * @param es 待转化的实体数组
      * @return 输出类数组
      */
-    List<O> outs(List<E> es);
+    List<O> outs(List<? extends E> es);
 }
