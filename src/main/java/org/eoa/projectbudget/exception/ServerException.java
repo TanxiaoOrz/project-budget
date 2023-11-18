@@ -12,9 +12,13 @@ import org.eoa.projectbudget.vo.out.Vo;
  **/
 public class ServerException extends EoaException{
     public ServerException(String description,Exception e) {
-
         e.printStackTrace();
         code=Vo.SERVER_ERROR;
         this.description = description+"\n"+e.getMessage();
+    }
+
+    public ServerException(String description) {
+        code = Vo.SERVER_ERROR;
+        this.description = description;
     }
 }
