@@ -36,7 +36,11 @@ public class FilterUtils<Entity> {
 
     public FilterUtils(Map<String, String[]> map,Class<Entity> clazz) throws ParameterException {
         this.map = map;
-        this.page = new Page(Integer.parseInt(map.get("current")[0]), Integer.parseInt(map.get("pageSize")[0]));
+        try {
+            this.page = new Page(Integer.parseInt(map.get("current")[0]), Integer.parseInt(map.get("pageSize")[0]));
+        }catch (NullPointerException e) {
+            this.page = new Page(1,Integer.MAX_VALUE);
+        }
 
         this.wrapper = new QueryWrapper<>();
         StringBuilder stringBuffer = new StringBuilder();
