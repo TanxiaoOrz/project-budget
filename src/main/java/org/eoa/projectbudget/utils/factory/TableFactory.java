@@ -2,6 +2,7 @@ package org.eoa.projectbudget.utils.factory;
 
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.mapper.HumanMapper;
+import org.eoa.projectbudget.mapper.ModuleTypeMapper;
 import org.eoa.projectbudget.vo.out.TableOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,12 +23,16 @@ import java.util.stream.Collectors;
 public class TableFactory implements OutFactory<Table, TableOut> {
     @Autowired
     HumanMapper humanMapper;
+    @Autowired
+    ModuleTypeMapper moduleTypeMapper;
 
     @Override
     public TableOut out(Table table){
         return new TableOut(table)
                 .setCreateName(humanMapper.selectById(table.getCreator())
-                        .getName());
+                        .getName())
+                .setModuleName(moduleTypeMapper.selectById(table.getModuleNo())
+                        .getModuleTypeName());
 
     }
 

@@ -42,6 +42,7 @@ public class TableOut {
     Long creator;
     String createName;
     Date createTime;
+    String moduleName;
 
     public TableOut(Table table){
         if (table.getClass() == TableEntity.class) {
