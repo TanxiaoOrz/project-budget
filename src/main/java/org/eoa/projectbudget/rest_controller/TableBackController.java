@@ -184,16 +184,12 @@ public class TableBackController {
     @Operation(summary = "创建表单")
     @PostMapping("/table")
     @Parameters({
-            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
     })
-    public Vo<Long> newTable(@RequestParam("isVirtual") Boolean isVirtual,
-                                @RequestAttribute("HumanDto") HumanDto humanDto,
-                                @RequestBody TableIn tableIn) throws EoaException {
+    public Vo<Long> newTable(@RequestAttribute("HumanDto") HumanDto humanDto,
+                             @RequestBody TableIn tableIn) throws EoaException {
         Long id;
-        if (!isVirtual.equals(tableIn.getVirtual()))
-            throw new ParameterException("isVirtual&&virtual","true||false","两次值不一致");
-        if (isVirtual) {
+        if (tableIn.getVirtual()) {
             id = viewService.createTable(tableIn.toEntity(null), humanDto.getDataId());
             changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_VIEW);
         }else {
@@ -212,21 +208,26 @@ public class TableBackController {
             @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
     })
-    public Vo<Integer> updateTable(@RequestParam("isVirtual") Boolean isVirtual,
+    public Vo<String> updateTable(@RequestParam("isVirtual") Boolean isVirtual,
                                 @RequestAttribute("HumanDto") HumanDto humanDto,
                                 @RequestBody TableIn tableIn,
                                 @PathVariable Long id) throws EoaException {
         Integer update;
+        int flag;
         if (isVirtual.equals(tableIn.getVirtual()))
             throw new ParameterException("isVirtual&&virtual","true||false","两次值不一致");
         if (isVirtual) {
             update = viewService.updateTable(tableIn.toEntity(id), humanDto.getDataId());
-            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_VIEW);
+            flag = (ChangeFlagUtils.TABLE_VIEW);
         }else {
             update = entityService.updateTable(tableIn.toEntity(id), humanDto.getDataId());
-            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_ENTITY);
+            flag = (ChangeFlagUtils.TABLE_ENTITY);
         }
-        return new Vo<>(update);
+        if (update==1) {
+            changeFlagUtils.freshDate(flag);
+            return new Vo<>("修改成功");
+        } else
+            return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
     }
 
     @Operation(summary = "删除表单")
@@ -235,18 +236,23 @@ public class TableBackController {
             @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
     })
-    public Vo<Integer> deleteTable(@RequestParam("isVirtual") Boolean isVirtual,
+    public Vo<String> deleteTable(@RequestParam("isVirtual") Boolean isVirtual,
                                    @RequestAttribute("HumanDto") HumanDto humanDto,
                                    @PathVariable Long id) {
         Integer delete;
+        int flag;
         if (isVirtual) {
             delete = viewService.deleteTable(id, humanDto.getDataId());
-            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_VIEW);
+            flag = ChangeFlagUtils.TABLE_VIEW;
         }else {
             delete = entityService.deleteTable(id, humanDto.getDataId());
-            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_ENTITY);
+            flag = ChangeFlagUtils.TABLE_ENTITY;
         }
-        return new Vo<>(delete);
+        if (delete==1) {
+            changeFlagUtils.freshDate(flag);
+            return new Vo<>("删除成功");
+        } else
+            return new Vo<>(Vo.SERVER_ERROR,"未进行删除,该数据不存在");
     }
 
 
