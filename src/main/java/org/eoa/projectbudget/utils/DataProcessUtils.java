@@ -33,4 +33,23 @@ public class DataProcessUtils {
      * @return 是否null或者空
      */
     public static boolean isEmpty(String s) {return s==null || s.equals("");}
+
+    /**
+     * 将数组字符串连接成数据库需要的但字符串形式
+     * @param strings 字符串数组
+     * @return ","分割的字符串
+     */
+    public static String contactStringArray(String[] strings) {
+        if (strings.length>=2) {
+            StringBuilder stringBuffer = new StringBuilder();
+            stringBuffer.append(strings[0]);
+            for (int i = 1; i < strings.length; i++) {
+                stringBuffer.append(',').append(strings[i]);
+            }
+            return stringBuffer.toString();
+        }else if (strings.length == 1) {
+            return strings[0];
+        }else
+            return "";
+    }
 }
