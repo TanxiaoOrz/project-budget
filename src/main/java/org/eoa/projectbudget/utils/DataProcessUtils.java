@@ -6,7 +6,7 @@ package org.eoa.projectbudget.utils;
  * @PackageName: org.eoa.projectbudget.utils
  * @ClassName: DataProcessUtil
  * @Description: 处理数据库中获取的数据
- * @Version 1.0
+ * @Version 1.2
  */
 public class DataProcessUtils {
     /**
@@ -40,6 +40,9 @@ public class DataProcessUtils {
      * @return ","分割的字符串
      */
     public static String contactStringArray(String[] strings) {
+        if (strings == null || strings.length == 0) {
+            return "";
+        }
         if (strings.length>=2) {
             StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append(strings[0]);
@@ -47,9 +50,17 @@ public class DataProcessUtils {
                 stringBuffer.append(',').append(strings[i]);
             }
             return stringBuffer.toString();
-        }else if (strings.length == 1) {
+        }else {
             return strings[0];
-        }else
-            return "";
+        }
+    }
+
+    /**
+     * 将数据库字段数组拆分
+     * @param s 字段数组字符串
+     * @return 拆分后数组
+     */
+    public static String[] splitStringArray(String s) {
+        return s.split(",");
     }
 }
