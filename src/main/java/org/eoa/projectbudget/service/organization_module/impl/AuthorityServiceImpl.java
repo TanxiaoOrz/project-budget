@@ -48,12 +48,6 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
 
 
     @Override
-    public boolean checkAuthority(String authority, Long userId) {
-        // TODO
-        return false;
-    }
-
-    @Override
     public Character getCharacterById(Long characterId, Long userId) {
         // TODO
         return null;

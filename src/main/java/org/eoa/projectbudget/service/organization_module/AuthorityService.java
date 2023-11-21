@@ -1,7 +1,5 @@
 package org.eoa.projectbudget.service.organization_module;
 
-import jakarta.annotation.Nullable;
-import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.vo.Tokens;
@@ -17,14 +15,6 @@ import java.util.List;
  * @Version 1.0
  */
 public interface  AuthorityService {
-
-    /**
-     * 回记录权限解析的日志的同时调用
-     * @param authority 权限描述字符串
-     * @param userId 用户id
-     * @return 该用户id是否符合字符串权限要求
-     */
-    boolean checkAuthority(String authority, Long userId);
 
     /**
      * 获取角色对象
