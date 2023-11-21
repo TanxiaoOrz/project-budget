@@ -23,7 +23,7 @@ public interface TableColumnService<C extends Column,T extends Table> {
      * @param userId 创建人id
      * @return 创建好的表单id
      */
-    Integer createTable(Table table, Long userId) throws ParameterException;
+    Long createTable(Table table, Long userId) throws ParameterException;
 
     /**
      *
@@ -48,7 +48,7 @@ public interface TableColumnService<C extends Column,T extends Table> {
 
     /**
      *
-     * @param moduleId 模块编号
+     * @param userId 用户编号
      * @param wrapper 筛选构造器
      * @return 该应用模块下的所有表单
      */
@@ -58,10 +58,10 @@ public interface TableColumnService<C extends Column,T extends Table> {
      * 添加字段
      * @param column 字段对象
      * @param userId 用户编号
-     * @return 操作数量
+     * @return 创建主键值
      * @throws ParameterException column参数异常
      */
-    Integer addColumn(Column column, Long userId) throws ParameterException;
+    Long addColumn(Column column, Long userId) throws ParameterException;
 
     /**
      * 编辑字段

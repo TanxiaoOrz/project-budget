@@ -47,7 +47,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
 
     @Override
     @Transactional
-    public Integer createTable(Table abstracts, Long userId) throws ParameterException {
+    public Long createTable(Table abstracts, Long userId) throws ParameterException {
         TableEntity table = (TableEntity) abstracts;
 
         log.info("用户:编号=>{}执行新建表单操作\ntable=>{}",userId,table);
@@ -73,7 +73,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
             log.info("创建明细表:表名=>{}",detailTableName);
         }
 
-        return insert;
+        return table.getTableId();
     }
 
     @Override
@@ -132,7 +132,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
     }
 
     @Override
-    public Integer addColumn(Column base, Long userId) throws ParameterException {
+    public Long addColumn(Column base, Long userId) throws ParameterException {
         ColumnEntity column = (ColumnEntity) base;
         log.info("用户:编号=>{}执行新建表单字段操作\ncolumn=>{}",userId,column);
         TableEntity tableEntity = tableMapper.selectById(column.getTableNo());
@@ -158,7 +158,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
         formDDLMapper.createColumn(tableName,column.getColumnDataName(), dateType);
 
         log.info("创建字段名=>{},字段类型=>{},在表单=>{}",column.getColumnDataName(),dateType,tableName);
-        return insert;
+        return column.getColumnId();
     }
 
     @Override

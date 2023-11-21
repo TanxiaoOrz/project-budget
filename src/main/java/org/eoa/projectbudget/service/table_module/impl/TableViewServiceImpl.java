@@ -42,7 +42,7 @@ public class TableViewServiceImpl implements TableColumnService<ColumnView,Table
     private final Logger log = LoggerFactory.getLogger("TableModule");
 
     @Override
-    public Integer createTable(Table abstracts, Long userId) throws ParameterException {
+    public Long createTable(Table abstracts, Long userId) throws ParameterException {
         TableView table = (TableView) abstracts;
 
         log.info("用户:编号=>{}执行新建表单操作\ntable=>{}",userId,table);
@@ -55,7 +55,7 @@ public class TableViewServiceImpl implements TableColumnService<ColumnView,Table
         }
         int insert = tableMapper.insert(table);
         log.info("插入新的表单索引数据,主键编号:{}",table.getTableId());
-        return insert;
+        return table.getTableId();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class TableViewServiceImpl implements TableColumnService<ColumnView,Table
     }
 
     @Override
-    public Integer addColumn(Column base, Long userId) throws ParameterException {
+    public Long addColumn(Column base, Long userId) throws ParameterException {
         ColumnView column = (ColumnView) base;
         log.info("用户:编号=>{}执行新建视图字段操作\ncolumn=>{}",userId,column);
         if (tableMapper.selectById(column.getTableNo()) == null) {
@@ -117,7 +117,7 @@ public class TableViewServiceImpl implements TableColumnService<ColumnView,Table
         }
         Integer insert = columnMapper.insert(column);
         log.info("插入完成,插入后数据=>{}",column);
-        return insert;
+        return column.getColumnId();
     }
 
     @Override
