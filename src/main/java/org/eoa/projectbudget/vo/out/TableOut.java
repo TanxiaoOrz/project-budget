@@ -1,7 +1,5 @@
 package org.eoa.projectbudget.vo.out;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +7,7 @@ import lombok.experimental.Accessors;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.entity.TableView;
+import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.eoa.projectbudget.vo.out.ViewData.DropSelect;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.vo
  * @ClassName: TableOut
  * @Description: 表单的视图传出类
- * @Version 1.0
+ * @Version 1.2
  */
 @Schema(name = "TableOut",title = "表单视图格式")
 @Data
@@ -57,12 +56,7 @@ public class TableOut {
             tableViewName=table.getTableViewName();
             tableDataName=table.getTableDataName();
             moduleNo=table.getModuleNo();
-            try {
-                groupNames=new ObjectMapper().readValue(table.getGroupName(),String[].class);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+            groupNames=DataProcessUtils.splitStringArray(table.getGroupName());
             remark = table.getRemark();
         }
     }
@@ -72,12 +66,7 @@ public class TableOut {
         tableViewName=table.getTableViewName();
         tableDataName=table.getTableDataName();
         moduleNo=table.getModuleNo();
-        try {
-            groupNames=new ObjectMapper().readValue(table.getGroupName(),String[].class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        groupNames = table.getGroupName().split(",");
         remark = table.getRemark();
     }
 
@@ -88,13 +77,8 @@ public class TableOut {
         tableDataName=table.getTableDataName();
         moduleNo=table.getModuleNo();
         workFlowNo=table.getWorkFlowNo();
-        try {
-            detailNames=new ObjectMapper().readValue(table.getDetailName(),String[].class);
-            groupNames=new ObjectMapper().readValue(table.getGroupName(),String[].class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        groupNames = DataProcessUtils.splitStringArray(table.getGroupName());
+        detailNames = DataProcessUtils.splitStringArray(table.getDetailName());
 
         remark = table.getRemark();
     }
