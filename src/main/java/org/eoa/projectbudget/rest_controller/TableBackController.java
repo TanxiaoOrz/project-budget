@@ -2,6 +2,7 @@ package org.eoa.projectbudget.rest_controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import org.eoa.projectbudget.utils.FilterUtils;
 import org.eoa.projectbudget.utils.factory.ModuleOutFactory;
 import org.eoa.projectbudget.utils.factory.TableFactory;
 import org.eoa.projectbudget.vo.in.ModuleIn;
+import org.eoa.projectbudget.vo.in.TableIn;
 import org.eoa.projectbudget.vo.out.ModuleOut;
 import org.eoa.projectbudget.vo.out.TableOut;
 import org.eoa.projectbudget.vo.out.Vo;
@@ -36,6 +38,7 @@ import java.util.List;
 @Tag(name = "表单应用后端接口",description = "需要拥有表单权限的登录用户进行操作")
 @CrossOrigin
 public class TableBackController {
+    public static final Long USER_ID_CACHE = 0L;
     @Autowired
     CacheService cacheService;
     @Autowired
@@ -58,11 +61,10 @@ public class TableBackController {
         FilterUtils<ModuleView> filter = new FilterUtils<>(request.getParameterMap(), ModuleView.class);
         List<ModuleOut> outs;
         String method = filter.getDescription();
-        Long userIdCache = 0L;
-        ModuleOut[] cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, userIdCache, ModuleOut[].class);
+        ModuleOut[] cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, USER_ID_CACHE, ModuleOut[].class);
         if (cache == null) {
             outs = moduleOutFactory.outs(moduleService.getAll(humanDto.getDataId(),filter.getWrapper()));
-            cacheService.setCache(ChangeFlagUtils.Flags[ChangeFlagUtils.MODULE], method, userIdCache,outs);
+            cacheService.setCache(ChangeFlagUtils.Flags[ChangeFlagUtils.MODULE], method, USER_ID_CACHE,outs);
         }else {
             outs = Arrays.asList(cache);
         }
@@ -74,8 +76,8 @@ public class TableBackController {
     @GetMapping("/module/{id}")
     public Vo<ModuleOut> getModule(@RequestAttribute("HumanDto") HumanDto humanDto,
                                    @PathVariable("id") Long id) throws EoaException {
-        final String method = "one";
-        ModuleOut cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, id, ModuleOut.class);
+        final String method = id.toString();
+        ModuleOut cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, USER_ID_CACHE, ModuleOut.class);
         ModuleOut out;
         if (cache == null) {
             ModuleView moduleView = moduleService.getOne(id, humanDto.getDataId());
@@ -135,29 +137,116 @@ public class TableBackController {
                                            HttpServletRequest request) throws EoaException {
         List<TableOut> tableOuts;
         TableOut[] cache;
-        Long userIdCache = 0L;
         if (isVirtual) {
             FilterUtils<TableView> filter = new FilterUtils<>(request.getParameterMap(), TableView.class);
             String method = filter.getDescription();
-            cache = cacheService.getCache(ChangeFlagUtils.TABLE_VIEW, method,userIdCache,TableOut[].class);
+            cache = cacheService.getCache(ChangeFlagUtils.TABLE_VIEW, method,USER_ID_CACHE,TableOut[].class);
             if (cache == null) {
                 tableOuts = tableFactory.outs(viewService.getTableList(filter.getWrapper(),humanDto.getDataId()));
-                cacheService.setCache(ChangeFlagUtils.TABLE_VIEW,method,userIdCache,tableOuts);
+                cacheService.setCache(ChangeFlagUtils.TABLE_VIEW,method,USER_ID_CACHE,tableOuts);
             } else {
                 tableOuts = List.of(cache);
             }
         }else {
             FilterUtils<TableEntity> filter = new FilterUtils<>(request.getParameterMap(), TableEntity.class);
             String method = filter.getDescription();
-            cache = cacheService.getCache(ChangeFlagUtils.TABLE_ENTITY, method,userIdCache,TableOut[].class);
+            cache = cacheService.getCache(ChangeFlagUtils.TABLE_ENTITY, method,USER_ID_CACHE,TableOut[].class);
             if (cache == null) {
                 tableOuts = tableFactory.outs(entityService.getTableList(filter.getWrapper(),humanDto.getDataId()));
-                cacheService.setCache(ChangeFlagUtils.TABLE_ENTITY,method,userIdCache,tableOuts);
+                cacheService.setCache(ChangeFlagUtils.TABLE_ENTITY,method,USER_ID_CACHE,tableOuts);
             } else {
                 tableOuts = List.of(cache);
             }
         }
         return new Vo<>(tableOuts);
+    }
+
+    @Operation(summary = "获取单个表单")
+    @GetMapping("/table/{id}")
+    @Parameters({
+            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
+    })
+    public Vo<TableOut> getTable(@PathVariable Long id,
+                                 @RequestParam("isVirtual") Boolean isVirtual,
+                                 @RequestAttribute("HumanDto")HumanDto humanDto) throws EoaException {
+        TableOut out;
+        String method = id.toString();
+        out = cacheService.getCache(isVirtual?ChangeFlagUtils.TABLE_VIEW:ChangeFlagUtils.TABLE_ENTITY,
+                method,USER_ID_CACHE,TableOut.class);
+        if (out == null) {
+            out = tableFactory.out(isVirtual? viewService.getTableById(id, humanDto.getDataId()) : entityService.getTableById(id, humanDto.getDataId()));
+            cacheService.setCache(isVirtual?ChangeFlagUtils.TABLE_VIEW:ChangeFlagUtils.TABLE_ENTITY,method,USER_ID_CACHE,out);
+        }
+        return new Vo<>(out);
+    }
+
+    @Operation(summary = "创建表单")
+    @PostMapping("/table")
+    @Parameters({
+            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
+    })
+    public Vo<Long> newTable(@RequestParam("isVirtual") Boolean isVirtual,
+                                @RequestAttribute("HumanDto") HumanDto humanDto,
+                                @RequestBody TableIn tableIn) throws EoaException {
+        Long id;
+        if (isVirtual.equals(tableIn.getVirtual()))
+            throw new ParameterException("isVirtual&&virtual","true||false","两次值不一致");
+        if (isVirtual) {
+            id = viewService.createTable(tableIn.toEntity(null), humanDto.getDataId());
+            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_VIEW);
+        }else {
+            id = entityService.createTable(tableIn.toEntity(null), humanDto.getDataId());
+            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_ENTITY);
+        }
+        if (id!=null)
+            return new Vo<>(id);
+        else
+            return new Vo<>(Vo.SERVER_ERROR,"未进行新建,请联系管理员");
+    }
+
+    @Operation(summary = "修改表单")
+    @PutMapping("/table/{id}")
+    @Parameters({
+            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
+    })
+    public Vo<Integer> updateTable(@RequestParam("isVirtual") Boolean isVirtual,
+                                @RequestAttribute("HumanDto") HumanDto humanDto,
+                                @RequestBody TableIn tableIn,
+                                @PathVariable Long id) throws EoaException {
+        Integer update;
+        if (isVirtual.equals(tableIn.getVirtual()))
+            throw new ParameterException("isVirtual&&virtual","true||false","两次值不一致");
+        if (isVirtual) {
+            update = viewService.updateTable(tableIn.toEntity(id), humanDto.getDataId());
+            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_VIEW);
+        }else {
+            update = entityService.updateTable(tableIn.toEntity(id), humanDto.getDataId());
+            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_ENTITY);
+        }
+        return new Vo<>(update);
+    }
+
+    @Operation(summary = "删除表单")
+    @DeleteMapping("/table/{id}")
+    @Parameters({
+            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
+    })
+    public Vo<Integer> deleteTable(@RequestParam("isVirtual") Boolean isVirtual,
+                                   @RequestAttribute("HumanDto") HumanDto humanDto,
+                                   @PathVariable Long id) {
+        Integer delete;
+        if (isVirtual) {
+            delete = viewService.deleteTable(id, humanDto.getDataId());
+            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_VIEW);
+        }else {
+            delete = entityService.deleteTable(id, humanDto.getDataId());
+            changeFlagUtils.freshDate(ChangeFlagUtils.TABLE_ENTITY);
+        }
+        return new Vo<>(delete);
     }
 
 
