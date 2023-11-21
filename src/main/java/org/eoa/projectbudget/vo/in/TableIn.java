@@ -7,8 +7,6 @@ import org.eoa.projectbudget.entity.TableView;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 
-import java.util.Date;
-
 /**
  * @Author: 张骏山
  * @Date: 2023/11/20 11:20
@@ -42,7 +40,7 @@ public class TableIn implements CheckParameter<Table>{
     @Schema(description = "默认共享权限")
     String defaultShare;
     @Schema(description = "是否是虚拟表单")
-    Boolean isVirtual;
+    Boolean virtual;
 
     @Override
     public void checkSelf() throws ParameterException {
@@ -52,16 +50,10 @@ public class TableIn implements CheckParameter<Table>{
         if (moduleNo==null) {
             throw new ParameterException("moduleNo","","没有所属模块编号");
         }
-        if (groupName == null) {
-            throw new ParameterException("groupCount","","没有主表分组数量");
-        }
-        if (isVirtual == null) {
+        if (virtual == null) {
             throw new ParameterException("isVirtual","","没有是否虚拟表单");
         }
-        if (!isVirtual) {
-            if (detailName == null) {
-                throw new ParameterException("detailName","","没有是否明细表数组");
-            }
+        if (!virtual) {
             if (DataProcessUtils.isEmpty(defaultCreate))
                 throw new ParameterException("defaultCreate","","没有默认创建权限");
             if (DataProcessUtils.isEmpty(defaultDelete))
@@ -70,6 +62,9 @@ public class TableIn implements CheckParameter<Table>{
                 throw new ParameterException("defaultShare","","没有默认共享权限");
             if (DataProcessUtils.isEmpty(defaultEdit))
                 throw new ParameterException("defaultEdit","","没有默认删除权限");
+        } else {
+            if (DataProcessUtils.isEmpty(tableDataName))
+                throw new ParameterException("tableDataName","","没有数据库表名");
         }
     }
 
@@ -77,17 +72,17 @@ public class TableIn implements CheckParameter<Table>{
     public Table toEntity(Long dataId) throws ParameterException {
         checkSelf();
         Table table;
-        table = isVirtual?new TableView():new TableEntity();
+        table = virtual ?new TableView():new TableEntity();
         table.setTableId(dataId);
         table.setTableViewName(tableViewName)
                 .setTableDataName(tableDataName)
                 .setModuleNo(moduleNo)
-                .setGroupCount(groupName.length)
+                .setGroupCount(groupName==null?0:groupName.length)
                 .setGroupName(DataProcessUtils.contactStringArray(groupName))
                 .setRemark(remark);
-        if (!isVirtual) {
+        if (!virtual) {
             assert table instanceof TableEntity;
-            ((TableEntity) table).setDetailCount(detailName.length)
+            ((TableEntity) table).setDetailCount(detailName==null?0:detailName.length)
                     .setDetailName(DataProcessUtils.contactStringArray(detailName))
                     .setWorkFlowNo(workFlowNo)
                     .setDefaultCreate(defaultCreate)
@@ -198,11 +193,11 @@ public class TableIn implements CheckParameter<Table>{
     }
 
     public Boolean getVirtual() {
-        return isVirtual;
+        return virtual;
     }
 
     public TableIn setVirtual(Boolean virtual) {
-        isVirtual = virtual;
+        this.virtual = virtual;
         return this;
     }
 }
