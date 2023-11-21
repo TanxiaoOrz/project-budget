@@ -191,7 +191,7 @@ public class TableBackController {
                                 @RequestAttribute("HumanDto") HumanDto humanDto,
                                 @RequestBody TableIn tableIn) throws EoaException {
         Long id;
-        if (isVirtual.equals(tableIn.getVirtual()))
+        if (!isVirtual.equals(tableIn.getVirtual()))
             throw new ParameterException("isVirtual&&virtual","true||false","两次值不一致");
         if (isVirtual) {
             id = viewService.createTable(tableIn.toEntity(null), humanDto.getDataId());
