@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.entity.ModuleType;
-import org.eoa.projectbudget.entity.ModuleView;
-import org.eoa.projectbudget.entity.TableEntity;
-import org.eoa.projectbudget.entity.TableView;
+import org.eoa.projectbudget.entity.*;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.service.cache.CacheService;
@@ -19,10 +16,13 @@ import org.eoa.projectbudget.service.table_module.impl.TableEntityServiceImpl;
 import org.eoa.projectbudget.service.table_module.impl.TableViewServiceImpl;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterUtils;
+import org.eoa.projectbudget.utils.factory.ColumnOutFactory;
 import org.eoa.projectbudget.utils.factory.ModuleOutFactory;
 import org.eoa.projectbudget.utils.factory.TableFactory;
+import org.eoa.projectbudget.vo.in.ColumnIn;
 import org.eoa.projectbudget.vo.in.ModuleIn;
 import org.eoa.projectbudget.vo.in.TableIn;
+import org.eoa.projectbudget.vo.out.ColumnOut;
 import org.eoa.projectbudget.vo.out.ModuleOut;
 import org.eoa.projectbudget.vo.out.TableOut;
 import org.eoa.projectbudget.vo.out.Vo;
@@ -32,6 +32,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @Author 张骏山
+ * @Date 2023/10/10 16:48
+ * @PackageName: org.eoa.projectbudget.rest_controller
+ * @ClassName: TableBackController
+ * @Description: 表单模块后端控制器
+ * @Version 1.5
+ */
 
 @RestController
 @RequestMapping("/api/v1/table/back")
@@ -53,6 +61,8 @@ public class TableBackController {
     TableViewServiceImpl viewService;
     @Autowired
     TableFactory tableFactory;
+    @Autowired
+    ColumnOutFactory columnFactory;
 
     @Operation(summary = "获取所有模块信息")
     @GetMapping("/module")
@@ -183,9 +193,6 @@ public class TableBackController {
 
     @Operation(summary = "创建表单")
     @PostMapping("/table")
-    @Parameters({
-            @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
-    })
     public Vo<Long> newTable(@RequestAttribute("HumanDto") HumanDto humanDto,
                              @RequestBody TableIn tableIn) throws EoaException {
         Long id;
@@ -205,18 +212,14 @@ public class TableBackController {
     @Operation(summary = "修改表单")
     @PutMapping("/table/{id}")
     @Parameters({
-            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "id",description = "表单编号",required = true,in = ParameterIn.PATH)
     })
-    public Vo<String> updateTable(@RequestParam("isVirtual") Boolean isVirtual,
-                                @RequestAttribute("HumanDto") HumanDto humanDto,
+    public Vo<String> updateTable(@RequestAttribute("HumanDto") HumanDto humanDto,
                                 @RequestBody TableIn tableIn,
                                 @PathVariable Long id) throws EoaException {
         Integer update;
         int flag;
-        if (isVirtual.equals(tableIn.getVirtual()))
-            throw new ParameterException("isVirtual&&virtual","true||false","两次值不一致");
-        if (isVirtual) {
+        if (tableIn.getVirtual()) {
             update = viewService.updateTable(tableIn.toEntity(id), humanDto.getDataId());
             flag = (ChangeFlagUtils.TABLE_VIEW);
         }else {
@@ -254,6 +257,127 @@ public class TableBackController {
         } else
             return new Vo<>(Vo.SERVER_ERROR,"未进行删除,该数据不存在");
     }
+    @Operation(summary = "获取字段列表")
+    @GetMapping("/column")
+    @Parameter(name = "isVirtual", description = "是否虚拟视图字段", required = true, in = ParameterIn.QUERY)
+    public Vo<List<ColumnOut>> getColumnList(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                             @RequestParam("isVirtual") Boolean isVirtual,
+                                             HttpServletRequest request) throws EoaException {
+        List<ColumnOut> outs;
+        ColumnOut[] cache;
+        if (isVirtual) {
+            FilterUtils<ColumnView> filters = new FilterUtils<>(request.getParameterMap(),ColumnView.class);
+            String method = filters.getDescription();
+            cache = cacheService.getCache(ChangeFlagUtils.COLUMN_VIEW,method,USER_ID_CACHE,ColumnOut[].class);
+            if (cache == null) {
+                outs = columnFactory.outs(viewService.getColumnList(filters.getWrapper(), humanDto.getDataId()));
+                cacheService.setCache(ChangeFlagUtils.COLUMN_VIEW,method,USER_ID_CACHE,outs);
+            }else {
+                outs = List.of(cache);
+            }
+        }else {
+            FilterUtils<ColumnEntity> filters = new FilterUtils<>(request.getParameterMap(),ColumnEntity.class);
+            String method = filters.getDescription();
+            cache = cacheService.getCache(ChangeFlagUtils.COLUMN_ENTITY,method,USER_ID_CACHE,ColumnOut[].class);
+            if (cache == null) {
+                outs = columnFactory.outs(entityService.getColumnList(filters.getWrapper(), humanDto.getDataId()));
+                cacheService.setCache(ChangeFlagUtils.COLUMN_ENTITY,method,USER_ID_CACHE,outs);
+            }else {
+                outs = List.of(cache);
+            }
+        }
+        return new Vo<>(outs);
+    }
 
+    @Operation(summary = "获取单个字段")
+    @GetMapping("/column/{id}")
+    @Parameters({
+            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "id",description = "字段编号",required = true,in = ParameterIn.PATH)
+    })
+    public Vo<ColumnOut> getColumn(@RequestParam("isVirtual") Boolean isVirtual,
+                                   @RequestAttribute("HumanDto") HumanDto humanDto,
+                                   @PathVariable Long id) throws EoaException {
+        ColumnOut out;
+        String method = id.toString();
+        if (isVirtual) {
+            out = cacheService.getCache(ChangeFlagUtils.COLUMN_VIEW,method,USER_ID_CACHE,ColumnOut.class);
+            if (out == null) {
+                out = columnFactory.out(viewService.getColumnById(id, humanDto.getDataId()));
+                cacheService.setCache(ChangeFlagUtils.COLUMN_VIEW,method, USER_ID_CACHE,out);
+            }
+        } else {
+            out = cacheService.getCache(ChangeFlagUtils.COLUMN_ENTITY,method,USER_ID_CACHE,ColumnOut.class);
+            if (out == null) {
+                out = columnFactory.out(entityService.getColumnById(id, humanDto.getDataId()));
+                cacheService.setCache(ChangeFlagUtils.COLUMN_ENTITY,method, USER_ID_CACHE,out);
+            }
+        }
+        return new Vo<>(out);
+    }
+
+    @Operation(summary = "新建字段")
+    @PostMapping("/column")
+    public Vo<Long> newColumn(@RequestAttribute("HumanDto") HumanDto humanDto,
+                              @RequestBody ColumnIn columnIn) throws ParameterException {
+        Long id;
+        if (columnIn.getVirtual()) {
+            id = viewService.addColumn(columnIn.toEntity(null), humanDto.getDataId());
+        } else {
+            id = entityService.addColumn(columnIn.toEntity(null), humanDto.getDataId());
+        }
+        if (id != null)
+            return new Vo<>(id);
+        else
+            return new Vo<>(Vo.SERVER_ERROR,"未进行新建,请联系管理员");
+    }
+
+    @Operation(summary = "更新字段属性")
+    @PutMapping("/column/{id}")
+    @Parameter(name = "id",description = "字段编号",required = true,in = ParameterIn.PATH)
+    public Vo<String> updateColumn(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                   @RequestBody ColumnIn columnIn,
+                                   @PathVariable Long id) throws ParameterException {
+        Integer update;
+        int flag;
+        if (columnIn.getVirtual()) {
+            update = viewService.alterColumn(columnIn.toEntity(id), humanDto.getDataId());
+            flag = ChangeFlagUtils.COLUMN_VIEW;
+        } else {
+            update = viewService.alterColumn(columnIn.toEntity(id), humanDto.getDataId());
+            flag = ChangeFlagUtils.COLUMN_ENTITY;
+        }
+        if (update==1) {
+            changeFlagUtils.freshDate(flag);
+            return new Vo<>("修改成功");
+        } else
+            return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
+    }
+
+    @Operation(summary = "更新字段属性")
+    @DeleteMapping("/column/{id}")
+    @Parameters({
+            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "id",description = "字段编号",required = true,in = ParameterIn.PATH)
+    })
+    public Vo<String> deleteColumn(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                   @RequestParam("isVirtual") Boolean isVirtual,
+                                   @PathVariable Long id) throws ParameterException {
+        Integer delete;
+        int flag;
+
+        if (isVirtual) {
+            delete = viewService.deleteColumn(id, humanDto.getDataId());
+            flag = ChangeFlagUtils.COLUMN_VIEW;
+        } else {
+            delete = entityService.deleteColumn(id, humanDto.getDataId());
+            flag = ChangeFlagUtils.COLUMN_ENTITY;
+        }
+        if (delete==1) {
+            changeFlagUtils.freshDate(flag);
+            return new Vo<>("删除成功");
+        } else
+            return new Vo<>(Vo.SERVER_ERROR,"未进行删除,该数据不存在");
+    }
 
 }
