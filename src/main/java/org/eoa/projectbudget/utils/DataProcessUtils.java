@@ -19,6 +19,15 @@ public class DataProcessUtils {
     }
 
     /**
+     * boolean转换成int
+     * @param b 传入的boolean
+     * @return 转换后的tinyInt值
+     */
+    public static int translateBooleanToInteger(boolean b) {
+        return b?1:0;
+    }
+
+    /**
      * 可能的null转换成空字符串
      * @param s 传入的判断字符串
      * @return 若为空则将其转换为""
