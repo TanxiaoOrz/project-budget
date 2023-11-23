@@ -134,6 +134,8 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
     @Override
     public Long addColumn(Column base, Long userId) throws ParameterException {
         ColumnEntity column = (ColumnEntity) base;
+        column.setCreateTime(new Date());
+        column.setCreator(userId);
         log.info("用户:编号=>{}执行新建表单字段操作\ncolumn=>{}",userId,column);
         TableEntity tableEntity = tableMapper.selectById(column.getTableNo());
         if (tableEntity == null) {

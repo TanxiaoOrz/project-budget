@@ -105,6 +105,8 @@ public class TableViewServiceImpl implements TableColumnService<ColumnView,Table
     @Override
     public Long addColumn(Column base, Long userId) throws ParameterException {
         ColumnView column = (ColumnView) base;
+        column.setCreateTime(new Date());
+        column.setCreator(userId);
         log.info("用户:编号=>{}执行新建视图字段操作\ncolumn=>{}",userId,column);
         if (tableMapper.selectById(column.getTableNo()) == null) {
             log.error("不存在表单编号=>{}的表单，操作中断",column.getTableNo());
