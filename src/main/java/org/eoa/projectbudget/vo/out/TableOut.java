@@ -59,6 +59,7 @@ public class TableOut {
             groupNames=DataProcessUtils.splitStringArray(table.getGroupName());
             remark = table.getRemark();
         }
+        generateSelect();
     }
 
     private void viewCreate(TableView table) {
@@ -83,12 +84,14 @@ public class TableOut {
         remark = table.getRemark();
     }
 
-    public TableOut generateSelect() {
-        int detailCount = detailNames.length;
-        if (detailCount >0){
-            detailSelect = new ArrayList<>(detailCount);
-            for (int i = 0; i < detailCount; i++) {
-                detailSelect.add(new DropSelect(i,detailNames[i],true,null));
+    private void generateSelect() {
+        if (!virtual) {
+            int detailCount = detailNames.length;
+            if (detailCount > 0) {
+                detailSelect = new ArrayList<>(detailCount);
+                for (int i = 0; i < detailCount; i++) {
+                    detailSelect.add(new DropSelect(i, detailNames[i], true, null));
+                }
             }
         }
         int groupCount = groupNames.length;
@@ -98,6 +101,5 @@ public class TableOut {
                 groupSelect.add(new DropSelect(i,groupNames[i],true,null));
             }
         }
-        return this;
     }
 }
