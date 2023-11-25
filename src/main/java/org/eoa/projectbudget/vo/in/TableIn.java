@@ -27,7 +27,7 @@ public class TableIn implements CheckParameter<Table>{
     String[] groupName;
     @Schema(description = "表单描述")
     String remark;
-    @Schema(description = "流程编号")
+    @Schema(description = "流程编号",deprecated = true)
     String workFlowNo;
     @Schema(description = "明细表名称数组")
     String[] detailName;
