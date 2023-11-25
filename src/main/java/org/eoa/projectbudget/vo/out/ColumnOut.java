@@ -46,7 +46,7 @@ public class ColumnOut{
     Integer columnDetailNo;
     @Schema(description = "字段是否展示")
     Boolean columnViewDisplay;
-    @Schema(description = "字段是否展示")
+    @Schema(description = "字段是否虚拟表单字段")
     Boolean virtual;
 
     public ColumnOut(Column column) {
