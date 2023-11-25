@@ -27,21 +27,44 @@ import java.util.List;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class TableOut {
+    @Schema(description = "表单编号")
     Long tableId;
+    @Schema(description = "表单显示名称")
     String tableViewName;
+    @Schema(description = "表单数据库名称`")
     String tableDataName;
+    @Schema(description = "表单所属模块")
     Long moduleNo;
+    @Schema(description = "流程编号",deprecated = true)
     String workFlowNo;
+    @Schema(description = "明细表名称数组")
     String[] detailNames;
+    @Schema(description = "明细选择框列表")
     List<DropSelect> detailSelect;
+    @Schema(description = "主表分组名称数组")
     String[] groupNames;
+    @Schema(description = "主表选择框列表")
     List<DropSelect> groupSelect;
+    @Schema(description = "表单描述")
     String remark;
+    @Schema(description = "是否是虚拟表单")
     Boolean virtual;
+    @Schema(description = "创建人id")
     Long creator;
+    @Schema(description = "创建名称")
     String createName;
+    @Schema(description = "创建时间")
     Date createTime;
+    @Schema(description = "模块名称")
     String moduleName;
+    @Schema(description = "默认编辑权限")
+    String defaultEdit;
+    @Schema(description = "默认创建权限")
+    String defaultCreate;
+    @Schema(description = "默认删除权限")
+    String defaultDelete;
+    @Schema(description = "默认共享权限")
+    String defaultShare;
 
     public TableOut(Table table){
         if (table.getClass() == TableEntity.class) {
@@ -80,7 +103,10 @@ public class TableOut {
         workFlowNo=table.getWorkFlowNo();
         groupNames = DataProcessUtils.splitStringArray(table.getGroupName());
         detailNames = DataProcessUtils.splitStringArray(table.getDetailName());
-
+        defaultCreate = table.getDefaultCreate();
+        defaultDelete = table.getDefaultDelete();
+        defaultEdit = table.getDefaultEdit();
+        defaultShare = table.getDefaultShare();
         remark = table.getRemark();
     }
 
