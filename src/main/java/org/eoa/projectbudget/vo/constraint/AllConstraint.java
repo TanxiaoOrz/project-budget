@@ -29,8 +29,8 @@ public class AllConstraint implements FormSolve, AuthoritySolve {
 
     @Override
     public boolean solve(HumanDto user, Form<Column, Table> form) throws EoaException {
-        Integer start =(Integer) form.getMainValue(this.start);
-        Integer end = (Integer) form.getMainValue(this.end);
+        Float start =(Float) form.getMainValue(this.start);
+        Float end = (Float) form.getMainValue(this.end);
         if (start == null) {
             throw new DataException(form.getTable().getTableDataName(),form.getDataId().toString(),"authority",this.start.toString(),
                     String.format("%d不在该表单的字段中",this.start));
