@@ -2,13 +2,9 @@ package org.eoa.projectbudget.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +35,7 @@ public abstract class Column {
             "TEXT",
             "NUMBER",
             "BROWSER_BOX",
-            "int",
+            "SELECT_ITEM",
             "DATETIME",
             "FILE"
     });
