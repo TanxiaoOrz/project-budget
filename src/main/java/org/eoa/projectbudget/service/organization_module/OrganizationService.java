@@ -1,11 +1,14 @@
 package org.eoa.projectbudget.service.organization_module;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Depart;
 import org.eoa.projectbudget.entity.HumanResource;
 import org.eoa.projectbudget.entity.HumanResourceView;
 import org.eoa.projectbudget.entity.Section;
 import org.eoa.projectbudget.exception.ParameterException;
+
+import java.util.List;
 
 /**
  * @Author 张骏山
@@ -81,5 +84,11 @@ public interface OrganizationService {
     Section getSection(Long SectionId, Long userId);
 
     Integer dropSection(Long SectionId, Long userId, boolean recursion);
+
+    List<HumanResourceView> getHumanList(QueryWrapper<HumanResourceView> wrapper,Long userId);
+
+    List<Depart> getDepartList(QueryWrapper<Depart> wrapper,Long userId);
+
+    List<Section> getSectionList(QueryWrapper<Section> wrapper,Long userId);
 
 }
