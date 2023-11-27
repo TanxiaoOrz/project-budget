@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -80,5 +81,9 @@ public class FilterUtils<Entity> {
 
     public String getDescription() {
         return description;
+    }
+
+    public <out> List<out> filt(List<out> entities) {
+        return entities.subList(page.getStart(), page.getEnd(entities.size()));
     }
 }

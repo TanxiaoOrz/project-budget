@@ -78,8 +78,7 @@ public class TableBackController {
         }else {
             outs = Arrays.asList(cache);
         }
-        List<ModuleOut> returns = outs.subList(filter.getPage().getStart(), filter.getPage().getEnd(outs.size()));
-        return new Vo<>(returns,outs.size());
+        return new Vo<>(filter.filt(outs),outs.size());
     }
 
     @Operation(summary = "获取单个模块信息")
@@ -146,6 +145,7 @@ public class TableBackController {
                                            @RequestParam("isVirtual") Boolean isVirtual,
                                            HttpServletRequest request) throws EoaException {
         List<TableOut> tableOuts;
+        List<TableOut> returns;
         TableOut[] cache;
         if (isVirtual) {
             FilterUtils<TableView> filter = new FilterUtils<>(request.getParameterMap(), TableView.class);
@@ -157,6 +157,7 @@ public class TableBackController {
             } else {
                 tableOuts = List.of(cache);
             }
+            returns = filter.filt(tableOuts);
         }else {
             FilterUtils<TableEntity> filter = new FilterUtils<>(request.getParameterMap(), TableEntity.class);
             String method = filter.getDescription();
@@ -167,8 +168,9 @@ public class TableBackController {
             } else {
                 tableOuts = List.of(cache);
             }
+            returns = filter.filt(tableOuts);
         }
-        return new Vo<>(tableOuts);
+        return new Vo<>(returns, tableOuts.size());
     }
 
     @Operation(summary = "获取单个表单")
@@ -264,6 +266,7 @@ public class TableBackController {
                                              @RequestParam("isVirtual") Boolean isVirtual,
                                              HttpServletRequest request) throws EoaException {
         List<ColumnOut> outs;
+        List<ColumnOut> returns;
         ColumnOut[] cache;
         if (isVirtual) {
             FilterUtils<ColumnView> filters = new FilterUtils<>(request.getParameterMap(),ColumnView.class);
@@ -275,6 +278,7 @@ public class TableBackController {
             }else {
                 outs = List.of(cache);
             }
+            returns = filters.filt(outs);
         }else {
             FilterUtils<ColumnEntity> filters = new FilterUtils<>(request.getParameterMap(),ColumnEntity.class);
             String method = filters.getDescription();
@@ -285,8 +289,9 @@ public class TableBackController {
             }else {
                 outs = List.of(cache);
             }
+            returns = filters.filt(outs);
         }
-        return new Vo<>(outs);
+        return new Vo<>(returns,outs.size());
     }
 
     @Operation(summary = "获取单个字段")
