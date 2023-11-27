@@ -6,13 +6,19 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.eoa.projectbudget.entity.Authority;
+import org.eoa.projectbudget.entity.Character;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.exception.ParameterException;
+import org.eoa.projectbudget.mapper.AuthorityMapper;
+import org.eoa.projectbudget.mapper.CharacterMapper;
 import org.eoa.projectbudget.service.organization_module.AuthorityService;
 import org.eoa.projectbudget.vo.Tokens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +52,22 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
 
     Logger log = LoggerFactory.getLogger("AuthorityModule");
 
+    @Autowired
+    AuthorityMapper authorityMapper;
+    @Autowired
+    CharacterMapper characterMapper;
+
+    @Override
+    public Authority getAuthorityById(Long authorityId, Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<Authority> getAllAuthority(QueryWrapper<Authority> wrapper, Long userId) {
+        List<Authority> authorities = authorityMapper.selectList(wrapper);
+        log.info("用户=>{}获取角色列表,获取到{}个",userId,authorities.size());
+        return authorities;
+    }
 
     @Override
     public Character getCharacterById(Long characterId, Long userId) {
@@ -54,9 +76,10 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     }
 
     @Override
-    public List<Character> getAllCharacter(Long userId) {
-        // TODO
-        return null;
+    public List<Character> getAllCharacter(QueryWrapper<Character> wrapper, Long userId) {
+        List<Character> characters = characterMapper.selectList(wrapper);
+        log.info("用户=>{}获取角色列表,获取到{}个",userId,characters.size());
+        return characters;
     }
 
     @Override
