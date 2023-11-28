@@ -58,11 +58,14 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
             log.error("指定模块编号:{}对应模块不存在,回滚",table.getModuleNo());
             throw new ParameterException("moduleNo",table.getModuleNo().toString(),"该id对应的应用模块不存在");
         }
-        int insert = tableMapper.insert(table);
-        log.info("插入新的表单索引数据,主键编号:{}",table.getTableId());
 
         String mainTableName = MAIN_TABLE + table.getTableId();
         table.setTableDataName(mainTableName);
+
+        int insert = tableMapper.insert(table);
+        log.info("插入新的表单索引数据,主键编号:{}",table.getTableId());
+
+
         tableMapper.updateById(table);
         log.info("创建主表:表名=>{}",mainTableName);
 
