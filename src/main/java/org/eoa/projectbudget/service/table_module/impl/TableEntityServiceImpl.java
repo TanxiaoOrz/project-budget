@@ -59,12 +59,15 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
             throw new ParameterException("moduleNo",table.getModuleNo().toString(),"该id对应的应用模块不存在");
         }
 
-        String mainTableName = MAIN_TABLE + table.getTableId();
-        table.setTableDataName(mainTableName);
+        table.setTableDataName("");
 
         int insert = tableMapper.insert(table);
         log.info("插入新的表单索引数据,主键编号:{}",table.getTableId());
 
+        String mainTableName = MAIN_TABLE + table.getTableId();
+        table.setTableDataName(mainTableName);
+
+        tableMapper.updateById(table);
 
         tableMapper.updateById(table);
         log.info("创建主表:表名=>{}",mainTableName);
