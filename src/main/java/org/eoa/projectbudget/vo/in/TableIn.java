@@ -53,16 +53,7 @@ public class TableIn implements CheckParameter<Table>{
         if (virtual == null) {
             throw new ParameterException("isVirtual","","没有是否虚拟表单");
         }
-        if (!virtual) {
-            if (DataProcessUtils.isEmpty(defaultCreate))
-                throw new ParameterException("defaultCreate","","没有默认创建权限");
-            if (DataProcessUtils.isEmpty(defaultDelete))
-                throw new ParameterException("defaultDelete","","没有默认删除权限");
-            if (DataProcessUtils.isEmpty(defaultShare))
-                throw new ParameterException("defaultShare","","没有默认共享权限");
-            if (DataProcessUtils.isEmpty(defaultEdit))
-                throw new ParameterException("defaultEdit","","没有默认删除权限");
-        } else {
+        if (virtual) {
             if (DataProcessUtils.isEmpty(tableDataName))
                 throw new ParameterException("tableDataName","","没有数据库表名");
         }
