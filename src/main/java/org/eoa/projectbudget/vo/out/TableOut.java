@@ -82,6 +82,7 @@ public class TableOut {
             groupNames=DataProcessUtils.splitStringArray(table.getGroupName());
             remark = table.getRemark();
         }
+        creator = table.getCreator();
         generateSelect();
     }
 
