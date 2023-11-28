@@ -48,8 +48,18 @@ public class AuthorityUtils {
 
     public static final List<Class<?>> clazzList = Arrays.asList(clazz);
 
-
+    /**
+     * 检验user对象是否在限制结构的creator限制内,如果限制对象传入的是null直接返回false
+     * @param user 检测对象
+     * @param creator 创建者对象
+     * @param authorityConstraint 限制结构体
+     * @return 是否在限制内
+     * @throws AuthoritySolveException
+     */
     public static boolean checkAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint) throws AuthoritySolveException {
+        if (authorityConstraint == null) {
+            return false;
+        }
         String bodyType = authorityConstraint.getBodyType();
         if (bodyType == null || bodyType.equals("")) {
             return false;
@@ -65,6 +75,9 @@ public class AuthorityUtils {
     }
 
     public static boolean checkTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint) throws EoaException {
+        if (authorityConstraint == null) {
+            return false;
+        }
         String tableType = authorityConstraint.getBodyType();
         if (tableType == null || tableType.equals("")) {
             return false;
@@ -79,7 +92,15 @@ public class AuthorityUtils {
         return false;
     }
 
+    /**
+     * 获取限制对象,如果空字符串传入,返回null
+     * @param authorityString 限制对象存储字符串
+     * @return 限制对象
+     * @throws AuthoritySolveException json字符串出错
+     */
     public static Constraint getConstraint(String authorityString) throws AuthoritySolveException {
+        if (DataProcessUtils.isEmpty(authorityString))
+            return null;
         Constraint authorityConstraint;
         try {
             authorityConstraint = new ObjectMapper().readValue(authorityString, Constraint.class);
