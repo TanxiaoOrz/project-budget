@@ -1,8 +1,11 @@
 package org.eoa.projectbudget.service.organization_module;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.eoa.projectbudget.entity.Authority;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.vo.Tokens;
+import org.eoa.projectbudget.entity.Character;
 
 import java.util.List;
 
@@ -12,9 +15,24 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service
  * @ClassName: AuthorityService
  * @Description: 权限处理业务类
- * @Version 1.0
+ * @Version 1.3
  */
 public interface  AuthorityService {
+    /**
+     * 获取指定权限
+     * @param authorityId 权限id
+     * @param userId 操作人
+     * @return 权限
+     */
+    Authority getAuthorityById(Long authorityId, Long userId);
+
+    /**
+     * 权限列表
+     * @param wrapper 筛选器
+     * @param userId 操作人
+     * @return 权限
+     */
+    List<Authority> getAllAuthority(QueryWrapper<Authority> wrapper, Long userId);
 
     /**
      * 获取角色对象
@@ -29,7 +47,7 @@ public interface  AuthorityService {
      * @param userId 操作用户
      * @return 角色数组
      */
-    List<Character> getAllCharacter(Long userId);
+    List<Character> getAllCharacter(QueryWrapper<Character> wrapper, Long userId);
 
     /**
      * 新建角色
