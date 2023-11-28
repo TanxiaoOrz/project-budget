@@ -24,12 +24,18 @@ public class ColumnOutFactory implements OutFactory<Column, ColumnOut> {
     HumanMapper humanMapper;
     @Override
     public ColumnOut out(Column column) {
+        if (column == null) {
+            return null;
+        }
         return new ColumnOut(column)
                 .setCreatorName(humanMapper.selectById(column.getCreator()).getName());
     }
 
     @Override
     public List<ColumnOut> outs(List<? extends Column> columns) {
+        if (columns == null) {
+            return null;
+        }
         return columns.stream().map(this::out).collect(Collectors.toList());
     }
 }

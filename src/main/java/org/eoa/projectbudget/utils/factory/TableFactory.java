@@ -28,6 +28,9 @@ public class TableFactory implements OutFactory<Table, TableOut> {
 
     @Override
     public TableOut out(Table table){
+        if (table == null) {
+            return null;
+        }
         return new TableOut(table)
                 .setCreateName(humanMapper.selectById(table.getCreator())
                         .getName())
@@ -38,6 +41,9 @@ public class TableFactory implements OutFactory<Table, TableOut> {
 
     @Override
     public List<TableOut> outs(List<? extends Table> tables) {
+        if (tables == null) {
+            return null;
+        }
         return tables.stream().map(this::out).collect(Collectors.toList());
     }
 }

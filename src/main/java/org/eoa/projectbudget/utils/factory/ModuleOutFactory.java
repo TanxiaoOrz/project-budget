@@ -26,6 +26,9 @@ public class ModuleOutFactory implements OutFactory<ModuleView,ModuleOut> {
 
     @Override
     public ModuleOut out(ModuleView moduleView) {
+        if (moduleView == null) {
+            return null;
+        }
         return new ModuleOut(moduleView.getModuleTypeId(),
                 moduleView.getModuleTypeName(),
                 moduleView.getWorkflowRemark(),
@@ -40,6 +43,8 @@ public class ModuleOutFactory implements OutFactory<ModuleView,ModuleOut> {
 
     @Override
     public List<ModuleOut> outs(List<? extends ModuleView> moduleViews) {
+        if (null == moduleViews)
+            return null;
         return moduleViews.stream().map(this::out).collect(Collectors.toList());
     }
 }
