@@ -83,6 +83,7 @@ public class TableOut {
             remark = table.getRemark();
         }
         creator = table.getCreator();
+        createTime = table.getCreateTime();
         generateSelect();
     }
 
