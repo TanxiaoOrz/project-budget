@@ -71,7 +71,7 @@ public class HumanOut {
         this.dataId = humanResourceView.getDataId();
         this.loginName = humanResourceView.getLoginName();
         this.name = humanResourceView.getName();
-        this.sex = humanResourceView.sex;
+        this.sex = humanResourceView.getSex();
         this.birth = humanResourceView.getBirth();
         this.telephone = humanResourceView.getTelephone();
         this.mail = humanResourceView.getMail();
