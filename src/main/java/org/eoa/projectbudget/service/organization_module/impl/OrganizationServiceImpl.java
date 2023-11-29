@@ -2,7 +2,10 @@ package org.eoa.projectbudget.service.organization_module.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.entity.*;
+import org.eoa.projectbudget.entity.Depart;
+import org.eoa.projectbudget.entity.HumanResource;
+import org.eoa.projectbudget.entity.HumanResourceView;
+import org.eoa.projectbudget.entity.Section;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.*;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
@@ -14,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author: 张骏山
@@ -160,16 +161,22 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public List<HumanResourceView> getHumanList(QueryWrapper<HumanResourceView> wrapper, Long userId) {
-        return null;
+        List<HumanResourceView> humanResourceViews = humanViewMapper.selectList(wrapper);
+        log.info("用户=>{}获取人员表单,获取数量=>{}",userId,humanResourceViews.size());
+        return humanResourceViews;
     }
 
     @Override
     public List<Depart> getDepartList(QueryWrapper<Depart> wrapper, Long userId) {
-        return null;
+        List<Depart> departs = departMapper.selectList(wrapper);
+        log.info("用户=>{}获取部门表单,获取数量=>{}",userId,departs.size());
+        return departs;
     }
 
     @Override
     public List<Section> getSectionList(QueryWrapper<Section> wrapper, Long userId) {
-        return null;
+        List<Section> sections = sectionMapper.selectList(wrapper);
+        log.info("用户=>{}获取分部表单,获取数量=>{}",userId,sections.size());
+        return sections;
     }
 }
