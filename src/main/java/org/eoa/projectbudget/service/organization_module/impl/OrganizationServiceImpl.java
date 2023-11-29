@@ -157,4 +157,19 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Integer dropSection(Long SectionId, Long userId, boolean recursion) {
         return null;
     }
+
+    @Override
+    public List<HumanResourceView> getHumanList(QueryWrapper<HumanResourceView> wrapper, Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<Depart> getDepartList(QueryWrapper<Depart> wrapper, Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<Section> getSectionList(QueryWrapper<Section> wrapper, Long userId) {
+        return null;
+    }
 }
