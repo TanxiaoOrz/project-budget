@@ -18,7 +18,7 @@ import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterUtils;
 import org.eoa.projectbudget.utils.factory.ColumnOutFactory;
 import org.eoa.projectbudget.utils.factory.ModuleOutFactory;
-import org.eoa.projectbudget.utils.factory.TableFactory;
+import org.eoa.projectbudget.utils.factory.TableOutFactory;
 import org.eoa.projectbudget.vo.in.ColumnIn;
 import org.eoa.projectbudget.vo.in.ModuleIn;
 import org.eoa.projectbudget.vo.in.TableIn;
@@ -60,7 +60,7 @@ public class TableBackController {
     @Autowired
     TableViewServiceImpl viewService;
     @Autowired
-    TableFactory tableFactory;
+    TableOutFactory tableOutFactory;
     @Autowired
     ColumnOutFactory columnFactory;
 
@@ -152,7 +152,7 @@ public class TableBackController {
             String method = filter.getDescription();
             cache = cacheService.getCache(ChangeFlagUtils.TABLE_VIEW, method,USER_ID_CACHE,TableOut[].class);
             if (cache == null) {
-                tableOuts = tableFactory.outs(viewService.getTableList(filter.getWrapper(),humanDto.getDataId()));
+                tableOuts = tableOutFactory.outs(viewService.getTableList(filter.getWrapper(),humanDto.getDataId()));
                 cacheService.setCache(ChangeFlagUtils.TABLE_VIEW,method,USER_ID_CACHE,tableOuts);
             } else {
                 tableOuts = List.of(cache);
@@ -163,7 +163,7 @@ public class TableBackController {
             String method = filter.getDescription();
             cache = cacheService.getCache(ChangeFlagUtils.TABLE_ENTITY, method,USER_ID_CACHE,TableOut[].class);
             if (cache == null) {
-                tableOuts = tableFactory.outs(entityService.getTableList(filter.getWrapper(),humanDto.getDataId()));
+                tableOuts = tableOutFactory.outs(entityService.getTableList(filter.getWrapper(),humanDto.getDataId()));
                 cacheService.setCache(ChangeFlagUtils.TABLE_ENTITY,method,USER_ID_CACHE,tableOuts);
             } else {
                 tableOuts = List.of(cache);
@@ -187,7 +187,7 @@ public class TableBackController {
         out = cacheService.getCache(isVirtual?ChangeFlagUtils.TABLE_VIEW:ChangeFlagUtils.TABLE_ENTITY,
                 method,USER_ID_CACHE,TableOut.class);
         if (out == null) {
-            out = tableFactory.out(isVirtual? viewService.getTableById(id, humanDto.getDataId()) : entityService.getTableById(id, humanDto.getDataId()));
+            out = tableOutFactory.out(isVirtual? viewService.getTableById(id, humanDto.getDataId()) : entityService.getTableById(id, humanDto.getDataId()));
             cacheService.setCache(isVirtual?ChangeFlagUtils.TABLE_VIEW:ChangeFlagUtils.TABLE_ENTITY,method,USER_ID_CACHE,out);
         }
         return new Vo<>(out);

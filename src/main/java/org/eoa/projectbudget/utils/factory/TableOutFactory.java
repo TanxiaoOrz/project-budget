@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
  * @Author: 张骏山
  * @Date: 2023/11/19 0:02
  * @PackageName: IntelliJ IDEA
- * @ClassName: TableFactory
+ * @ClassName: TableOutFactory
  * @Description: Table相关输出类的构造工厂
  * @Version: 1.0
  */
 
 @Component
-public class TableFactory implements OutFactory<Table, TableOut> {
+public class TableOutFactory implements OutFactory<Table, TableOut> {
     @Autowired
     HumanMapper humanMapper;
     @Autowired
