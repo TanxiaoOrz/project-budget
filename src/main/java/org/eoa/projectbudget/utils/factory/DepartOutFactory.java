@@ -1,6 +1,8 @@
 package org.eoa.projectbudget.utils.factory;
 
 import org.eoa.projectbudget.entity.Depart;
+import org.eoa.projectbudget.entity.HumanResource;
+import org.eoa.projectbudget.entity.Section;
 import org.eoa.projectbudget.mapper.DepartMapper;
 import org.eoa.projectbudget.mapper.HumanMapper;
 import org.eoa.projectbudget.mapper.SectionMapper;
@@ -33,10 +35,13 @@ public class DepartOutFactory implements OutFactory<Depart, DepartOut> {
         if (depart == null) {
             return null;
         }
+        HumanResource humanResource = humanMapper.selectById(depart.getDepartManager());
+        Depart depart1 = departMapper.selectById(depart.getBelongDepart());
+        Section section = sectionMapper.selectById(depart.getBelongSection());
         return new DepartOut(depart)
-                .setManagerName(humanMapper.selectById(depart.getDepartManager()).getName())
-                .setBelongDepartName(departMapper.selectById(depart.getBelongDepart()).getDepartName())
-                .setBelongSectionName(sectionMapper.selectById(depart.getBelongSection()).getSectionName());
+                .setManagerName(humanResource==null?null:humanResource.getName())
+                .setBelongDepartName(depart1==null?null:depart1.getDepartName())
+                .setBelongSectionName(section==null?null:section.getSectionName());
     }
 
     @Override

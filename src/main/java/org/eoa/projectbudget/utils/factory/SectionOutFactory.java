@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.utils.factory;
 
+import org.eoa.projectbudget.entity.HumanResource;
 import org.eoa.projectbudget.entity.Section;
 import org.eoa.projectbudget.mapper.HumanMapper;
 import org.eoa.projectbudget.mapper.SectionMapper;
@@ -30,9 +31,11 @@ public class SectionOutFactory implements OutFactory<Section, SectionOut> {
         if (section == null) {
             return null;
         }
+        HumanResource humanResource = humanMapper.selectById(section.getSectionManager());
+        Section section1 = sectionMapper.selectById(section.getBelongSection());
         return new SectionOut(section)
-                .setManagerName(humanMapper.selectById(section.getSectionManager()).getName())
-                .setBelongSectionName(sectionMapper.selectById(section.getBelongSection()).getSectionName());
+                .setManagerName(humanResource==null?null:humanResource.getName())
+                .setBelongSectionName(section1==null?null:section1.getSectionName());
     }
 
     @Override
