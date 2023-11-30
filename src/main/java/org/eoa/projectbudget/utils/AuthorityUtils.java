@@ -54,7 +54,7 @@ public class AuthorityUtils {
      * @param creator 创建者对象
      * @param authorityConstraint 限制结构体
      * @return 是否在限制内
-     * @throws AuthoritySolveException
+     * @throws AuthoritySolveException 权限字符串包裹异常
      */
     public static boolean checkAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint) throws AuthoritySolveException {
         if (authorityConstraint == null) {
