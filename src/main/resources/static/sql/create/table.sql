@@ -161,14 +161,14 @@ create table `character` (
     `creator` BIGINT(64) UNSIGNED NOT NULL COMMENT '创建者id',
     PRIMARY KEY (`dataId`),
     UNIQUE INDEX `characterName_Unique` (`characterName` ASC)
-) comment = "角色表单";
+) comment = '角色表单';
 
 create table `character_human` (
     `humanId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,人员唯一id',
     `characterId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
     `grade` int not null default 0 comment '角色作用级别',
     PRIMARY KEY (`humanId`,`characterId`)
-) comment = "角色人员索引表";
+) comment = '角色人员索引表';
 
 create table `authority` (
     `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,权限唯一id',
@@ -176,19 +176,19 @@ create table `authority` (
     `authorityDescription` varchar(100) null comment  '权限描述',
     `authorityRemark` varchar(100) null comment  '权限备注,用来描述那些角色或人员拥有该权限',
     PRIMARY key (`dataId`)
-) comment = "后端操作权限表";
+) comment = '后端操作权限表';
 
 create table `authority_character` (
     `characterId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
     `authorityId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,权限唯一id',
     PRIMARY KEY (`characterId`,`authorityId`)
-) comment = "角色权限索引表";
+) comment = '角色权限索引表';
 
 create table `authority_human` (
     `humanId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,人员唯一id',
     `authorityId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,权限唯一id',
     PRIMARY KEY (`humanId`,`authorityId`)
-) comment = "人员权限索引表";
+) comment = '人员权限索引表';
 
 -- 文件目录表单
 
