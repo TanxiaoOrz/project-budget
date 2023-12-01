@@ -135,6 +135,8 @@ public class TableViewServiceImpl implements TableColumnService<ColumnView,Table
             log.error("不允许修改字段所属的表单,原表单编号=>{},新表单编号=>{}",old.getTableNo(),column.getTableNo());
             throw new ParameterException("tableNo",column.getTableNo().toString(),"不允许修改所属表单");
         }
+        column.setCreateTime(new Date());
+        column.setCreator(userId);
         int update = columnMapper.updateById(column);
         log.info("修改完成,修改数量=>{}",update);
         return update;
