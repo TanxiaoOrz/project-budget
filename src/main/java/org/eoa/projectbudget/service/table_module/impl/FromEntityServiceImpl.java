@@ -4,6 +4,8 @@ import org.eoa.projectbudget.entity.ColumnEntity;
 import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.service.table_module.FormService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.Map;
  */
 @Service
 public class FromEntityServiceImpl implements FormService<ColumnEntity, TableEntity> {
+
+    private final Logger log = LoggerFactory.getLogger("TableModule");
 
     @Override
     public Form<ColumnEntity, TableEntity> getFormOne(Long tableId, Long dataId, Long userId) {
