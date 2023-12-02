@@ -2,6 +2,7 @@ package org.eoa.projectbudget.dto;
 
 import org.eoa.projectbudget.entity.HumanResourceView;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -10,9 +11,9 @@ import java.util.*;
  * @PackageName: org.eoa.projectbudget.dto
  * @ClassName: HumanDto
  * @Description: 人力资源计算及缓存时的实体对象
- * @Version 1.0
+ * @Version 1.1
  **/
-public class HumanDto extends HumanResourceView {
+public class HumanDto extends HumanResourceView implements Serializable {
     HashMap<Long,Integer> characters;
     HashSet<Integer> authorities;
     HashSet<Long> leaderRecursion;

@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.exception.ParameterException;
@@ -33,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
  * @PackageName: org.eoa.projectbudget.rest_controller
  * @ClassName: TokenController
  * @Description: Token相关处理接口
- * @Version: 1.0
+ * @Version: 1.1
  **/
 
 @RestController
@@ -57,7 +56,6 @@ public class TokenController implements InitializingBean {
     CacheService cacheService;
 
     String flag;
-    String method = "TOKEN";
 
     @PostMapping
     @Operation(summary = "获取token认证", description = "输入登入名和密码,回传token字符串")
@@ -66,9 +64,8 @@ public class TokenController implements InitializingBean {
             @RequestBody Login login)
             throws EoaException, JsonProcessingException {
         login.checkSelf();
-        HumanDto humanDto = organizationService.getHumanDto(login.getLoginName(),login.getPassword());
-        cacheService.setCache(flag,method,humanDto.getDataId(),humanDto);
-        Tokens tokens = authorityService.getTokens(humanDto.getDataId());
+        Long id = organizationService.checkLogin(login.getLoginName(), login.getPassword());
+        Tokens tokens = authorityService.getTokens(id);
         return new Vo<>(JWT.create().withClaim("tokens",new ObjectMapper().writeValueAsString(tokens)).sign(algorithm));
     }
 

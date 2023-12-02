@@ -12,6 +12,8 @@ import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -24,7 +26,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service.organization_module.impl
  * @ClassName: OrganizationServiceImpl
  * @Description: TODO
- * @Version: 1.0
+ * @Version: 1.1
  **/
 
 @Service
@@ -50,6 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "humanDto",key = "#humanResource.dataId")
     public Integer updateHuman(HumanResource humanResource, Long userId) {
         return null;
     }
@@ -60,19 +63,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public HumanDto getHumanDto(String loginName, String password) throws ParameterException {
+    public Long checkLogin(String loginName, String password) throws ParameterException {
         log.info("用户名=>{}尝试登录",loginName);
         HumanResourceView humanResourceView = humanViewMapper.selectOne(new QueryWrapper<HumanResourceView>().eq("loginName", loginName).eq("password", password));
-
         if (humanResourceView == null) {
             log.info("未检索到符合输入用户名与密码的人员");
             throw new ParameterException("longinName",loginName,"用户名或密码不正确");
         }
-
-        Long humanId = humanResourceView.getDataId();
-        log.info("检索到对应人员dataId=>{}", humanId);
-
-        return getHumanDto(humanResourceView);
+        return humanResourceView.getDataId();
     }
 
     private HumanDto getHumanDto(HumanResourceView humanResourceView) {
@@ -103,18 +101,27 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    @Cacheable(cacheNames = "humanDto",key = "#humanId")
     public HumanDto getHumanDto(Long humanId, Long userId) throws ParameterException {
+        if (userId == null) {
+            HumanResourceView humanResourceView = humanViewMapper.selectById(humanId);
+            if (humanResourceView == null) {
+                return null;
+            }
+            return getHumanDto(humanResourceView);
+        }
         log.info("用户=>{}重新获取人员数据=>{}",userId,humanId);
         HumanResourceView humanResourceView = humanViewMapper.selectById(humanId);
         if (humanResourceView == null) {
             log.info("无该编号成员");
-            throw new ParameterException("humanId",humanId.toString(),"用户名或密码不正确");
+            throw new ParameterException("humanId",humanId.toString(),"无该编号成员");
         }
         log.info("获取成功");
         return getHumanDto(humanResourceView);
     }
 
     @Override
+    @CacheEvict(cacheNames = "humanDto",key = "#humanId")
     public Integer dropHuman(Long humanId, Long userId) {
         return null;
     }

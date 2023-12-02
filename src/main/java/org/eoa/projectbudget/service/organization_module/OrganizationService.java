@@ -16,7 +16,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service.organization_module
  * @ClassName: OrganizationService
  * @Description: 组织架构业务层声明
- * @Version 1.0
+ * @Version 1.1
  */
 public interface OrganizationService {
 
@@ -45,12 +45,13 @@ public interface OrganizationService {
     HumanResourceView getHuman(Long humanId, Long userId);
 
     /**
-     * 用户登录
+     * 用户登录验证
      * @param userName 用户名
      * @param password 密码
-     * @return 结果
+     * @return 用户id
+     * @throws ParameterException 用户名密码不正确
      */
-    HumanDto getHumanDto(String userName, String password) throws ParameterException;
+    Long checkLogin(String userName, String password) throws ParameterException;
 
     /**
      * 缓存过期时获取用户数据
