@@ -202,7 +202,7 @@ create table `file_storage` (
     `editAuthority` json null comment  '编辑权限描述',
     `viewAuthority` json null comment  '查看权限描述',
     `deleteAuthority` json null comment  '删除权限描述',
-    `leadContent` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,所在目录唯一id',
+    `leadContent` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,所在目录唯一id,null',
     primary key (`dataId`),
     INDEX `leadContent_FOREIGN` (`leadContent` ASC)
 ) COMMENT = '文件存储';
@@ -218,7 +218,7 @@ create table `content_list` (
     `defaultCreate` json null comment  '创建权限描述',
     `defaultDelete` json null comment  '删除权限描述',
     `defaultShare` json null comment  '共享权限描述',
-    `leadContent` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,所在目录唯一id',
+    `leadContent` BIGINT(64) UNSIGNED NULL COMMENT '数据编号,所在目录唯一id',
     primary key (`dataId`),
     INDEX `leadContent_FOREIGN` (`leadContent` ASC)
 ) COMMENT = '目录';
