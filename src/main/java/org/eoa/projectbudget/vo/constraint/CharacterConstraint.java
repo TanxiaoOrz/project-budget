@@ -20,8 +20,8 @@ import java.util.Set;
  * @Date: 2023/10/31 11:15
  * @PackageName: org.eoa.projectbudget.utils.authority
  * @ClassName: Character
- * @Description: TODO
- * @Version 1.0
+ * @Description: 角色限制校验
+ * @Version 1.1
  **/
 @Data
 @Accessors(chain = true)
@@ -30,6 +30,7 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
 
     @Override
     public boolean solve(HumanDto user, HumanDto creator) {
+
         for (Group group :
                 characters) {
             Integer userGrade = user.getCharacters().get(group.characterId);
@@ -40,12 +41,20 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
                 switch (userGrade) {
                     case 0:
                         return true;
-                    case 1:
+                    case 1: {
+                        if (creator == null) {
+                            return false;
+                        }
                         if (creator.getSectionRecursion().contains(user.getSection()))
                             return true;
-                    case 2:
+                    }
+                    case 2: {
+                        if (creator == null) {
+                            return false;
+                        }
                         if (creator.getDepart().equals(user.getDepart()))
                             return true;
+                    }
                 }
         }
         return false;

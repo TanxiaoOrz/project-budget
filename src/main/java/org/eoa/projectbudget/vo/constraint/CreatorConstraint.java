@@ -1,6 +1,5 @@
 package org.eoa.projectbudget.vo.constraint;
 
-import lombok.Data;
 import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
@@ -12,9 +11,9 @@ import org.eoa.projectbudget.utils.authority.FormSolve;
 /**
  * @Author: 张骏山
  * @Date: 2023/10/31 11:17
- * @PackageName: org.eoa.projectbudget.utils.authority
- * @ClassName: Creator
- * @Description: TODO
+ * @PackageName: org.eoa.projectbudget.vo.constraint
+ * @ClassName: CreatorConstraint
+ * @Description: 创建者限制校验
  * @Version 1.0
  **/
 
@@ -28,6 +27,9 @@ public class CreatorConstraint implements AuthoritySolve, FormSolve {
 
     @Override
     public boolean solve(HumanDto user, HumanDto creator) {
+        if (creator == null) {
+            return false;
+        }
         Long userId = creator.getDataId();
         if (self && user.getDataId().equals(userId))
             return true;
