@@ -7,7 +7,6 @@ import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Authority;
 import org.eoa.projectbudget.entity.Character;
 import org.eoa.projectbudget.exception.EoaException;
-import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.service.cache.CacheService;
 import org.eoa.projectbudget.service.organization_module.AuthorityService;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
@@ -32,7 +31,7 @@ import java.util.List;
 @RestController
 @Tag(name = "前端的权限对象获取控制器")
 @CrossOrigin
-@RequestMapping("/api/v1/front/authority")
+@RequestMapping("/api/v1/authority/front")
 public class AuthorityFrontController {
 
     @Autowired
