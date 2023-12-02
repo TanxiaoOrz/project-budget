@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.exception.ParameterException;
-import org.eoa.projectbudget.mapper.HumanMapper;
 import org.eoa.projectbudget.mapper.HumanViewMapper;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.vo.constraint.*;
@@ -13,7 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Author: 张骏山
@@ -41,19 +43,23 @@ class AuthorityUtilsTest {
     CreatorConstraint creatorConstraint;
     ProposedConstraint proposedConstraint;
 
+//    String constraintStr = """
+//            {
+//                "bodyType":"allConstraint,createConstraint,characterConstraint,proposedConstraint,authorityConstraint",
+//                "body":{
+//                    "characterConstraint":"{\\"characters\\":[{\\"characterId\\":2,\\"grade\\":0}]}",
+//                    "proposedConstraint":"{\\"humans\\":[0,2],\\"departs\\":[1,2],\\"sections\\":[1,2]}",
+//                    "allConstraint":"{\\"start\\":5,\\"end\\":100}",
+//                    "authorityConstraint":"{\\"authorities\\":[1]}",
+//                    "createConstraint":"{\\"self\\":true,\\"leader\\":false,\\"leaderRecursion\\":false,\\"depart\\":false,\\"section\\":false,\\"sectionRecursive\\":false}"
+//                },
+//                "tableType":null,
+//                "table":null
+//            }
+//            """;
+
     String constraintStr = """
-            {
-                "bodyType":"allConstraint,createConstraint,characterConstraint,proposedConstraint,authorityConstraint",
-                "body":{
-                    "characterConstraint":"{\\"characters\\":[{\\"characterId\\":2,\\"grade\\":0}]}",
-                    "proposedConstraint":"{\\"humans\\":[0,2],\\"departs\\":[1,2],\\"sections\\":[1,2]}",
-                    "allConstraint":"{\\"start\\":5,\\"end\\":100}",
-                    "authorityConstraint":"{\\"authorities\\":[1]}",
-                    "createConstraint":"{\\"self\\":true,\\"leader\\":false,\\"leaderRecursion\\":false,\\"depart\\":false,\\"section\\":false,\\"sectionRecursive\\":false}"
-                },
-                "tableType":null,
-                "table":null
-            }
+            {"body": {"allConstarint": "{\\"start\\":1,\\"end\\":50}", "allConstraint": "{\\"start\\":1,\\"end\\":45}", "createConstraint": "{\\"self\\":true,\\"leader\\":true,\\"leaderRecursion\\":true,\\"depart\\":true,\\"section\\":false,\\"sectionRecursive\\":true}", "proposedConstraint": "{\\"humans\\":[1,2],\\"departs\\":[],\\"section\\":[]}", "characterConstraint": "[{\\"characterId\\":1,\\"grade\\":0},{\\"characterId\\":2,\\"grade\\":1}]"}, "table": {"proposedConstraint": "{\\"humans\\":[],\\"departs\\":[],\\"section\\":[]}"}, "bodyType": "allConstraint,createConstraint,proposedConstraint,characterConstraint,proposedConstraint,", "tableType": ""}
             """;
 
     @Test
@@ -121,6 +127,7 @@ class AuthorityUtilsTest {
 
     @Test
     void checkAuthority() throws AuthoritySolveException, ParameterException {
+        constraint = AuthorityUtils.getConstraint(constraintStr);
         HumanDto sysadmin = organizationService.getHumanDto(1L, 1L);
         HumanDto tourist = organizationService.getHumanDto(2L,1L);
         System.out.println("AuthorityUtils.checkAuthority(sysadmin,tourist,constraint) = " + AuthorityUtils.checkAuthority(sysadmin, tourist, constraint));
