@@ -10,7 +10,7 @@ import org.eoa.projectbudget.utils.DataProcessUtils;
  * @PackageName: org.eoa.projectbudget.vo.in
  * @ClassName: FileIn
  * @Description: 文件传入类
- * @Version: 1.0
+ * @Version: 1.0.1
  **/
 public class FileIn implements CheckParameter<File> {
     String fileName;
@@ -41,7 +41,8 @@ public class FileIn implements CheckParameter<File> {
                 .setEditAuthority(editAuthority)
                 .setViewAuthority(viewAuthority)
                 .setDeleteAuthority(deleteAuthority)
-                .setLeadContent(leadContent);
+                .setLeadContent(leadContent)
+                .setIsDeprecated(1);
     }
 
     public String getFileName() {
