@@ -27,11 +27,16 @@ public class ChangeFlagUtils {
     public static final int COLUMN_VIEW = 3;
     public static final int CHARACTER = 4;
     public static final int AUTHORITY = 5;
+    public static final int CONTENT = 6;
+
+    public static final int FILE = 7;
+
     public static final String[] Flags = {
             "HUMAN","MODUlE",
             "TABLE_ENTITY","TABLE_VIEW",
             "COLUMN_ENTITY","COLUMN_VIEW",
-            "CHARACTER","AUTHORITY"
+            "CHARACTER","AUTHORITY",
+            "CONTENT","FILE"
     };
     private final HashMap<String, Date> flagMap = new HashMap<>();
     private final HashMap<Long, Date> userMap = new HashMap<>();
