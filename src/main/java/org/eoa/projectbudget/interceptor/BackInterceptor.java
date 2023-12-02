@@ -14,8 +14,8 @@ import java.util.List;
  * @Date: 2023/11/16 19:20
  * @PackageName: IntelliJ IDEA
  * @ClassName: BackInterceptor
- * @Description: TODO
- * @Version: 1.1
+ * @Description: 后端权限控制检测器
+ * @Version: 1.2
  */
 public class BackInterceptor implements HandlerInterceptor {
 
