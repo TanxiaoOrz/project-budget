@@ -43,4 +43,58 @@ public class FileIn implements CheckParameter<File> {
                 .setDeleteAuthority(deleteAuthority)
                 .setLeadContent(leadContent);
     }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public FileIn setFileName(String fileName) {
+        this.fileName = fileName;
+        return this;
+    }
+
+    public String getFileRoute() {
+        return fileRoute;
+    }
+
+    public FileIn setFileRoute(String fileRoute) {
+        this.fileRoute = fileRoute;
+        return this;
+    }
+
+    public String getEditAuthority() {
+        return editAuthority;
+    }
+
+    public FileIn setEditAuthority(String editAuthority) {
+        this.editAuthority = editAuthority;
+        return this;
+    }
+
+    public String getViewAuthority() {
+        return viewAuthority;
+    }
+
+    public FileIn setViewAuthority(String viewAuthority) {
+        this.viewAuthority = viewAuthority;
+        return this;
+    }
+
+    public String getDeleteAuthority() {
+        return deleteAuthority;
+    }
+
+    public FileIn setDeleteAuthority(String deleteAuthority) {
+        this.deleteAuthority = deleteAuthority;
+        return this;
+    }
+
+    public Long getLeadContent() {
+        return leadContent;
+    }
+
+    public FileIn setLeadContent(Long leadContent) {
+        this.leadContent = leadContent;
+        return this;
+    }
 }
