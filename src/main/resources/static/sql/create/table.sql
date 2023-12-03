@@ -193,7 +193,7 @@ create table `authority_human` (
 -- 文件目录表单
 
 create table `file_storage` (
-    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,文件唯一id',
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,文件唯一id',
     `isDeprecated` tinyInt null default 0 comment '0否1是废弃',
     `fileName` varchar(100) null comment  '文件名',
     `fileRoute` varchar(1000) not null comment  '文件路径',
@@ -208,7 +208,7 @@ create table `file_storage` (
 ) COMMENT = '文件存储';
 
 create table `content_list` (
-    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,目录唯一id',
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,目录唯一id',
     `isDeprecated` tinyInt null default 0 comment '0否1是废弃',
     `contentName` varchar(100) null comment  '目录名',
     `contentRemark` varchar(1000) not null comment  '目录描述',
