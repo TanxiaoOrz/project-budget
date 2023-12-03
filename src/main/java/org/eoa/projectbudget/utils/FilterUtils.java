@@ -17,7 +17,7 @@ import java.util.Map;
  * @Date: 2023/11/16 21:16
  * @PackageName: IntelliJ IDEA
  * @ClassName: FilterUtils
- * @Description: TODO
+ * @Description: 过滤器工具
  * @Version: 1.0
  */
 public class FilterUtils<Entity> {
@@ -54,18 +54,22 @@ public class FilterUtils<Entity> {
             } catch (NoSuchFieldException e) {
                 continue;
             }
-            String typeName = declaredField.getType().getTypeName();
-            if (typeName.equals(STRING))
-                wrapper.like(column, value[0]);
-            else if (typeName.equals(DATE)) {
-                String[] split = value[0].split(",");
-                try {
-                    wrapper.between(column, FORMAT.parse(split[0]), FORMAT.parse(split[1]));
-                } catch (ParseException e) {
-                    throw new ParameterException(column, value[0], "日期格式错误");
-                }
-            } else
-                wrapper.eq(column, value[0]);
+            if (value[0].equals("null")) {
+                wrapper.isNull(column);
+            } else {
+                String typeName = declaredField.getType().getTypeName();
+                if (typeName.equals(STRING))
+                    wrapper.like(column, value[0]);
+                else if (typeName.equals(DATE)) {
+                    String[] split = value[0].split(",");
+                    try {
+                        wrapper.between(column, FORMAT.parse(split[0]), FORMAT.parse(split[1]));
+                    } catch (ParseException e) {
+                        throw new ParameterException(column, value[0], "日期格式错误");
+                    }
+                } else
+                    wrapper.eq(column, value[0]);
+            }
             stringBuffer.append(column).append(":").append(Arrays.toString(value));
         }
         description = stringBuffer.toString();
