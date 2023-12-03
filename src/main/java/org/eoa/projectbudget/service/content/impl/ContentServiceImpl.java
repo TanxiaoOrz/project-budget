@@ -52,9 +52,11 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Long newContent(Content content, Long userId) throws ParameterException {
         content.setCreator(userId).setCreateTime(new Date());
-        Content lead = contentMapper.selectById(content.getLeadContent());
-        if (lead == null) {
-            throw new ParameterException("leadContent",content.getLeadContent().toString(),"不存在该目录");
+        if (content.getLeadContent() != null){
+            Content lead = contentMapper.selectById(content.getLeadContent());
+            if (lead == null) {
+                throw new ParameterException("leadContent", content.getLeadContent().toString(), "不存在该目录");
+            }
         }
         contentMapper.insert(content);
         log.info("用户=>{}创建目录=>{}",userId,content.getDataId());
