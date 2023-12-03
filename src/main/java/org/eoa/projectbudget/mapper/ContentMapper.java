@@ -22,6 +22,6 @@ public interface ContentMapper extends BaseMapper<Content> {
      * @param dataId 数据编号
      * @return 修改数量
      */
-    @Update("update content_list set isDeprecated = 0 where dataId = #{dataId}")
+    @Update("update content_list set isDeprecated = 1 where dataId = #{dataId}")
     Integer drop(@Param("dataId") Long dataId);
 }

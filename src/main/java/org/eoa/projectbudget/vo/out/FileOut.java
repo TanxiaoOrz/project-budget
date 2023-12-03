@@ -15,7 +15,7 @@ import java.util.Date;
  **/
 public class FileOut {
     Long dataId;
-    Boolean isDeprecated;
+    Boolean deprecated;
     String fileName;
     String fileRoute;
     Long creator;
@@ -33,7 +33,7 @@ public class FileOut {
 
     public FileOut(File file) {
         this.dataId = file.getDataId();
-        this.isDeprecated = DataProcessUtils.translateIntegerToBoolean(file.getIsDeprecated());
+        this.deprecated = DataProcessUtils.translateIntegerToBoolean(file.getIsDeprecated());
         this.fileName = file.getFileName();
         this.fileRoute = file.getFileRoute();
         this.creator = file.getCreator();
@@ -54,11 +54,11 @@ public class FileOut {
     }
 
     public Boolean getDeprecated() {
-        return isDeprecated;
+        return deprecated;
     }
 
     public FileOut setDeprecated(Boolean deprecated) {
-        isDeprecated = deprecated;
+        this.deprecated = deprecated;
         return this;
     }
 

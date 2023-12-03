@@ -21,6 +21,6 @@ public interface FileMapper extends BaseMapper<File> {
      * @param dataId 数据编号
      * @return 修改数量
      */
-    @Update("update file_storage set isDeprecated = 0 where dataId = #{dataId}")
+    @Update("update file_storage set isDeprecated = 1 where dataId = #{dataId}")
     Integer drop(@Param("dataId") Long dataId);
 }

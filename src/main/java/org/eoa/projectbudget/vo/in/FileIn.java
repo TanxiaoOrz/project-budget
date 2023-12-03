@@ -42,7 +42,7 @@ public class FileIn implements CheckParameter<File> {
                 .setViewAuthority(viewAuthority)
                 .setDeleteAuthority(deleteAuthority)
                 .setLeadContent(leadContent)
-                .setIsDeprecated(1);
+                .setIsDeprecated(0);
     }
 
     public String getFileName() {
