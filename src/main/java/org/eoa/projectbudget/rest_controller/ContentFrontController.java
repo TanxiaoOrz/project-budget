@@ -46,6 +46,7 @@ import java.util.List;
 @RestController
 @Tag(name = "目录模块前端接口")
 @RequestMapping("/api/v1/content/front")
+@CrossOrigin
 public class ContentFrontController {
 
     @Autowired
@@ -76,6 +77,7 @@ public class ContentFrontController {
 
     @GetMapping(value = "/content")
     @Operation(summary = "获取目录清单")
+    @SuppressWarnings("Duplicates")
     public Vo<List<ContentOut>> getContentList(@RequestAttribute("HumanDto")HumanDto humanDto,
                                                HttpServletRequest request) throws EoaException {
         FilterUtils<Content> filter = new FilterUtils<>(request.getParameterMap(), Content.class);
@@ -99,7 +101,8 @@ public class ContentFrontController {
     }
 
     @GetMapping(value = "/content/{id}")
-    @Operation(summary = "获取文件清单")
+    @Operation(summary = "获取具体目录")
+    @SuppressWarnings("Duplicates")
     public Vo<ContentOut> getContent(@RequestAttribute("HumanDto")HumanDto humanDto,
                                @PathVariable Long id) throws EoaException {
         ContentOut out = cacheService.getCache(ChangeFlagUtils.CONTENT,id.toString(), USER_ID_CACHE, ContentOut.class);
@@ -119,7 +122,7 @@ public class ContentFrontController {
         FilterUtils<File> filter = new FilterUtils<>(request.getParameterMap(), File.class);
         List<FileOut> outs;
         String method = filter.getDescription();
-        FileOut[] cache = cacheService.getCache(ChangeFlagUtils.CONTENT,method, humanDto.getDataId(), FileOut[].class);
+        FileOut[] cache = cacheService.getCache(ChangeFlagUtils.FILE,method, humanDto.getDataId(), FileOut[].class);
         if (cache == null) {
             outs = fileOutFactory.outs(contentService.getFileList(filter.getWrapper(), humanDto.getDataId())).stream().filter(fileOut -> {
                 try {
@@ -129,7 +132,7 @@ public class ContentFrontController {
                     return false;
                 }
             }).toList();
-            cacheService.setCache(ChangeFlagUtils.CONTENT,method, humanDto.getDataId(), outs);
+            cacheService.setCache(ChangeFlagUtils.FILE,method, humanDto.getDataId(), outs);
         } else {
             outs = Arrays.asList(cache);
         }
@@ -140,9 +143,10 @@ public class ContentFrontController {
     @Operation(summary = "获取文件清单")
     public Vo<FileOut> getFile(@RequestAttribute("HumanDto")HumanDto humanDto,
                                @PathVariable Long id) throws EoaException {
-        FileOut out = cacheService.getCache(ChangeFlagUtils.CONTENT,id.toString(), USER_ID_CACHE, FileOut.class);
+        FileOut out = cacheService.getCache(ChangeFlagUtils.FILE,id.toString(), USER_ID_CACHE, FileOut.class);
         if (out == null) {
             out = fileOutFactory.out(contentService.getFile(id, humanDto.getDataId()));
+            cacheService.setCache(ChangeFlagUtils.FILE,id.toString(),USER_ID_CACHE,FileOut.class);
         }
         if (AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(out.getCreator(),null),AuthorityUtils.getConstraint(out.getViewAuthority())))
             return new Vo<>(out);
