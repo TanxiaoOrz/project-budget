@@ -15,9 +15,6 @@ import org.eoa.projectbudget.utils.DataProcessUtils;
 public class FileIn implements CheckParameter<File> {
     String fileName;
     String fileRoute;
-    String editAuthority;
-    String viewAuthority;
-    String deleteAuthority;
     Long leadContent;
     @Override
     public void checkSelf() throws ParameterException {
@@ -38,9 +35,6 @@ public class FileIn implements CheckParameter<File> {
         return new File().setDataId(dataId)
                 .setFileName(fileName)
                 .setFileRoute(fileRoute)
-                .setEditAuthority(editAuthority)
-                .setViewAuthority(viewAuthority)
-                .setDeleteAuthority(deleteAuthority)
                 .setLeadContent(leadContent)
                 .setIsDeprecated(0);
     }
@@ -60,33 +54,6 @@ public class FileIn implements CheckParameter<File> {
 
     public FileIn setFileRoute(String fileRoute) {
         this.fileRoute = fileRoute;
-        return this;
-    }
-
-    public String getEditAuthority() {
-        return editAuthority;
-    }
-
-    public FileIn setEditAuthority(String editAuthority) {
-        this.editAuthority = editAuthority;
-        return this;
-    }
-
-    public String getViewAuthority() {
-        return viewAuthority;
-    }
-
-    public FileIn setViewAuthority(String viewAuthority) {
-        this.viewAuthority = viewAuthority;
-        return this;
-    }
-
-    public String getDeleteAuthority() {
-        return deleteAuthority;
-    }
-
-    public FileIn setDeleteAuthority(String deleteAuthority) {
-        this.deleteAuthority = deleteAuthority;
         return this;
     }
 

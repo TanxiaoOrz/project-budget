@@ -67,12 +67,32 @@ public class ContentFrontController {
     private final long USER_ID_CACHE = 0L;
 
 
-    @PostMapping(value = "/upload")
-    @Operation(summary = "上传文件")
+    @PostMapping(value = "/upload/content")
+    @Operation(summary = "上传文件,目录模块上传")
+    @Parameter(name = "leadContent",description = "上级目录",required = true,in = ParameterIn.QUERY)
     // 此处的@RequestParam中的file名应与前端upload组件中的name的值保持一致
-    public Vo<String> upload(@RequestPart("file") MultipartFile multipartFile
-                            ,@RequestAttribute("HumanDto")HumanDto humanDto) throws EoaException, IOException {
-        return new Vo<>(fileService.upload(multipartFile, humanDto.getDataId()));
+    public Vo<String> uploadC(@RequestPart("file") MultipartFile multipartFile
+                            ,@RequestAttribute("HumanDto")HumanDto humanDto
+                            ,@RequestParam("leadContent") Long leadContent) throws EoaException, IOException {
+        Content content = contentService.getContent(leadContent, humanDto.getDataId());
+        if (AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(content.getCreator(),null),AuthorityUtils.getConstraint(content.getDefaultCreate()))) {
+            String upload = fileService.upload(multipartFile, humanDto.getDataId());
+            return new Vo<>(upload);
+        } else
+            throw new AuthorityException(humanDto.getDataId(), "Content", leadContent,"上传文件");
+    }
+    @PostMapping(value = "/upload/form")
+    @Operation(summary = "上传文件,表单模块上传,返回新建的文件id")
+    @Parameter(name = "leadContent",description = "上级目录",required = true,in = ParameterIn.QUERY)
+    public Vo<Long> uploadF(@RequestPart("file") MultipartFile multipartFile
+            ,@RequestAttribute("HumanDto")HumanDto humanDto
+            ,@RequestParam("leadContent") Long leadContent) throws EoaException, IOException {
+
+        String upload = fileService.upload(multipartFile, humanDto.getDataId());
+        File file = new FileIn().setFileName(multipartFile.getName()).setLeadContent(leadContent).setFileRoute(upload).toEntity(null);
+        Long id = contentService.newFile(file, humanDto.getDataId());
+        return new Vo<>(id);
+
     }
 
     @GetMapping(value = "/content")
@@ -102,6 +122,7 @@ public class ContentFrontController {
 
     @GetMapping(value = "/content/{id}")
     @Operation(summary = "获取具体目录")
+    @Parameter(name = "id",description = "数据编号",required = true,in = ParameterIn.PATH)
     @SuppressWarnings("Duplicates")
     public Vo<ContentOut> getContent(@RequestAttribute("HumanDto")HumanDto humanDto,
                                @PathVariable Long id) throws EoaException {
@@ -117,6 +138,8 @@ public class ContentFrontController {
 
     @GetMapping(value = "/file")
     @Operation(summary = "获取文件清单")
+    @Parameter(name = "leadContent",description = "上级目录",required = true,in = ParameterIn.QUERY)
+    @Parameter(name = "isDeprecated",description = "是否废弃",required = false,in = ParameterIn.QUERY)
     public Vo<List<FileOut>> getFileList(@RequestAttribute("HumanDto")HumanDto humanDto,
                                             HttpServletRequest request) throws EoaException {
         FilterUtils<File> filter = new FilterUtils<>(request.getParameterMap(), File.class);
@@ -141,6 +164,7 @@ public class ContentFrontController {
 
     @GetMapping(value = "/file/{id}")
     @Operation(summary = "获取文件清单")
+    @Parameter(name = "id",description = "数据编号",required = true,in = ParameterIn.PATH)
     public Vo<FileOut> getFile(@RequestAttribute("HumanDto")HumanDto humanDto,
                                @PathVariable Long id) throws EoaException {
         FileOut out = cacheService.getCache(ChangeFlagUtils.FILE,id.toString(), USER_ID_CACHE, FileOut.class);
@@ -202,7 +226,7 @@ public class ContentFrontController {
         if (AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(old.getCreator(),null),AuthorityUtils.getConstraint(old.getDeleteAuthority()))) {
             Integer deletes = contentService.dropFile(id, humanDto.getDataId());
             if (deletes==1) {
-                changeFlagUtils.freshDate(ChangeFlagUtils.MODULE);
+                changeFlagUtils.freshDate(ChangeFlagUtils.FILE);
                 return new Vo<>("删除成功");
             } else
                 return new Vo<>(Vo.SERVER_ERROR,"未进行删除,该数据不存在");

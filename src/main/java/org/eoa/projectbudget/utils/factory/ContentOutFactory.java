@@ -32,10 +32,10 @@ public class ContentOutFactory implements OutFactory<Content, ContentOut> {
         if (content == null) {
             return null;
         }
-        Content content1 = contentMapper.selectById(content.getLeadContent());
+        Content lead = contentMapper.selectById(content.getLeadContent());
         HumanResourceView humanResourceView = humanViewMapper.selectById(content.getCreator());
         return new ContentOut(content)
-                .setLeadName(content1==null?null: content.getContentName())
+                .setLeadName(lead==null?null: lead.getContentName())
                 .setCreatorName(humanResourceView.getName());
     }
 
