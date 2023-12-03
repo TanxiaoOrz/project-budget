@@ -18,7 +18,7 @@ import java.util.Date;
 @Schema(name = "ContentOut", description = "目录输出结构体")
 public class ContentOut {
     Long dataId;
-    Boolean isDeprecated;
+    Boolean deprecated;
     String contentName;
     String contentRemark;
     Long creator;
@@ -36,7 +36,7 @@ public class ContentOut {
 
     public ContentOut(Content content) {
         this.dataId = content.getDataId();
-        this.isDeprecated = DataProcessUtils.translateIntegerToBoolean(content.getIsDeprecated());
+        this.deprecated = DataProcessUtils.translateIntegerToBoolean(content.getIsDeprecated());
         this.contentName = content.getContentName();
         this.contentRemark = content.getContentRemark();
         this.creator = content.getCreator();
@@ -58,11 +58,11 @@ public class ContentOut {
     }
 
     public Boolean getDeprecated() {
-        return isDeprecated;
+        return deprecated;
     }
 
     public ContentOut setDeprecated(Boolean deprecated) {
-        isDeprecated = deprecated;
+        this.deprecated = deprecated;
         return this;
     }
 
