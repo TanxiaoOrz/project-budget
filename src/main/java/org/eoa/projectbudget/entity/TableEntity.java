@@ -1,14 +1,9 @@
 package org.eoa.projectbudget.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import java.util.Date;
 
 /**
  * @Author 张骏山
@@ -19,7 +14,6 @@ import java.util.Date;
  * @Version 1.0
  */
 @EqualsAndHashCode(callSuper = false)
-@Data
 @AllArgsConstructor
 @TableName("table_index")
 @Accessors(chain = true)
@@ -37,5 +31,68 @@ public class TableEntity extends Table{
 
     public TableEntity() {
 
+    }
+
+    public String getWorkFlowNo() {
+        return workFlowNo;
+    }
+
+    public TableEntity setWorkFlowNo(String workFlowNo) {
+        this.workFlowNo = workFlowNo;
+        return this;
+    }
+
+    public Integer getDetailCount() {
+        return detailCount;
+    }
+
+    public TableEntity setDetailCount(Integer detailCount) {
+        this.detailCount = detailCount;
+        return this;
+    }
+
+    public String getDetailName() {
+        return detailName;
+    }
+
+    public TableEntity setDetailName(String detailName) {
+        this.detailName = detailName;
+        return this;
+    }
+
+    public String getDefaultEdit() {
+        return defaultEdit;
+    }
+
+    public TableEntity setDefaultEdit(String defaultEdit) {
+        this.defaultEdit = defaultEdit;
+        return this;
+    }
+
+    public String getDefaultCreate() {
+        return defaultCreate;
+    }
+
+    public TableEntity setDefaultCreate(String defaultCreate) {
+        this.defaultCreate = defaultCreate;
+        return this;
+    }
+
+    public String getDefaultDelete() {
+        return defaultDelete;
+    }
+
+    public TableEntity setDefaultDelete(String defaultDelete) {
+        this.defaultDelete = defaultDelete;
+        return this;
+    }
+
+    public String getDefaultShare() {
+        return defaultShare;
+    }
+
+    public TableEntity setDefaultShare(String defaultShare) {
+        this.defaultShare = defaultShare;
+        return this;
     }
 }

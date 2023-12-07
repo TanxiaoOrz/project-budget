@@ -49,6 +49,9 @@ public class ColumnOut{
     @Schema(description = "字段是否虚拟表单字段")
     Boolean virtual;
 
+    public ColumnOut() {
+    }
+
     public ColumnOut(Column column) {
         this.columnId = column.getColumnId();
         this.columnViewName = column.getColumnViewName();

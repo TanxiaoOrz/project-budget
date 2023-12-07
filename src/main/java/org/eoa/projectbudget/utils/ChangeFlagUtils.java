@@ -23,13 +23,13 @@ public class ChangeFlagUtils {
     public static final int MODULE = 1;
     public static final int TABLE_ENTITY = 2;
     public static final int TABLE_VIEW = 3;
-    public static final int COLUMN_ENTITY = 2;
-    public static final int COLUMN_VIEW = 3;
-    public static final int CHARACTER = 4;
-    public static final int AUTHORITY = 5;
-    public static final int CONTENT = 6;
+    public static final int COLUMN_ENTITY = 4;
+    public static final int COLUMN_VIEW = 5;
+    public static final int CHARACTER = 6;
+    public static final int AUTHORITY = 7;
+    public static final int CONTENT = 8;
 
-    public static final int FILE = 7;
+    public static final int FILE = 9;
 
     public static final String[] Flags = {
             "HUMAN","MODUlE",

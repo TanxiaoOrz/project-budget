@@ -70,6 +70,8 @@ public class DataProcessUtils {
      * @return 拆分后数组
      */
     public static String[] splitStringArray(String s) {
+        if (isEmpty(s))
+            return new String[]{};
         return s.split(",");
     }
 }

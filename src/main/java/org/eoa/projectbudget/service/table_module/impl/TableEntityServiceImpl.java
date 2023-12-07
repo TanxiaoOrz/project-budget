@@ -138,6 +138,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
     }
 
     @Override
+    @Transactional
     public Long addColumn(Column base, Long userId) throws ParameterException {
         ColumnEntity column = (ColumnEntity) base;
         column.setCreateTime(new Date());
@@ -158,7 +159,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
 
         String dateType = column.createDateType();
         String tableName;
-        if (column.getColumnDetailNo()!=-1)
+        if (column.getColumnDetailNo()==null||column.getColumnDetailNo()==-1)
             tableName = tableEntity.getTableDataName();
         else
             tableName = tableEntity.getTableDataName()+DETAIL_LAG+column.getColumnDetailNo();

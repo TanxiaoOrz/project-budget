@@ -68,6 +68,8 @@ public class CacheServiceImpl implements CacheService{
         try {
             return new ObjectMapper().readValue(s,clazz);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            log.error("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>false",flag,changeFlag,key);
             throw new DataException("redis",flag,key,s,"json转换出错");
         }
     }

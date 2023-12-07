@@ -7,14 +7,12 @@ import org.eoa.projectbudget.entity.ColumnView;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 
-import java.util.Date;
-
 /**
  * @Author: 张骏山
  * @Date: 2023/11/23 19:47
  * @PackageName: org.eoa.projectbudget.vo.in
  * @ClassName: ColumnIn
- * @Description: TODO
+ * @Description: 列字段格式传入类
  * @Version: 1.0
  */
 @Schema(name = "ColumnIn",description = "列字段格式传入类")
@@ -33,20 +31,24 @@ public class ColumnIn implements CheckParameter<Column> {
     Integer columnGroupNo;
     @Schema(description = "字段显示顺序")
     Integer columnViewNo;
-    @Schema(description = "字段创建者")
-    Long creator;
-    @Schema(description = "字段创建时间")
-    Date createTime;
     @Schema(description = "字段明细编号")
     Integer columnDetailNo;
-    @Schema(description = "字段是否展示")
+    @Schema(description = "字段是否展示",deprecated = true)
     Boolean columnViewDisplay;
     @Schema(description = "字段是否展示")
     Boolean isVirtual;
 
     @Override
     public void checkSelf() throws ParameterException {
-        //TODO
+        if (tableNo == null) {
+            throw new ParameterException("tableNo","","没有所属表单");
+        }
+        if (DataProcessUtils.isEmpty(columnDataName))
+            throw new ParameterException("columnDataName","","没有字段数据库名称");
+        if (DataProcessUtils.isEmpty(columnViewName))
+            throw new ParameterException("columnViewName","","没有字段显示名称");
+        if (DataProcessUtils.isEmpty(columnType)||!Column.DATATYPE_GROUP_VIEW.contains(columnType))
+            throw new ParameterException("columnType",columnType!=null?columnType:"","字段类型不存在");
     }
 
     @Override
@@ -62,8 +64,6 @@ public class ColumnIn implements CheckParameter<Column> {
                 .setColumnDataName(columnDataName)
                 .setColumnViewName(columnViewName)
                 .setColumnViewNo(columnViewNo)
-                .setCreator(creator)
-                .setCreateTime(createTime)
                 .setTableNo(tableNo)
                 .setColumnTypeDescription(columnTypeDescription);
         if (isVirtual) {
@@ -74,7 +74,6 @@ public class ColumnIn implements CheckParameter<Column> {
             assert ret instanceof ColumnEntity;
             ((ColumnEntity) ret).setColumnDetailNo(columnDetailNo);
         }
-        //TODO
         return ret;
     }
 
@@ -138,24 +137,6 @@ public class ColumnIn implements CheckParameter<Column> {
 
     public ColumnIn setColumnViewNo(Integer columnViewNo) {
         this.columnViewNo = columnViewNo;
-        return this;
-    }
-
-    public Long getCreator() {
-        return creator;
-    }
-
-    public ColumnIn setCreator(Long creator) {
-        this.creator = creator;
-        return this;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public ColumnIn setCreateTime(Date createTime) {
-        this.createTime = createTime;
         return this;
     }
 

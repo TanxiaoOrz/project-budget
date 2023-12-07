@@ -326,13 +326,18 @@ public class TableBackController {
     public Vo<Long> newColumn(@RequestAttribute("HumanDto") HumanDto humanDto,
                               @RequestBody ColumnIn columnIn) throws ParameterException {
         Long id;
+        int flag;
         if (columnIn.getVirtual()) {
             id = viewService.addColumn(columnIn.toEntity(null), humanDto.getDataId());
+            flag = ChangeFlagUtils.COLUMN_VIEW;
         } else {
             id = entityService.addColumn(columnIn.toEntity(null), humanDto.getDataId());
+            flag = ChangeFlagUtils.COLUMN_ENTITY;
         }
-        if (id != null)
+        if (id != null) {
+            changeFlagUtils.freshDate(flag);
             return new Vo<>(id);
+        }
         else
             return new Vo<>(Vo.SERVER_ERROR,"未进行新建,请联系管理员");
     }
@@ -349,7 +354,7 @@ public class TableBackController {
             update = viewService.alterColumn(columnIn.toEntity(id), humanDto.getDataId());
             flag = ChangeFlagUtils.COLUMN_VIEW;
         } else {
-            update = viewService.alterColumn(columnIn.toEntity(id), humanDto.getDataId());
+            update = entityService.alterColumn(columnIn.toEntity(id), humanDto.getDataId());
             flag = ChangeFlagUtils.COLUMN_ENTITY;
         }
         if (update==1) {

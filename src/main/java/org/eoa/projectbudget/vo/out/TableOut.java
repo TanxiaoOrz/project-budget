@@ -115,19 +115,19 @@ public class TableOut {
     private void generateSelect() {
         if (!virtual) {
             int detailCount = detailNames.length;
+            detailSelect = new ArrayList<>(detailCount+1);
+            detailSelect.add(new DropSelect(-1,"不在明细表",true,null));
             if (detailCount > 0) {
-                detailSelect = new ArrayList<>(detailCount);
                 for (int i = 0; i < detailCount; i++) {
                     detailSelect.add(new DropSelect(i, detailNames[i], true, null));
                 }
             }
         }
         int groupCount = groupNames.length;
-        if (groupCount >0){
-            groupSelect = new ArrayList<>(groupCount);
-            for (int i = 0; i < groupCount; i++) {
-                groupSelect.add(new DropSelect(i,groupNames[i],true,null));
-            }
+        groupSelect = new ArrayList<>(groupCount + 1);
+        groupSelect.add(new DropSelect(-1,"不在主表",true,null));
+        for (int i = 0; i < groupCount; i++) {
+            groupSelect.add(new DropSelect(i,groupNames[i],true,null));
         }
     }
 }

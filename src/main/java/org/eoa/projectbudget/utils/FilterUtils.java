@@ -48,12 +48,11 @@ public class FilterUtils<Entity> {
         for (Map.Entry<String, String[]> entry : map.entrySet()) {
             String column = entry.getKey();
             String[] value = entry.getValue();
-            Field declaredField;
-            try {
-                declaredField = clazz.getDeclaredField(column);
-            } catch (NoSuchFieldException e) {
+            Field declaredField = getField(clazz,column);
+            if (declaredField == null) {
                 continue;
             }
+
             if (value[0].equals("null")) {
                 wrapper.isNull(column);
             } else {
@@ -73,6 +72,17 @@ public class FilterUtils<Entity> {
             stringBuffer.append(column).append(":").append(Arrays.toString(value));
         }
         description = stringBuffer.toString();
+    }
+
+    private Field getField(Class<?> clazz, String name) {
+        if (clazz == null) {
+            return null;
+        }
+        try {
+            return clazz.getDeclaredField(name);
+        } catch (NoSuchFieldException e) {
+            return getField(clazz.getSuperclass(),name);
+        }
     }
 
     public Page getPage() {
