@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 
 @SpringBootTest
-class FormDDLMapperTest {
+class FormOutDtoDDLMapperTest {
     public static final String TEST_MAIN = "main_table_1";
     public static final String TEST_DETAIL = "main_table_1_dt_1";
     public static final String[] TEST_COLUMNS = {"column1","column2","column3"};

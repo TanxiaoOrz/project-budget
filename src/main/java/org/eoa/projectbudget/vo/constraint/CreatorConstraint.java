@@ -1,6 +1,6 @@
 package org.eoa.projectbudget.vo.constraint;
 
-import org.eoa.projectbudget.dto.Form;
+import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Table;
@@ -45,7 +45,7 @@ public class CreatorConstraint implements AuthoritySolve, FormSolve {
     }
 
     @Override
-    public boolean solve(HumanDto user, Form<Column, Table> form) throws EoaException {
+    public boolean solve(HumanDto user, FormOutDto<Column, Table> formOutDto) throws EoaException {
         return false;
     }
 

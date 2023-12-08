@@ -2,9 +2,9 @@ package org.eoa.projectbudget.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.exception.EoaException;
@@ -74,7 +74,7 @@ public class AuthorityUtils {
         return false;
     }
 
-    public static boolean checkTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint) throws EoaException {
+    public static boolean checkTable(HumanDto user, FormOutDto<Column, Table> formOutDto, Constraint authorityConstraint) throws EoaException {
         if (authorityConstraint == null) {
             return false;
         }
@@ -86,7 +86,7 @@ public class AuthorityUtils {
              tableType.split(",")) {
             if (!typeList.contains(type))
                 throw new AuthoritySolveException(authorityConstraint.getBodyType(), "类型设置错误");
-            else if (inTypeTable(user, form, authorityConstraint, typeList.indexOf(type)))
+            else if (inTypeTable(user, formOutDto, authorityConstraint, typeList.indexOf(type)))
                 return true;
         }
         return false;
@@ -124,7 +124,7 @@ public class AuthorityUtils {
         return solve.solve(user, creator);
     }
 
-    private static boolean inTypeTable(HumanDto user, Form<Column, Table> form, Constraint authorityConstraint, int index) throws EoaException {
+    private static boolean inTypeTable(HumanDto user, FormOutDto<Column, Table> formOutDto, Constraint authorityConstraint, int index) throws EoaException {
         String constraint = authorityConstraint.getBody().get(types[index]);
         FormSolve solve;
         try {
@@ -135,7 +135,7 @@ public class AuthorityUtils {
         if (solve == null) {
             return false;
         }
-        return solve.solve(user, form);
+        return solve.solve(user, formOutDto);
     }
 
 

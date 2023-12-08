@@ -1,6 +1,6 @@
 package org.eoa.projectbudget.vo.constraint;
 
-import org.eoa.projectbudget.dto.Form;
+import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Table;
@@ -38,33 +38,33 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
     }
 
     @Override
-    public boolean solve(HumanDto user, Form<Column, Table> form) throws EoaException {
+    public boolean solve(HumanDto user, FormOutDto<Column, Table> formOutDto) throws EoaException {
         for (Long humanColumn:
              humans) {
-            Set<Long> asked = getAsked(form, humanColumn);
+            Set<Long> asked = getAsked(formOutDto, humanColumn);
             if (asked.contains(user.getDataId()))
                 return true;
         }
 
         for (Long departColumnId:
                 departs) {
-            if (getAsked(form,departColumnId).contains(user.getDepart()))
+            if (getAsked(formOutDto,departColumnId).contains(user.getDepart()))
                 return true;
         }
 
         for (Long sectionColumnId:
                 sections) {
-            if (getAsked(form,sectionColumnId).contains(user.getSection()))
+            if (getAsked(formOutDto,sectionColumnId).contains(user.getSection()))
                 return true;
         }
 
         return false;
     }
 
-    private Set<Long> getAsked(Form<Column, Table> form, Long columnId) throws DataException {
+    private Set<Long> getAsked(FormOutDto<Column, Table> formOutDto, Long columnId) throws DataException {
         Set<Long> asked = new HashSet<>();
         boolean isFound = false;
-        Object mainValue = form.getMainValue(columnId);
+        Object mainValue = formOutDto.getMainValue(columnId);
 
         if (mainValue != null) {
             asked.add((Long) mainValue);
@@ -72,7 +72,7 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
         }
 
         if (!isFound) {
-            List<Object> detailsValues = form.getDetailsValues(columnId);
+            List<Object> detailsValues = formOutDto.getDetailsValues(columnId);
             if (detailsValues != null) {
                 asked.addAll(detailsValues.stream().map(o -> (Long) o).toList());
                 isFound = true;
@@ -80,7 +80,7 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
         }
 
         if (!isFound) {
-            throw new DataException(form.getTable().getTableDataName(), form.getDataId().toString(),"authority", columnId.toString(),
+            throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority", columnId.toString(),
                     String.format("%d不在该表单的字段中", columnId));
         }
         return asked;

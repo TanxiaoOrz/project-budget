@@ -51,8 +51,19 @@
     <select id="getIdsByMap" resultType="Integer">
         select dataId from ${formTableName}
         <where>
-            <foreach collection="columnMap.entrySet()" index="key" item="value" separator=" and ">
+            <foreach collection="eqMap.entrySet()" index="key" item="value" separator=" and ">
                 ${key} = #{value}
+            </foreach>
+            and
+            <foreach collection="likeMap.entrySet()" index="key" item="value" separator=" and ">
+                ${key} like #{value}
+            </foreach>
+            and
+            <foreach collection="betweenMap.entrySet()" index="key" item="value" separator=" and ">
+                ${key}
+                    <foreach collection="value" index="key" item="valueItem" open="between" separator="and">
+                        #{valueItem}
+                    </foreach>
             </foreach>
         </where>
     </select>

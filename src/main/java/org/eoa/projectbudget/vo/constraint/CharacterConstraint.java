@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.dto.Form;
+import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
@@ -61,12 +61,12 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
     }
 
     @Override
-    public boolean solve(HumanDto user, Form<Column, Table> form) throws EoaException {
+    public boolean solve(HumanDto user, FormOutDto<Column, Table> formOutDto) throws EoaException {
         for (Group character:
              characters) {
             Set<Long> asked = new HashSet<>();
             boolean isFound = false;
-            Object mainValue = form.getMainValue(character.getCharacterId());
+            Object mainValue = formOutDto.getMainValue(character.getCharacterId());
 
             if (mainValue != null) {
                 asked.add((Long) mainValue);
@@ -74,14 +74,14 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
             }
 
             if (!isFound) {
-                List<Object> detailsValues = form.getDetailsValues(character.getCharacterId());
+                List<Object> detailsValues = formOutDto.getDetailsValues(character.getCharacterId());
                 if (detailsValues != null) {
                     asked.addAll(detailsValues.stream().map(o -> (Long) o).toList());
                     isFound = true;
                 }
             }
             if (!isFound) {
-                throw new DataException(form.getTable().getTableDataName(),form.getDataId().toString(),"authority",character.getCharacterId().toString(),
+                throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority",character.getCharacterId().toString(),
                         String.format("%d不在该表单的字段中",character.getCharacterId()));
             }
             for (Long characterId:

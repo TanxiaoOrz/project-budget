@@ -2,6 +2,7 @@ package org.eoa.projectbudget.mapper;
 
 import org.apache.ibatis.annotations.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,6 @@ public interface FormDMLMapper {
     /**
      * 更新明细表数据
      * @param columns 字段键值对
-     * @param detailMainId 明细id
      * @param formDetailTableName 明细表名
      * @return 结果数字
      */
@@ -64,7 +64,6 @@ public interface FormDMLMapper {
      * 插入主表数据
      * @param columnsWithBaseData 字段键值对
      * @param formTableName 主表名称
-     * @param dataId 主键值返回对象
      * @return 结果数字
      */
     Integer insertMainForm(@Param("columns") Map<String,Object> columnsWithBaseData
@@ -74,7 +73,6 @@ public interface FormDMLMapper {
      * 插入明细数据
      * @param columnsWithBaseData  字段键值对
      * @param formDetailTableName 明细表明
-     * @param detailMainId 明细主键值返回对象
      * @return 结果数字
      */
     Integer insertDetailForm(@Param("columns") Map<String,Object> columnsWithBaseData
@@ -92,7 +90,7 @@ public interface FormDMLMapper {
 
     /**
      * 删除明细表数据
-     * @param detailMainId 明细id
+     * @param detailDataId 明细id
      * @param formDetailTableName 明细表名
      * @return 结果数字
      */
@@ -103,10 +101,14 @@ public interface FormDMLMapper {
     /**
      * 规则下批量获取主键id
      * @param formTableName 表名
-     * @param columnMap 字段筛选规则
+     * @param eqMap 字段筛选规则
+     * @param likeMap 字符串筛选规则
+     * @param betweenMap 日期筛选规则
      * @return 主键数组
      */
     List<Long> getIdsByMap(@Param("formTableName")String formTableName,
-                              @Param("columnMap")Map<String,Object> columnMap);
+                           @Param("eqMap")Map<String,String> eqMap,
+                           @Param("likeMap")Map<String, String> likeMap,
+                           @Param("betweenMap")Map<String, String[]> betweenMap);
 
 }

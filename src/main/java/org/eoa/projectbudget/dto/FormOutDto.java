@@ -1,7 +1,5 @@
 package org.eoa.projectbudget.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.eoa.projectbudget.entity.Column;
@@ -20,14 +18,12 @@ import java.util.concurrent.atomic.AtomicReference;
  * @PackageName: org.eoa.projectbudget.entity
  * @ClassName: Form
  * @Description: 自定义表单传输公共类
- * @Version 1.0
+ * @Version 1.1
  */
 
 @Data
 @Accessors(chain = true)
-public class Form<C extends Column, T extends Table> {
-
-    @TableId(type = IdType.AUTO)
+public class FormOutDto<C extends Column, T extends Table> {
     Long dataId;
     Long requestId;
     Integer requestStatus;
@@ -37,11 +33,13 @@ public class Form<C extends Column, T extends Table> {
     String editAuthority;
     String viewAuthority;
     String deleteAuthority;
+    Boolean virtual;
+    Long tableId;
     List<Group> groups;
     List<Detail> details;
     T table;
 
-    public Form<C,T> addGroup(Integer groupId, String groupName, Map<C, Object> columns) {
+    public FormOutDto<C,T> addGroup(Integer groupId, String groupName, Map<C, Object> columns) {
         if (groups == null) {
             groups = new ArrayList<>();
         }
@@ -49,7 +47,7 @@ public class Form<C extends Column, T extends Table> {
         return this;
     }
 
-    public Form<C,T> addDetail(Integer detailId, String detailName,Map<C,Map<Integer,Object>> columns) {
+    public FormOutDto<C,T> addDetail(Integer detailId, String detailName, Map<C,Map<Integer,Object>> columns) {
         // TODO
 
 

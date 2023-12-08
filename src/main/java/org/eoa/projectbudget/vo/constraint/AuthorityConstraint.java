@@ -1,8 +1,8 @@
 package org.eoa.projectbudget.vo.constraint;
 
+import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
@@ -32,14 +32,14 @@ public class AuthorityConstraint implements AuthoritySolve, FormSolve {
     }
 
     @Override
-    public boolean solve(HumanDto user, Form<Column, Table> form) throws EoaException {
+    public boolean solve(HumanDto user, FormOutDto<Column, Table> formOutDto) throws EoaException {
         if (user.getAuthorities().contains(1))
             return true;
         for (Long authority:
              authorities) {
             Set<Integer> asked = new HashSet<>();
             boolean isFound = false;
-            Object mainValue = form.getMainValue(authority);
+            Object mainValue = formOutDto.getMainValue(authority);
 
             if (mainValue != null) {
                 asked.add((Integer) mainValue);
@@ -47,7 +47,7 @@ public class AuthorityConstraint implements AuthoritySolve, FormSolve {
             }
 
             if (!isFound) {
-                List<Object> detailsValues = form.getDetailsValues(authority);
+                List<Object> detailsValues = formOutDto.getDetailsValues(authority);
                 if (detailsValues != null) {
                     asked.addAll(detailsValues.stream().map(o -> (Integer) o).toList());
                     isFound = true;
@@ -56,7 +56,7 @@ public class AuthorityConstraint implements AuthoritySolve, FormSolve {
 
             // 判断列是否在表单中
             if (!isFound) {
-                throw new DataException(form.getTable().getTableDataName(),form.getDataId().toString(),"authority",authorities.toString(),
+                throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority",authorities.toString(),
                         String.format("%d不在该表单的字段中",authority));
             }
             for (Integer ask:

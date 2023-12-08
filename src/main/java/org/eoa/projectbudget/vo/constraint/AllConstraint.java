@@ -1,6 +1,6 @@
 package org.eoa.projectbudget.vo.constraint;
 
-import org.eoa.projectbudget.dto.Form;
+import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Table;
@@ -28,15 +28,15 @@ public class AllConstraint implements FormSolve, AuthoritySolve {
     }
 
     @Override
-    public boolean solve(HumanDto user, Form<Column, Table> form) throws EoaException {
-        Float start =(Float) form.getMainValue(this.start);
-        Float end = (Float) form.getMainValue(this.end);
+    public boolean solve(HumanDto user, FormOutDto<Column, Table> formOutDto) throws EoaException {
+        Float start =(Float) formOutDto.getMainValue(this.start);
+        Float end = (Float) formOutDto.getMainValue(this.end);
         if (start == null) {
-            throw new DataException(form.getTable().getTableDataName(),form.getDataId().toString(),"authority",this.start.toString(),
+            throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority",this.start.toString(),
                     String.format("%d不在该表单的字段中",this.start));
         }
         if (end == null) {
-            throw new DataException(form.getTable().getTableDataName(),form.getDataId().toString(),"authority",this.end.toString(),
+            throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority",this.end.toString(),
                     String.format("%d不在该表单的字段中",this.end));
         }
         return (user.getSafety()>=start && user.getSafety() <= end);

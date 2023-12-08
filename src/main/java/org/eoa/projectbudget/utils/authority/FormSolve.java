@@ -1,8 +1,8 @@
 package org.eoa.projectbudget.utils.authority;
 
+import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.dto.Form;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.EoaException;
 
@@ -19,9 +19,9 @@ public interface FormSolve {
     /**
      *
      * @param user 需要判断的用户
-     * @param form 表单内容
+     * @param formOutDto 表单内容
      * @return 用户是否有权限
      */
-    boolean solve(HumanDto user, Form<Column,Table> form) throws EoaException;
+    boolean solve(HumanDto user, FormOutDto<Column,Table> formOutDto) throws EoaException;
 
 }
