@@ -74,7 +74,8 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
 
         formDDLMapper.createTable(mainTableName, FormDDLMapper.MAIN);
         for (int i = 0; i < table.getDetailCount(); i++) {
-            String detailTableName = mainTableName + DETAIL_LAG + i;
+            int detailNo = i + 1;
+            String detailTableName = mainTableName + DETAIL_LAG + detailNo;
             formDDLMapper.createTable(detailTableName, FormDDLMapper.DETAIL);
             log.info("创建明细表:表名=>{}",detailTableName);
         }
@@ -105,7 +106,8 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
         log.info("更新完成,新的数据=>{}",table);
 
         for (int i = old.getDetailCount(); i < table.getDetailCount(); i++) {
-            String detailTableName = table.getTableDataName() + DETAIL_LAG + i;
+            int detailNo = i + 1;
+            String detailTableName = table.getTableDataName() + DETAIL_LAG + detailNo;
             formDDLMapper.createTable(detailTableName, FormDDLMapper.DETAIL);
             log.info("创建新的明细表,表名=>{}",detailTableName);
         }

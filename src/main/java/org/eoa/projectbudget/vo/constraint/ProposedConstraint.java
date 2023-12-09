@@ -2,8 +2,6 @@ package org.eoa.projectbudget.vo.constraint;
 
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
@@ -38,7 +36,7 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
     }
 
     @Override
-    public boolean solve(HumanDto user, FormOutDto<Column, Table> formOutDto) throws EoaException {
+    public boolean solve(HumanDto user, FormOutDto formOutDto) throws EoaException {
         for (Long humanColumn:
              humans) {
             Set<Long> asked = getAsked(formOutDto, humanColumn);
@@ -61,7 +59,7 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
         return false;
     }
 
-    private Set<Long> getAsked(FormOutDto<Column, Table> formOutDto, Long columnId) throws DataException {
+    private Set<Long> getAsked(FormOutDto formOutDto, Long columnId) throws DataException {
         Set<Long> asked = new HashSet<>();
         boolean isFound = false;
         Object mainValue = formOutDto.getMainValue(columnId);

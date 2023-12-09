@@ -2,10 +2,8 @@ package org.eoa.projectbudget.vo.constraint;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.dto.FormOutDto;
-import org.eoa.projectbudget.entity.Table;
+import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
@@ -61,7 +59,7 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
     }
 
     @Override
-    public boolean solve(HumanDto user, FormOutDto<Column, Table> formOutDto) throws EoaException {
+    public boolean solve(HumanDto user, FormOutDto formOutDto) throws EoaException {
         for (Group character:
              characters) {
             Set<Long> asked = new HashSet<>();

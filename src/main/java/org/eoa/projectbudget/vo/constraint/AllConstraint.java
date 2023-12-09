@@ -2,8 +2,6 @@ package org.eoa.projectbudget.vo.constraint;
 
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
@@ -28,7 +26,7 @@ public class AllConstraint implements FormSolve, AuthoritySolve {
     }
 
     @Override
-    public boolean solve(HumanDto user, FormOutDto<Column, Table> formOutDto) throws EoaException {
+    public boolean solve(HumanDto user, FormOutDto formOutDto) throws EoaException {
         Float start =(Float) formOutDto.getMainValue(this.start);
         Float end = (Float) formOutDto.getMainValue(this.end);
         if (start == null) {

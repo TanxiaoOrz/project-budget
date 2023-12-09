@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.entity.Column;
-import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.authority.AuthoritySolve;
@@ -21,7 +19,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.utils
  * @ClassName: AuthorityUtils
  * @Description: 权限处理工具
- * @Version 1.0
+ * @Version 1.1
  */
 
 
@@ -46,7 +44,6 @@ public class AuthorityUtils {
     };
     public static final List<String> typeList = Arrays.asList(types);
 
-    public static final List<Class<?>> clazzList = Arrays.asList(clazz);
 
     /**
      * 检验user对象是否在限制结构的creator限制内,如果限制对象传入的是null直接返回false
@@ -74,7 +71,7 @@ public class AuthorityUtils {
         return false;
     }
 
-    public static boolean checkTable(HumanDto user, FormOutDto<Column, Table> formOutDto, Constraint authorityConstraint) throws EoaException {
+    public static boolean checkTable(HumanDto user, FormOutDto formOutDto, Constraint authorityConstraint) throws EoaException {
         if (authorityConstraint == null) {
             return false;
         }
@@ -124,7 +121,7 @@ public class AuthorityUtils {
         return solve.solve(user, creator);
     }
 
-    private static boolean inTypeTable(HumanDto user, FormOutDto<Column, Table> formOutDto, Constraint authorityConstraint, int index) throws EoaException {
+    private static boolean inTypeTable(HumanDto user, FormOutDto formOutDto, Constraint authorityConstraint, int index) throws EoaException {
         String constraint = authorityConstraint.getBody().get(types[index]);
         FormSolve solve;
         try {
