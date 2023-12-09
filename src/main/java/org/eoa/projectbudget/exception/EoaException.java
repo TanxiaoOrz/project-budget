@@ -8,7 +8,7 @@ package org.eoa.projectbudget.exception;
  * @Description: 自定义异常基础类
  * @Version 1.0
  */
-public class EoaException extends Exception{
+public class EoaException extends RuntimeException{
     public int code;
     public String description;
 
