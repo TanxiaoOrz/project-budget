@@ -1,9 +1,10 @@
 package org.eoa.projectbudget.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import java.util.Map;
  * @PackageName: org.eoa.projectbudget.mapper
  * @ClassName: FormDMLMapper
  * @Description: 自定义表单对象的数据库dml操作接口
- * @Version 1.0
+ * @Version 1.1
  */
 
 @Mapper
@@ -71,7 +72,7 @@ public interface FormDMLMapper {
 
     /**
      * 插入明细数据
-     * @param columnsWithBaseData  字段键值对
+     * @param columnsWithBaseData  字段键值对,需要基础信息
      * @param formDetailTableName 明细表明
      * @return 结果数字
      */
@@ -99,6 +100,16 @@ public interface FormDMLMapper {
                             ,@Param("formDetailTableName")String formDetailTableName);
 
     /**
+     * 删除明细表数据中主表相关数据
+     * @param detailMainId 主表id
+     * @param formDetailTableName 明细表名
+     * @return 结果数字
+     */
+    @Delete("delete from ${formDetailTableName} where `detailMainId` = #{detailMainId}")
+    Integer deleteDetailFormByDataId(@Param("detailMainId") Long detailMainId
+            ,@Param("formDetailTableName")String formDetailTableName);
+
+    /**
      * 规则下批量获取主键id
      * @param formTableName 表名
      * @param eqMap 字段筛选规则
@@ -110,5 +121,15 @@ public interface FormDMLMapper {
                            @Param("eqMap")Map<String,String> eqMap,
                            @Param("likeMap")Map<String, String> likeMap,
                            @Param("betweenMap")Map<String, String[]> betweenMap);
+
+    /**
+     * 获取对应主表id下的所有明细id
+     * @param detailMainId 主表id
+     * @param detailTableName 明细表名
+     * @return 明细id数组
+     */
+    @Select("select detailDataId from ${formDetailTableName} where `detailMainId` = #{detailMainId}")
+    List<Long> getExistDetail(@Param("detailMainId")Long detailMainId,
+                              @Param("detailTableName")String detailTableName);
 
 }
