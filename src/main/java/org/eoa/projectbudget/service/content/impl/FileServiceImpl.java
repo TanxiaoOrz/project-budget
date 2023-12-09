@@ -5,7 +5,6 @@ import org.eoa.projectbudget.service.content.FileService;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,19 +18,19 @@ import java.io.IOException;
  * @PackageName: org.eoa.projectbudget.service.content.impl
  * @ClassName: FileServiceImpl
  * @Description: 文件处理结构实现类
- * @Version: 1.0
+ * @Version: 1.1
  **/
 
 @Service
-public class FileServiceImpl implements FileService, InitializingBean {
+public class FileServiceImpl implements FileService {
 
     private final Logger log = LoggerFactory.getLogger("ContentModule");
-    private String absolutePath;
+
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public String upload(MultipartFile multipartFile, Long userId) throws EoaException, IOException {
-
+        final String absolutePath = ResourceUtils.getFile("classpath:") +"/static/files";
         String name = DataProcessUtils.nullToString(multipartFile.getOriginalFilename());
         int i = 0;
         File file = new File(absolutePath, name);
@@ -46,8 +45,4 @@ public class FileServiceImpl implements FileService, InitializingBean {
         return "/files/"+file.getName();
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        absolutePath = ResourceUtils.getFile("classpath:") +"/static/files";
-    }
 }
