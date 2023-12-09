@@ -10,8 +10,8 @@ import java.util.HashMap;
  * @Date: 2023/11/6 17:44
  * @PackageName: org.eoa.projectbudget.utils
  * @ClassName: ChangeFlagUtils
- * @Description: TODO
- * @Version: 1.0
+ * @Description: 缓存控制刷新工具
+ * @Version: 1.5
  **/
 
 @Component
@@ -28,15 +28,17 @@ public class ChangeFlagUtils {
     public static final int CHARACTER = 6;
     public static final int AUTHORITY = 7;
     public static final int CONTENT = 8;
-
     public static final int FILE = 9;
+    public static final int Form = 10;
+
 
     public static final String[] Flags = {
             "HUMAN","MODUlE",
             "TABLE_ENTITY","TABLE_VIEW",
             "COLUMN_ENTITY","COLUMN_VIEW",
             "CHARACTER","AUTHORITY",
-            "CONTENT","FILE"
+            "CONTENT","FILE",
+            "Form"
     };
     private final HashMap<String, Date> flagMap = new HashMap<>();
     private final HashMap<Long, Date> userMap = new HashMap<>();
