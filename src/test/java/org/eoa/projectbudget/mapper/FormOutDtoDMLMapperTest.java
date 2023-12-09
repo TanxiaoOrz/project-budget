@@ -54,7 +54,9 @@ class FormOutDtoDMLMapperTest {
     void insertMainForm() {
         HashMap<String, Object> columnDatas = getColumnDatas(5);
         formDMLMapper.insertMainForm(columnDatas, FormOutDtoDDLMapperTest.TEST_MAIN);
-        System.out.println("columnDatas.get(\"dataId\") = " + columnDatas.get("dataId"));
+        Object dataId = columnDatas.get("dataId");
+        System.out.println("dataId.getClass() = " + dataId.getClass());
+        System.out.println("columnDatas.get(\"dataId\") = " + dataId);
 
     }
 
