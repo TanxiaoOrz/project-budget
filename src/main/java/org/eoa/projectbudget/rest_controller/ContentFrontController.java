@@ -106,12 +106,8 @@ public class ContentFrontController {
         ContentOut[] cache = cacheService.getCache(ChangeFlagUtils.CONTENT,method, humanDto.getDataId(), ContentOut[].class);
         if (cache == null) {
             outs = contentOutFactory.outs(contentService.getContentList(filter.getWrapper(), humanDto.getDataId())).stream().filter(contentOut -> {
-                try {
-                    Constraint constraint = AuthorityUtils.getConstraint(contentOut.getDefaultShare());
-                    return AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(contentOut.getCreator(),null),constraint);
-                } catch (AuthoritySolveException | ParameterException e) {
-                    return false;
-                }
+                Constraint constraint = AuthorityUtils.getConstraint(contentOut.getDefaultShare());
+                return AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(contentOut.getCreator(),null),constraint);
             }).toList();
             cacheService.setCache(ChangeFlagUtils.CONTENT,method, humanDto.getDataId(), outs);
         } else {
@@ -126,20 +122,30 @@ public class ContentFrontController {
     @SuppressWarnings("Duplicates")
     public Vo<ContentOut> getContent(@RequestAttribute("HumanDto")HumanDto humanDto,
                                @PathVariable Long id) throws EoaException {
-        ContentOut out = cacheService.getCache(ChangeFlagUtils.CONTENT,id.toString(), USER_ID_CACHE, ContentOut.class);
-        if (out == null) {
-            out = contentOutFactory.out(contentService.getContent(id, humanDto.getDataId()));
-        }
-        if (AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(out.getCreator(),null),AuthorityUtils.getConstraint(out.getDefaultShare())))
-            return new Vo<>(out);
-        else
+        Boolean viewCache = cacheService.getCache(ChangeFlagUtils.CONTENT, id.toString(), humanDto.getDataId(), Boolean.class);
+        if (viewCache == null||viewCache) {
+            ContentOut out = cacheService.getCache(ChangeFlagUtils.CONTENT,id.toString(), USER_ID_CACHE, ContentOut.class);
+            if (out == null) {
+                out = contentOutFactory.out(contentService.getContent(id, humanDto.getDataId()));
+            }
+            if (viewCache == null) {
+                viewCache = AuthorityUtils.checkAuthority(humanDto, organizationService.getHumanDto(out.getCreator(), null), AuthorityUtils.getConstraint(out.getDefaultShare()));
+                cacheService.setCache(ChangeFlagUtils.CONTENT, id.toString(), humanDto.getDataId(), viewCache);
+            }
+            if (viewCache)
+                return new Vo<>(out);
+            else
+                throw new AuthorityException(humanDto.getDataId(), "Content", id, "查看");
+        } else {
             throw new AuthorityException(humanDto.getDataId(), "Content", id, "查看");
+        }
+
     }
 
     @GetMapping(value = "/file")
     @Operation(summary = "获取文件清单")
     @Parameter(name = "leadContent",description = "上级目录",required = true,in = ParameterIn.QUERY)
-    @Parameter(name = "isDeprecated",description = "是否废弃",required = false,in = ParameterIn.QUERY)
+    @Parameter(name = "isDeprecated",description = "是否废弃",required = true,in = ParameterIn.QUERY)
     public Vo<List<FileOut>> getFileList(@RequestAttribute("HumanDto")HumanDto humanDto,
                                             HttpServletRequest request) throws EoaException {
         FilterUtils<File> filter = new FilterUtils<>(request.getParameterMap(), File.class);
@@ -148,12 +154,8 @@ public class ContentFrontController {
         FileOut[] cache = cacheService.getCache(ChangeFlagUtils.FILE,method, humanDto.getDataId(), FileOut[].class);
         if (cache == null) {
             outs = fileOutFactory.outs(contentService.getFileList(filter.getWrapper(), humanDto.getDataId())).stream().filter(fileOut -> {
-                try {
-                    Constraint constraint = AuthorityUtils.getConstraint(fileOut.getViewAuthority());
-                    return AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(fileOut.getCreator(),null),constraint);
-                } catch (AuthoritySolveException | ParameterException e) {
-                    return false;
-                }
+                Constraint constraint = AuthorityUtils.getConstraint(fileOut.getViewAuthority());
+                return AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(fileOut.getCreator(),null),constraint);
             }).toList();
             cacheService.setCache(ChangeFlagUtils.FILE,method, humanDto.getDataId(), outs);
         } else {
@@ -167,15 +169,24 @@ public class ContentFrontController {
     @Parameter(name = "id",description = "数据编号",required = true,in = ParameterIn.PATH)
     public Vo<FileOut> getFile(@RequestAttribute("HumanDto")HumanDto humanDto,
                                @PathVariable Long id) throws EoaException {
-        FileOut out = cacheService.getCache(ChangeFlagUtils.FILE,id.toString(), USER_ID_CACHE, FileOut.class);
-        if (out == null) {
-            out = fileOutFactory.out(contentService.getFile(id, humanDto.getDataId()));
-            cacheService.setCache(ChangeFlagUtils.FILE,id.toString(),USER_ID_CACHE,FileOut.class);
-        }
-        if (AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(out.getCreator(),null),AuthorityUtils.getConstraint(out.getViewAuthority())))
-            return new Vo<>(out);
-        else
+        Boolean viewCache = cacheService.getCache(ChangeFlagUtils.FILE, id.toString(), humanDto.getDataId(), Boolean.class);
+        if (viewCache == null || viewCache) {
+            FileOut out = cacheService.getCache(ChangeFlagUtils.FILE, id.toString(), USER_ID_CACHE, FileOut.class);
+            if (out == null) {
+                out = fileOutFactory.out(contentService.getFile(id, humanDto.getDataId()));
+                cacheService.setCache(ChangeFlagUtils.FILE, id.toString(), USER_ID_CACHE, FileOut.class);
+            }
+            if (viewCache == null) {
+                viewCache = AuthorityUtils.checkAuthority(humanDto, organizationService.getHumanDto(out.getCreator(), null), AuthorityUtils.getConstraint(out.getViewAuthority()));
+                cacheService.setCache(ChangeFlagUtils.FILE, id.toString(), humanDto.getDataId(), viewCache);
+            }
+            if (viewCache)
+                return new Vo<>(out);
+            else
+                throw new AuthorityException(humanDto.getDataId(), "File", id, "查看");
+        } else {
             throw new AuthorityException(humanDto.getDataId(), "File", id, "查看");
+        }
     }
 
     @PostMapping(value = "/file")
@@ -192,7 +203,7 @@ public class ContentFrontController {
             } else
                 return new Vo<>(Vo.SERVER_ERROR,"未进行新建,请联系管理员");
         } else
-            throw new AuthorityException(humanDto.getDataId(), "Content", content.getDataId(), "创建");
+            throw new AuthorityException(humanDto.getDataId(), "Content", content.getDataId(), "上传文件");
     }
 
 
