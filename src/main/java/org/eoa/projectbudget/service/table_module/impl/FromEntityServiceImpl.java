@@ -17,7 +17,7 @@ import org.eoa.projectbudget.service.table_module.FormService;
 import org.eoa.projectbudget.utils.AuthorityUtils;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.eoa.projectbudget.utils.FilterFormUtils;
-import org.eoa.projectbudget.vo.constraint.Constraint;
+import org.eoa.projectbudget.dto.constraint.Constraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

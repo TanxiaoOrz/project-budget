@@ -21,7 +21,7 @@ import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterUtils;
 import org.eoa.projectbudget.utils.factory.ContentOutFactory;
 import org.eoa.projectbudget.utils.factory.FileOutFactory;
-import org.eoa.projectbudget.vo.constraint.Constraint;
+import org.eoa.projectbudget.dto.constraint.Constraint;
 import org.eoa.projectbudget.vo.in.FileIn;
 import org.eoa.projectbudget.vo.out.ContentOut;
 import org.eoa.projectbudget.vo.out.FileOut;

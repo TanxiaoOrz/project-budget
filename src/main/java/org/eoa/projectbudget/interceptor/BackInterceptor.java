@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.AuthorityException;
-import org.eoa.projectbudget.vo.constraint.AuthorityConstraint;
+import org.eoa.projectbudget.dto.constraint.AuthorityConstraint;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.List;
