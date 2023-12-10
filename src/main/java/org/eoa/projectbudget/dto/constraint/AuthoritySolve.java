@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.utils.authority;
+package org.eoa.projectbudget.dto.constraint;
 
 import org.eoa.projectbudget.dto.HumanDto;
 

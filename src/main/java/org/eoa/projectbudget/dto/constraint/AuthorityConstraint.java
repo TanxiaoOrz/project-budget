@@ -1,11 +1,9 @@
-package org.eoa.projectbudget.vo.constraint;
+package org.eoa.projectbudget.dto.constraint;
 
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
-import org.eoa.projectbudget.utils.authority.AuthoritySolve;
-import org.eoa.projectbudget.utils.authority.FormSolve;
 
 import java.util.HashSet;
 import java.util.List;

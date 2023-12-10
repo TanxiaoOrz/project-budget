@@ -1,4 +1,4 @@
-package org.eoa.projectbudget.vo.constraint;
+package org.eoa.projectbudget.dto.constraint;
 
 import java.util.Map;
 

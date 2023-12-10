@@ -6,7 +6,7 @@ import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.Table;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.utils.AuthorityUtils;
-import org.eoa.projectbudget.vo.constraint.Constraint;
+import org.eoa.projectbudget.dto.constraint.Constraint;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;

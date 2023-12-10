@@ -4,11 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.dto.constraint.*;
 import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.exception.EoaException;
-import org.eoa.projectbudget.utils.authority.AuthoritySolve;
-import org.eoa.projectbudget.utils.authority.FormSolve;
-import org.eoa.projectbudget.vo.constraint.*;
 
 import java.util.Arrays;
 import java.util.List;
