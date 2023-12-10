@@ -15,7 +15,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.utils.factory
  * @ClassName: FormOutFactory
  * @Description: 表单数据输出类构造工厂
- * @Version: 1.0
+ * @Version: 1.1
  */
 
 @Component
@@ -37,7 +37,7 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
             HashMap<String, Object> values = new HashMap<>();
             group.getColumns().forEach((column, value) -> {
                 String columnDataName = column.getColumnDataName();
-                columns.put(columnDataName, new FormOut.ColumnSimple(column.getColumnType(),column.getColumnTypeDescription()));
+                columns.put(columnDataName, new FormOut.ColumnSimple(column.getColumnType(),column.getColumnTypeDescription(),column.getColumnViewName()));
                 values.put(columnDataName,value);
             });
 
@@ -50,7 +50,7 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
         dto.getDetails().forEach(detail -> {
             HashMap<String, FormOut.ColumnSimple> columns = new HashMap<>();
             detail.getDetailColumns().forEach(column ->
-                    columns.put(column.getColumnDataName(),new FormOut.ColumnSimple(column.getColumnType(), column.getColumnTypeDescription())));
+                    columns.put(column.getColumnDataName(),new FormOut.ColumnSimple(column.getColumnType(), column.getColumnTypeDescription(), column.getColumnViewName())));
             formOut.addDetail(detail.getDetailId(),detail.getDetailName(), columns,detail.getDetailValuesList());
         });
         return formOut;

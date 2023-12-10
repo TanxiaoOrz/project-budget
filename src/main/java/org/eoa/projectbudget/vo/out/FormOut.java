@@ -14,7 +14,7 @@ import java.util.Map;
  * @PackageName: org.eoa.projectbudget.vo
  * @ClassName: FormOut
  * @Description: 表单数据输出类
- * @Version 1.0
+ * @Version 1.1
  */
 
 public class FormOut {
@@ -22,6 +22,8 @@ public class FormOut {
     Long dataId;
     Long requestId;
     Long tableId;
+
+    String tableName;
     Integer requestStatus;
     Long creator;
     Date createTime;
@@ -46,6 +48,7 @@ public class FormOut {
         this.latestEditTime = form.getLatestEditTime();
         this.virtual = form.getVirtual();
         this.viewAuthority = form.getViewAuthority();
+        this.tableName = form.getTable().getTableViewName();
         groups = new ArrayList<>();
         details = new ArrayList<>();
     }
@@ -168,15 +171,18 @@ public class FormOut {
     }
 
     public static class ColumnSimple {
+
+        String columnName;
         String type;
         String typeDescription;
 
         public ColumnSimple() {
         }
 
-        public ColumnSimple(String type, String typeDescription) {
+        public ColumnSimple(String type, String typeDescription,String columnName) {
             this.type = type;
             this.typeDescription = typeDescription;
+            this.columnName = columnName;
         }
 
         public String getType() {
@@ -194,6 +200,15 @@ public class FormOut {
 
         public ColumnSimple setTypeDescription(String typeDescription) {
             this.typeDescription = typeDescription;
+            return this;
+        }
+
+        public String getColumnName() {
+            return columnName;
+        }
+
+        public ColumnSimple setColumnName(String columnName) {
+            this.columnName = columnName;
             return this;
         }
     }
