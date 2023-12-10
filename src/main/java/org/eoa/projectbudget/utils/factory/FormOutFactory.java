@@ -6,6 +6,7 @@ import org.eoa.projectbudget.vo.out.FormOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
                     columns,
                     values);
         });
+        dto.getGroups().sort(Comparator.comparingInt(FormOutDto.Group::getGroupId));
 
         dto.getDetails().forEach(detail -> {
             HashMap<String, FormOut.ColumnSimple> columns = new HashMap<>();
@@ -53,6 +55,7 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
                     columns.put(column.getColumnDataName(),new FormOut.ColumnSimple(column.getColumnType(), column.getColumnTypeDescription(), column.getColumnViewName())));
             formOut.addDetail(detail.getDetailId(),detail.getDetailName(), columns,detail.getDetailValuesList());
         });
+        formOut.getDetails().sort(Comparator.comparingInt(FormOut.Detail::getDetailId));
         return formOut;
     }
 
