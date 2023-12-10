@@ -1,7 +1,6 @@
 package org.eoa.projectbudget.vo.out;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import org.eoa.projectbudget.exception.EoaException;
 
 /**
@@ -10,9 +9,8 @@ import org.eoa.projectbudget.exception.EoaException;
  * @PackageName: org.eoa.projectbudget.vo
  * @ClassName: Vo
  * @Description: 数据回传的包装实体
- * @Version 1.3
+ * @Version 1.4
  */
-@Data
 @Schema(name = "Vo",description = "数据传输实体类")
 public class Vo<Entity> {
     public static Integer SUCCESS = 0;
@@ -23,13 +21,13 @@ public class Vo<Entity> {
     public static Integer SERVER_ERROR = 2;
     public static Integer STORE_DATA_ERROR = 3;
 
-    @Schema(name = "成功状态",description = "0:成功,-1:重新登录,-2:更新token,-3:无权限,1:入参错误,2:运行错误,3:存储数据错误")
+    @Schema(description = "成功状态,0:成功,-1:重新登录,-2:更新token,-3:无权限,1:入参错误,2:运行错误,3:存储数据错误")
     private Integer code;
-    @Schema(name = "结果描述,批量获取数据时为数据的数量")
+    @Schema(description = "结果描述,批量获取数据时为数据的数量")
     private String description;
-    @Schema(name = "结果类")
+    @Schema(description = "结果类")
     private Entity entity;
-    @Schema(name = "更新token",description = "先是短token,后是长token")
+    @Schema(description = "更新token,先是短token,后是长token",deprecated = true)
     private String[] newToken;
 
     /**
@@ -70,5 +68,41 @@ public class Vo<Entity> {
         this.code = SUCCESS;
         this.description = counts.toString();
         this.entity = entity;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public Vo<Entity> setCode(Integer code) {
+        this.code = code;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Vo<Entity> setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public Vo<Entity> setEntity(Entity entity) {
+        this.entity = entity;
+        return this;
+    }
+
+    public String[] getNewToken() {
+        return newToken;
+    }
+
+    public Vo<Entity> setNewToken(String[] newToken) {
+        this.newToken = newToken;
+        return this;
     }
 }
