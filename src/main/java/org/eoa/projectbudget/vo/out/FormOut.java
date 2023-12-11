@@ -2,11 +2,9 @@ package org.eoa.projectbudget.vo.out;
 
 
 import org.eoa.projectbudget.dto.FormOutDto;
+import org.eoa.projectbudget.utils.DataProcessUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author 张骏山
@@ -33,9 +31,34 @@ public class FormOut {
     Boolean virtual;
     List<Group> groups;
     List<Detail> details;
-
+    String title;
 
     public FormOut() {
+    }
+
+    public void toBrowser(Long columnId) {
+        for (Group group:
+             groups) {
+            Optional<Map.Entry<String, ColumnSimple>> entry = group.columns.entrySet().stream().filter(set -> set.getValue().columnId.equals(columnId)).findFirst();
+            if (entry.isPresent()) {
+                title = group.values.get(entry.get().getKey()).toString();
+                break;
+            }
+        }
+        title = DataProcessUtils.nullToString(title);
+
+        this.dataId = null;
+        this.requestId = null;
+        this.tableId = null;
+        this.requestStatus = null;
+        this.creator = null;
+        this.createTime = null;
+        this.latestEditTime = null;
+        this.virtual = null;
+        this.viewAuthority = null;
+        this.tableName = null;
+        groups = null;
+        details = null;
     }
 
     public FormOut(FormOutDto form) {
@@ -51,6 +74,7 @@ public class FormOut {
         this.tableName = form.getTable().getTableViewName();
         groups = new ArrayList<>();
         details = new ArrayList<>();
+        title = null;
     }
 
     public FormOut addGroup(Integer groupId, String groupName, Map<String, ColumnSimple> columns, Map<String, Object> values) {
@@ -172,6 +196,7 @@ public class FormOut {
 
     public static class ColumnSimple {
 
+        Long columnId;
         String columnName;
         String type;
         String typeDescription;
@@ -179,10 +204,20 @@ public class FormOut {
         public ColumnSimple() {
         }
 
-        public ColumnSimple(String type, String typeDescription,String columnName) {
+        public ColumnSimple(String type, String typeDescription,String columnName,Long columnId) {
             this.type = type;
             this.typeDescription = typeDescription;
             this.columnName = columnName;
+            this.columnId = columnId;
+        }
+
+        public Long getColumnId() {
+            return columnId;
+        }
+
+        public ColumnSimple setColumnId(Long columnId) {
+            this.columnId = columnId;
+            return this;
         }
 
         public String getType() {

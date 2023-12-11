@@ -148,17 +148,23 @@ public class TableFrontController {
     @GetMapping("/form")
     @Operation(summary = "批量获取实体表单或虚拟视图的符合要求数据")
     @Parameters({
+            @Parameter(name = "columnId", description = "如果获取显示浏览框传输对应显示字段id", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "tableId", description = "表单编号", required = true, in = ParameterIn.QUERY)
     })
     public Vo<List<FormOut>> getForms(@RequestAttribute("HumanDto") HumanDto humanDto,
                                       @RequestParam("isVirtual")Boolean isVirtual,
                                       @RequestParam("tableId")Long tableId,
+                                      @RequestParam(value = "columnId",required = false)Long columnId,
                                       HttpServletRequest request) throws EoaException {
         FilterFormUtils filter = new FilterFormUtils(request.getParameterMap());
         if (isVirtual) {
-
-            return new Vo<>(factory.outs(viewService.getFormSort(tableId, filter, humanDto.getDataId())));
+            List<FormOut> outs = factory.outs(viewService.getFormSort(tableId, filter, humanDto.getDataId()));
+            if (columnId == null) {
+                outs.forEach(formOut -> formOut.toBrowser(columnId));
+                return new Vo<>(outs);
+            }
+            return new Vo<>(filter.filt(outs),outs.size());
         } else {
             List<FormOut> outs;
             FormOut[] cache = cacheService.getCache(ChangeFlagUtils.Form, filter.getDescription(), humanDto.getDataId(), FormOut[].class);
@@ -167,6 +173,10 @@ public class TableFrontController {
                         filter(dto -> dto.checkView(organizationService.getHumanDto(dto.getCreator(), null), humanDto)).toList());
             } else {
                 outs = Arrays.asList(cache);
+            }
+            if (columnId == null) {
+                outs.forEach(formOut -> formOut.toBrowser(columnId));
+                return new Vo<>(outs);
             }
             return new Vo<>(filter.filt(outs),outs.size());
         }

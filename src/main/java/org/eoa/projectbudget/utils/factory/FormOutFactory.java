@@ -38,7 +38,7 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
             HashMap<String, Object> values = new HashMap<>();
             group.getColumns().forEach((column, value) -> {
                 String columnDataName = column.getColumnDataName();
-                columns.put(columnDataName, new FormOut.ColumnSimple(column.getColumnType(),column.getColumnTypeDescription(),column.getColumnViewName()));
+                columns.put(columnDataName, new FormOut.ColumnSimple(column.getColumnType(),column.getColumnTypeDescription(),column.getColumnViewName(), column.getColumnId()));
                 values.put(columnDataName,value);
             });
 
@@ -52,7 +52,7 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
         dto.getDetails().forEach(detail -> {
             HashMap<String, FormOut.ColumnSimple> columns = new HashMap<>();
             detail.getDetailColumns().forEach(column ->
-                    columns.put(column.getColumnDataName(),new FormOut.ColumnSimple(column.getColumnType(), column.getColumnTypeDescription(), column.getColumnViewName())));
+                    columns.put(column.getColumnDataName(),new FormOut.ColumnSimple(column.getColumnType(), column.getColumnTypeDescription(), column.getColumnViewName(), column.getColumnId())));
             formOut.addDetail(detail.getDetailId(),detail.getDetailName(), columns,detail.getDetailValuesList());
         });
         formOut.getDetails().sort(Comparator.comparingInt(FormOut.Detail::getDetailId));
