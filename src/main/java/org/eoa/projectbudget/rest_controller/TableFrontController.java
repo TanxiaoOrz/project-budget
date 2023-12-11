@@ -14,14 +14,17 @@ import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
 import org.eoa.projectbudget.mapper.TableEntityMapper;
 import org.eoa.projectbudget.service.cache.CacheService;
+import org.eoa.projectbudget.service.content.ContentService;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.service.table_module.FormService;
 import org.eoa.projectbudget.service.table_module.impl.FormViewServiceImpl;
 import org.eoa.projectbudget.service.table_module.impl.FromEntityServiceImpl;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterFormUtils;
+import org.eoa.projectbudget.utils.factory.FileOutFactory;
 import org.eoa.projectbudget.utils.factory.FormOutFactory;
 import org.eoa.projectbudget.vo.in.FormIn;
+import org.eoa.projectbudget.vo.out.FileOut;
 import org.eoa.projectbudget.vo.out.FormOut;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +64,46 @@ public class TableFrontController {
     ColumnEntityMapper columnEntityMapper;
     @Autowired
     TableEntityMapper tableEntityMapper;
+    @Autowired
+    ContentService contentService;
+    @Autowired
+    FileOutFactory fileOutFactory;
 
     public final Long USER_ID_CACHE = 0L;
+
+
+    @GetMapping("/file/{dataId}")
+    @Operation(summary = "从表单中获取文件结构")
+    @Parameters({
+            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "dataId",description = "文件编号",required = true,in = ParameterIn.PATH),
+            @Parameter(name = "tableId", description = "表单编号", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "formId", description = "数据编号", required = true, in = ParameterIn.QUERY)
+    })
+    public Vo<FileOut> getFile(@RequestAttribute("HumanDto") HumanDto humanDto,
+                               @PathVariable("dataId")Long dataId,
+                               @RequestParam("isVirtual")Boolean isVirtual,
+                               @RequestParam("tableId")Long tableId,
+                               @RequestParam("formId")Long formId) {
+        Boolean viewCache = cacheService.getCache(ChangeFlagUtils.Form, formId.toString(), humanDto.getDataId(), Boolean.class);
+        if (viewCache == null) {
+            FormOutDto cache = cacheService.getCache(ChangeFlagUtils.Form,dataId+"dto", USER_ID_CACHE, FormOutDto.class);
+            if (cache == null) {
+                cache = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
+            }
+            viewCache = cache.checkView(organizationService.getHumanDto(cache.getCreator(), null), humanDto);
+        }
+        if (viewCache) {
+            FileOut out = cacheService.getCache(ChangeFlagUtils.FILE, dataId.toString(), USER_ID_CACHE, FileOut.class);
+            if (out == null) {
+                out = fileOutFactory.out(contentService.getFile(dataId, humanDto.getDataId()));
+                cacheService.setCache(ChangeFlagUtils.FILE, dataId.toString(), USER_ID_CACHE, FileOut.class);
+            }
+            return new Vo<>(out);
+        } else
+            throw  new AuthorityException(humanDto.getDataId(), "File来自table="+tableId+"form="+formId+"isVirtual="+isVirtual, dataId, "查看");
+
+    }
 
     @GetMapping("/from/{dataId}")
     @Operation(summary = "获取指定实体表单或虚拟视图的指定数据")
