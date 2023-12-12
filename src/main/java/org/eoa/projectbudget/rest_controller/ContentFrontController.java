@@ -84,14 +84,14 @@ public class ContentFrontController {
     @PostMapping(value = "/upload/form")
     @Operation(summary = "上传文件,表单模块上传,返回新建的文件id")
     @Parameter(name = "leadContent",description = "上级目录",required = true,in = ParameterIn.QUERY)
-    public Vo<Long> uploadF(@RequestPart("file") MultipartFile multipartFile
+    public Vo<FileOut> uploadF(@RequestPart("file") MultipartFile multipartFile
             ,@RequestAttribute("HumanDto")HumanDto humanDto
             ,@RequestParam("leadContent") Long leadContent) throws EoaException, IOException {
 
         String upload = fileService.upload(multipartFile, humanDto.getDataId());
         File file = new FileIn().setFileName(multipartFile.getName()).setLeadContent(leadContent).setFileRoute(upload).toEntity(null);
         Long id = contentService.newFile(file, humanDto.getDataId());
-        return new Vo<>(id);
+        return new Vo<>(fileOutFactory.out(contentService.getFile(id, humanDto.getDataId())));
 
     }
 
