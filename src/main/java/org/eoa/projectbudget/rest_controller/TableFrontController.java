@@ -87,17 +87,23 @@ public class TableFrontController {
                                @RequestParam("formId")Long formId) {
         Boolean viewCache = cacheService.getCache(ChangeFlagUtils.Form, formId.toString(), humanDto.getDataId(), Boolean.class);
         if (viewCache == null) {
-            FormOutDto cache = cacheService.getCache(ChangeFlagUtils.Form,dataId+"dto", USER_ID_CACHE, FormOutDto.class);
-            if (cache == null) {
-                cache = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
+            if (formId.equals(0L)) {
+                viewCache = true;
+            } else {
+                FormOutDto cache = cacheService.getCache(ChangeFlagUtils.Form, formId + "dto", USER_ID_CACHE, FormOutDto.class);
+                if (cache == null) {
+                    cache = entityService.getFormOne(tableId, formId, humanDto.getDataId());
+                    cacheService.setCache(ChangeFlagUtils.Form,formId + "dto", USER_ID_CACHE,cache);
+                }
+                viewCache = cache.checkView(organizationService.getHumanDto(cache.getCreator(), null), humanDto);
             }
-            viewCache = cache.checkView(organizationService.getHumanDto(cache.getCreator(), null), humanDto);
+            cacheService.setCache(ChangeFlagUtils.Form, formId.toString(), humanDto.getDataId(),viewCache);
         }
         if (viewCache) {
             FileOut out = cacheService.getCache(ChangeFlagUtils.FILE, dataId.toString(), USER_ID_CACHE, FileOut.class);
             if (out == null) {
                 out = fileOutFactory.out(contentService.getFile(dataId, humanDto.getDataId()));
-                cacheService.setCache(ChangeFlagUtils.FILE, dataId.toString(), USER_ID_CACHE, FileOut.class);
+                cacheService.setCache(ChangeFlagUtils.FILE, dataId.toString(), USER_ID_CACHE, out);
             }
             return new Vo<>(out);
         } else
@@ -120,12 +126,12 @@ public class TableFrontController {
             return new Vo<>(factory.out(viewService.getFormOne(tableId, dataId, humanDto.getDataId())));
         } else {
             Boolean viewCache = cacheService.getCache(ChangeFlagUtils.Form, dataId.toString(), humanDto.getDataId(), Boolean.class);
-            boolean create = tableId.equals(0L);
+            boolean create = dataId.equals(0L);
             FormOut out;
             if (viewCache == null) {
                 FormOutDto cache = cacheService.getCache(ChangeFlagUtils.Form,dataId+"dto", USER_ID_CACHE, FormOutDto.class);
                 if (cache == null) {
-                    cache = entityService.getFormOne(create?null:tableId, dataId, humanDto.getDataId());
+                    cache = entityService.getFormOne(tableId, create?null:dataId, humanDto.getDataId());
                 }
                 out = factory.out(cache);
                 viewCache = create?entityService.checkAuthority(tableId, null, FormService.CREATE, humanDto):

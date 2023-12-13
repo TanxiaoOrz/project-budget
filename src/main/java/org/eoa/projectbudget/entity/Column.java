@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author 张骏山
@@ -52,4 +53,16 @@ public abstract class Column {
     protected Long creator;
     protected Date createTime;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Column column = (Column) o;
+        return Objects.equals(columnId, column.columnId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(columnId);
+    }
 }

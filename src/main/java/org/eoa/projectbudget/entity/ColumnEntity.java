@@ -1,7 +1,5 @@
 package org.eoa.projectbudget.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +19,7 @@ import java.util.List;
  */
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -48,4 +45,6 @@ public class ColumnEntity extends Column{
     public String createDateType() {
         return DATATYPE_GROUP_DATA.get(DATATYPE_GROUP_VIEW.indexOf(columnType));
     }
+
+
 }

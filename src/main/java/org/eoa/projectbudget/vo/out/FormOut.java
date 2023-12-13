@@ -77,12 +77,31 @@ public class FormOut {
         title = null;
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public FormOut setTableName(String tableName) {
+        this.tableName = tableName;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public FormOut setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
     public FormOut addGroup(Integer groupId, String groupName, Map<String, ColumnSimple> columns, Map<String, Object> values) {
         groups.add(new Group(groupId, groupName, columns, values));
         return this;
     }
 
     public FormOut addDetail(Integer detailId, String detailName, Map<String, FormOut.ColumnSimple> columns, List<Map<String, Object>> values) {
+        details.add(new Detail(detailId, detailName, columns, values));
         return this;
     }
 
@@ -197,17 +216,17 @@ public class FormOut {
     public static class ColumnSimple {
 
         Long columnId;
-        String columnName;
-        String type;
-        String typeDescription;
+        String columnViewName;
+        String columnType;
+        String columnTypeDescription;
 
         public ColumnSimple() {
         }
 
-        public ColumnSimple(String type, String typeDescription,String columnName,Long columnId) {
-            this.type = type;
-            this.typeDescription = typeDescription;
-            this.columnName = columnName;
+        public ColumnSimple(String columnType, String columnTypeDescription, String columnViewName, Long columnId) {
+            this.columnType = columnType;
+            this.columnTypeDescription = columnTypeDescription;
+            this.columnViewName = columnViewName;
             this.columnId = columnId;
         }
 
@@ -220,30 +239,30 @@ public class FormOut {
             return this;
         }
 
-        public String getType() {
-            return type;
+        public String getColumnType() {
+            return columnType;
         }
 
-        public ColumnSimple setType(String type) {
-            this.type = type;
+        public ColumnSimple setColumnType(String columnType) {
+            this.columnType = columnType;
             return this;
         }
 
-        public String getTypeDescription() {
-            return typeDescription;
+        public String getColumnTypeDescription() {
+            return columnTypeDescription;
         }
 
-        public ColumnSimple setTypeDescription(String typeDescription) {
-            this.typeDescription = typeDescription;
+        public ColumnSimple setColumnTypeDescription(String columnTypeDescription) {
+            this.columnTypeDescription = columnTypeDescription;
             return this;
         }
 
-        public String getColumnName() {
-            return columnName;
+        public String getColumnViewName() {
+            return columnViewName;
         }
 
-        public ColumnSimple setColumnName(String columnName) {
-            this.columnName = columnName;
+        public ColumnSimple setColumnViewName(String columnViewName) {
+            this.columnViewName = columnViewName;
             return this;
         }
     }

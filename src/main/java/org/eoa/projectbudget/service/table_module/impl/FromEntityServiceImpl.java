@@ -69,6 +69,8 @@ public class FromEntityServiceImpl implements FormService {
 
     private FormOutDto consistForm(Long dataId, TableEntity table, List<ColumnEntity> columns) {
         FormOutDto form = new FormOutDto();
+        form.setTable(table);
+        form.setTableId(table.getTableId());
 
         Integer groupCount = table.getGroupCount();
         Map<String,Object> mainValues;
@@ -83,14 +85,15 @@ public class FromEntityServiceImpl implements FormService {
         }
 
         form.setCreator((Long) mainValues.get("creator"))
-                .setDataId(dataId)
+                .setDataId(dataId==null?0L:dataId)
                 .setRequestId((Long) mainValues.get("requestId"))
                 .setRequestStatus((Integer) mainValues.get("requestStatus"))
                 .setCreateTime((Date) mainValues.get("createTime"))
                 .setDeleteAuthority((String) mainValues.get("deleteAuthority"))
                 .setViewAuthority((String) mainValues.get("viewAuthority"))
                 .setEditAuthority((String) mainValues.get("editAuthority"))
-                .setLatestEditTime((Date) mainValues.get("lastEditTime"));
+                .setLatestEditTime((Date) mainValues.get("lastEditTime"))
+                .setVirtual(false);
 
         String[] groupNames = DataProcessUtils.splitStringArray(table.getGroupName());
         List<ColumnEntity> mainColumns = columns.stream().filter(columnEntity -> columnEntity.getColumnDetailNo() == -1).toList();
@@ -98,7 +101,10 @@ public class FromEntityServiceImpl implements FormService {
             int groupNo = i + 1;
             form.addGroup(groupNo, groupNames[i],
                     mainColumns.stream().filter(columnEntity -> columnEntity.getColumnGroupNo().equals(groupNo)).
-                            collect(Collectors.toMap(column -> column,column -> mainValues.get(column.getColumnDataName()))));
+                            collect(Collectors.toMap(column -> column,column -> {
+                                Object value = mainValues.get(column.getColumnDataName());
+                                return value ==null?"":value;
+                            })));
         }
         String[] detailNames = DataProcessUtils.splitStringArray(table.getDetailName());
         List<ColumnEntity> detailColumns = columns.stream().filter(columnEntity -> !columnEntity.getColumnDetailNo().equals(-1)).toList();
@@ -116,7 +122,13 @@ public class FromEntityServiceImpl implements FormService {
         log.info("用户->{}尝试创建实体表单数据form->{}",userId,form);
         TableEntity table = form.getTable();
         String tableDataName = table.getTableDataName();
-        Map<String, Object> mains = form.getMains();
+        Map<String, Object> mains = form.getMainMap();
+        mains.put("creator",userId);
+        mains.put("createTime", new Date());
+        mains.put("deleteAuthority",table.getDefaultDelete());
+        mains.put("viewAuthority",table.getDefaultShare());
+        mains.put("editAuthority",table.getDefaultEdit());
+
         formDMLMapper.insertMainForm(mains, tableDataName);
         Long dataId = (Long) mains.get("dataId");
 

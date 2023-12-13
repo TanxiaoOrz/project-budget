@@ -82,7 +82,9 @@ public class FormViewServiceImpl implements FormService {
 
     private FormOutDto consistForm(Long dataId, TableView table, List<ColumnView> mainColumns) {
         FormOutDto formOutDto = new FormOutDto().setTable(table);
-        formOutDto.setDataId(dataId);
+        formOutDto.setDataId(dataId)
+                .setTableId(table.getTableId())
+                .setVirtual(true);
 
         Integer groupCount = table.getGroupCount();
         Map<String, Object> mainValues = formDMLMapper.getMainFormById(dataId, table.getTableDataName());
@@ -93,7 +95,10 @@ public class FormViewServiceImpl implements FormService {
         for (int i = 0; i < groupCount; i++) {
             int groupNo = i + 1;
             Map<ColumnView, Object> columnMap = mainColumns.stream().filter(column -> column.getColumnGroupNo().equals(groupNo))
-                    .collect(Collectors.toMap(column -> column, column -> mainValues.get(column.getColumnDataName())));
+                    .collect(Collectors.toMap(column -> column, column -> {
+                        Object value = mainValues.get(column.getColumnDataName());
+                        return value == null?"":value;
+                    }));
             formOutDto.addGroup(groupNo,groupNames[i],columnMap);
         }
         return formOutDto;

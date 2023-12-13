@@ -1,6 +1,7 @@
 package org.eoa.projectbudget.utils.factory;
 
 import org.eoa.projectbudget.dto.FormOutDto;
+import org.eoa.projectbudget.entity.HumanResourceView;
 import org.eoa.projectbudget.mapper.HumanViewMapper;
 import org.eoa.projectbudget.vo.out.FormOut;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,9 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
         if (dto == null) {
             return null;
         }
+        HumanResourceView humanResourceView = humanViewMapper.selectById(dto.getCreator());
         FormOut formOut = new FormOut(dto)
-                .setCreatorName(humanViewMapper.selectById(dto.getCreator()).getName());
+                .setCreatorName(humanResourceView==null?"":humanResourceView.getName());
 
         dto.getGroups().forEach(group -> {
             HashMap<String, FormOut.ColumnSimple> columns = new HashMap<>();

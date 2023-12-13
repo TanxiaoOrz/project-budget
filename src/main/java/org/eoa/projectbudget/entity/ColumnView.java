@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  */
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -25,5 +25,6 @@ import lombok.experimental.Accessors;
 public class ColumnView extends Column{
 
     private Integer columnViewDisplay;
+
 
 }

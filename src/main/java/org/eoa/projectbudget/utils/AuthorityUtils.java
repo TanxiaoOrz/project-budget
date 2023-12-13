@@ -61,9 +61,7 @@ public class AuthorityUtils {
         }
         for (String type:
                 bodyType.split(",")) {
-            if (!typeList.contains(type))
-                throw new AuthoritySolveException(authorityConstraint.getBodyType(), "类型设置错误");
-            else if (inTypeAuthority(user, creator, authorityConstraint, typeList.indexOf(type)))
+            if (typeList.contains(type) && inTypeAuthority(user, creator, authorityConstraint, typeList.indexOf(type)))
                 return true;
         }
         return false;
