@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.FormInDto;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.entity.*;
+import org.eoa.projectbudget.entity.Column;
+import org.eoa.projectbudget.entity.ColumnView;
+import org.eoa.projectbudget.entity.TableView;
 import org.eoa.projectbudget.exception.AuthorityException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ParameterException;
@@ -19,8 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 张骏山
@@ -94,12 +98,11 @@ public class FormViewServiceImpl implements FormService {
         String[] groupNames = DataProcessUtils.splitStringArray(table.getGroupName());
         for (int i = 0; i < groupCount; i++) {
             int groupNo = i + 1;
-            Map<ColumnView, Object> columnMap = mainColumns.stream().filter(column -> column.getColumnGroupNo().equals(groupNo))
-                    .collect(Collectors.toMap(column -> column, column -> {
-                        Object value = mainValues.get(column.getColumnDataName());
-                        return value == null?"":value;
-                    }));
-            formOutDto.addGroup(groupNo,groupNames[i],columnMap);
+            HashMap<Column, Object> groupValue = new HashMap<>();
+            mainColumns.stream().filter(columnEntity -> columnEntity.getColumnGroupNo().equals(groupNo)).
+                    forEach(column->groupValue.put(column,mainValues.get(column.getColumnDataName())));
+            formOutDto.addGroup(groupNo, groupNames[i],
+                    groupValue);
         }
         return formOutDto;
     }

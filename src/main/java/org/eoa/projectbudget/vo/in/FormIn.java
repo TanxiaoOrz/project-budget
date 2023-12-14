@@ -28,12 +28,13 @@ public class FormIn implements CheckParameter<FormInDto> {
             throw new ParameterException("mains","","缺少主表数据键值对");
         }
         if (detailValueMapLists == null) {
-            throw new ParameterException("details","","缺少明细数据键值对数组");
+            throw new ParameterException("detailValueMapLists","","缺少明细数据键值对数组");
         }
     }
 
     @Override
     public FormInDto toEntity(Long dataId) throws ParameterException {
+        checkSelf();
         FormInDto formInDto = new FormInDto();
         formInDto.setDataId(dataId)
                 .setMains(mains)

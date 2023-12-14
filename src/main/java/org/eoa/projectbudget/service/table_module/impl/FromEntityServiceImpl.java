@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.FormInDto;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.dto.constraint.Constraint;
+import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.ColumnEntity;
 import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.exception.EoaException;
@@ -17,7 +19,6 @@ import org.eoa.projectbudget.service.table_module.FormService;
 import org.eoa.projectbudget.utils.AuthorityUtils;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.eoa.projectbudget.utils.FilterFormUtils;
-import org.eoa.projectbudget.dto.constraint.Constraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author 张骏山
@@ -99,12 +99,12 @@ public class FromEntityServiceImpl implements FormService {
         List<ColumnEntity> mainColumns = columns.stream().filter(columnEntity -> columnEntity.getColumnDetailNo() == -1).toList();
         for (int i = 0; i < groupCount; i++) {
             int groupNo = i + 1;
+
+            HashMap<Column, Object> groupValue = new HashMap<>();
+            mainColumns.stream().filter(columnEntity -> columnEntity.getColumnGroupNo().equals(groupNo)).
+                    forEach(column->groupValue.put(column,mainValues.get(column.getColumnDataName())));
             form.addGroup(groupNo, groupNames[i],
-                    mainColumns.stream().filter(columnEntity -> columnEntity.getColumnGroupNo().equals(groupNo)).
-                            collect(Collectors.toMap(column -> column,column -> {
-                                Object value = mainValues.get(column.getColumnDataName());
-                                return value ==null?"":value;
-                            })));
+                    groupValue);
         }
         String[] detailNames = DataProcessUtils.splitStringArray(table.getDetailName());
         List<ColumnEntity> detailColumns = columns.stream().filter(columnEntity -> !columnEntity.getColumnDetailNo().equals(-1)).toList();
@@ -140,7 +140,8 @@ public class FromEntityServiceImpl implements FormService {
                     :detailMapList) {   //遍历一个明细表每一行
                 detailMap.remove("detailDataId"); //获取并去除明细id
                 String formDetailTableName = tableDataName + DETAIL_LAG + detailNo;
-                formDMLMapper.insertDetailForm(detailMap, formDetailTableName);
+                if (detailMap.size()>0)
+                    formDMLMapper.insertDetailForm(detailMap, formDetailTableName);
             }
         }
         return dataId;

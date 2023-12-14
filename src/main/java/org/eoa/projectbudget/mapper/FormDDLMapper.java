@@ -27,7 +27,7 @@ public class FormDDLMapper {
               `requestStatus` INT NULL,
               `creator` BIGINT(64) NULL,
               `createTime` DATETIME NULL,
-              `latestEditTime` DATETIME NULL,
+              `lastEditTime` DATETIME NULL,
               `editAuthority` JSON NULL,
               `viewAuthority` JSON NULL,
               `deleteAuthority` JSON NULL,

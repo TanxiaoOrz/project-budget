@@ -1,14 +1,12 @@
 package org.eoa.projectbudget.dto;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.ColumnEntity;
 import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
 import org.eoa.projectbudget.mapper.TableEntityMapper;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author: 张骏山
@@ -46,7 +44,8 @@ public class FormInDto {
     }
 
     public Map<String,Object> getMainMap() {
-        Map<String, Object> collect = mainColumns.stream().collect(Collectors.toMap(Column::getColumnDataName, columnEntity -> mains.get(columnEntity.getColumnDataName())));
+        Map<String, Object> collect = new HashMap<>();
+        mainColumns.forEach(column->collect.put(column.getColumnDataName(), mains.get(column.getColumnDataName())));
         collect.put("lastEditTime",new Date());
         return collect;
     }
@@ -55,12 +54,13 @@ public class FormInDto {
         ArrayList<List<Map<String, Object>>> maps = new ArrayList<>();
         Integer detailCount = table.getDetailCount();
         for (int i = 0; i < detailCount; i++) {
-            int finalI = i;
             ArrayList<Map<String, Object>> detailMapList = new ArrayList<>();
-            for (List<Map<String,Object>> details:
-                    detailValueMapLists) {
-                Map<String, Object> detailMap = detailColumns.get(i).stream().collect(Collectors.toMap(Column::getColumnDataName, columnEntity -> details.get(finalI).get(columnEntity.getColumnDataName())));
-                Object detailDataId = details.get(finalI).get("detailDataId");
+            List<Map<String,Object>> details = detailValueMapLists.get(i);
+            for (Map<String,Object> value:
+                    details) {
+                Map<String, Object> detailMap = new HashMap<>();
+                detailColumns.get(i).forEach(column->detailMap.put(column.getColumnDataName(),value.get(column.getColumnDataName())));
+                Object detailDataId = details.get(i).get("detailDataId");
                 if (detailDataId != null) {
                     detailMap.put("detailDataId",detailDataId);
                 }

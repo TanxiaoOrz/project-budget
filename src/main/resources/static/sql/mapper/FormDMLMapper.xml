@@ -54,17 +54,21 @@
             <foreach collection="eqMap.entrySet()" index="key" item="value" separator=" and ">
                 ${key} = #{value}
             </foreach>
-            and
-            <foreach collection="likeMap.entrySet()" index="key" item="value" separator=" and ">
-                ${key} like #{value}
-            </foreach>
-            and
-            <foreach collection="betweenMap.entrySet()" index="key" item="value" separator=" and ">
-                ${key}
-                    <foreach collection="value" index="key" item="valueItem" open="between" separator="and">
-                        #{valueItem}
-                    </foreach>
-            </foreach>
+            <if test="likeMap.size()>0">
+                and
+                <foreach collection="likeMap.entrySet()" index="key" item="value" separator=" and ">
+                    ${key} like #{value}
+                </foreach>
+            </if>
+            <if test="betweenMap.size()>0">
+                and
+                <foreach collection="betweenMap.entrySet()" index="key" item="value" separator=" and ">
+                    ${key}
+                        <foreach collection="value" index="key" item="valueItem" open="between" separator="and">
+                            #{valueItem}
+                        </foreach>
+                </foreach>
+            </if>
         </where>
     </select>
 

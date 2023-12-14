@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.eoa.projectbudget.dto.FormInDto;
@@ -111,7 +112,27 @@ public class TableFrontController {
 
     }
 
-    @GetMapping("/from/{dataId}")
+    @GetMapping("/authority/{dataId}")
+    @Operation(summary = "获取指定实体表单或虚拟视图的操作权限")
+    @Parameters({
+            @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "dataId",description = "表单编号",required = false,in = ParameterIn.PATH),
+            @Parameter(name = "tableId", description = "表单编号", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "type", description = "操作行为",required = false, in = ParameterIn.QUERY, examples = {
+                    @ExampleObject(value = "1",description = "EDIT"),@ExampleObject(value = "0",description = "CREATE"),@ExampleObject(value = "2",description = "DELETE")})
+    })
+    public Vo<Boolean> getFormAuthority(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                        @PathVariable("dataId")Long dataId,
+                                        @RequestParam("isVirtual")Boolean isVirtual,
+                                        @RequestParam("tableId")Long tableId,
+                                        @RequestParam("type")int type) throws EoaException {
+        if (isVirtual)
+            return new Vo<>(viewService.checkAuthority(tableId,dataId,type,humanDto));
+        else
+            return new Vo<>(entityService.checkAuthority(tableId,dataId,type,humanDto));
+    }
+
+    @GetMapping("/form/{dataId}")
     @Operation(summary = "获取指定实体表单或虚拟视图的指定数据")
     @Parameters({
             @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
@@ -156,7 +177,7 @@ public class TableFrontController {
     @GetMapping("/form")
     @Operation(summary = "批量获取实体表单或虚拟视图的符合要求数据")
     @Parameters({
-            @Parameter(name = "columnId", description = "如果获取显示浏览框传输对应显示字段id", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "columnId", description = "如果获取显示浏览框传输对应显示字段id", required = false, in = ParameterIn.QUERY),
             @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "tableId", description = "表单编号", required = true, in = ParameterIn.QUERY)
     })
@@ -182,15 +203,15 @@ public class TableFrontController {
             } else {
                 outs = Arrays.asList(cache);
             }
-            if (columnId == null) {
+            if (columnId != null) {
                 outs.forEach(formOut -> formOut.toBrowser(columnId));
-                return new Vo<>(outs);
+                return new Vo<>(outs,outs.size());
             }
             return new Vo<>(filter.filt(outs),outs.size());
         }
     }
 
-    @PostMapping("/from")
+    @PostMapping("/form")
     @Operation(summary = "创建获取实体表单或虚拟视图的数据")
     @Parameters({
             @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
@@ -218,7 +239,7 @@ public class TableFrontController {
 
     }
 
-    @PutMapping("/from/{dataId}")
+    @PutMapping("/form/{dataId}")
     @Operation(summary = "创建获取实体表单或虚拟视图的数据")
     @Parameters({
             @Parameter(name = "dataId",description = "表单编号",required = true,in = ParameterIn.PATH),
@@ -247,7 +268,7 @@ public class TableFrontController {
         }
     }
 
-    @DeleteMapping("/from/{dataId}")
+    @DeleteMapping("/form/{dataId}")
     @Operation(summary = "获取指定实体表单或虚拟视图的指定数据")
     @Parameters({
             @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
