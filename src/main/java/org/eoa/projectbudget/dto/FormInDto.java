@@ -1,6 +1,7 @@
 package org.eoa.projectbudget.dto;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.ColumnEntity;
 import org.eoa.projectbudget.entity.TableEntity;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
@@ -37,15 +38,21 @@ public class FormInDto {
 
         int detailCounts = table.getDetailCount();
         detailColumns = new ArrayList<>(detailCounts);
-        for (int i = 1; i <= detailCounts; i++) {
-            detailColumns.add(columns.stream().filter(columnEntity -> columnEntity.getColumnDetailNo()==detailCounts).toList());
+        for (int i = 0; i <= detailCounts; i++) {
+            int groupNo = i+1;
+            detailColumns.add(columns.stream().filter(columnEntity -> columnEntity.getColumnDetailNo()== groupNo).toList());
         }
         return this;
     }
 
     public Map<String,Object> getMainMap() {
         Map<String, Object> collect = new HashMap<>();
-        mainColumns.forEach(column->collect.put(column.getColumnDataName(), mains.get(column.getColumnDataName())));
+        mainColumns.forEach(column-> {
+            Object value = mains.get(column.getColumnDataName());
+            if (column.getColumnType().equals(Column.DATATYPE_GROUP_VIEW.get(Column.DATETIME))&&( value instanceof Integer || value instanceof Long))
+                value = new Date(Long.parseLong(value.toString()));
+            collect.put(column.getColumnDataName(), value);
+        });
         collect.put("lastEditTime",new Date());
         return collect;
     }
@@ -59,7 +66,12 @@ public class FormInDto {
             for (Map<String,Object> value:
                     details) {
                 Map<String, Object> detailMap = new HashMap<>();
-                detailColumns.get(i).forEach(column->detailMap.put(column.getColumnDataName(),value.get(column.getColumnDataName())));
+                detailColumns.get(i).forEach(column-> {
+                    Object value1 = value.get(column.getColumnDataName());
+                    if (column.getColumnType().equals(Column.DATATYPE_GROUP_VIEW.get(Column.DATETIME))&&( value1 instanceof Integer || value1 instanceof Long))
+                        value1 = new Date(Long.parseLong(value1.toString()));
+                    detailMap.put(column.getColumnDataName(), value1);
+                });
                 Object detailDataId = details.get(i).get("detailDataId");
                 if (detailDataId != null) {
                     detailMap.put("detailDataId",detailDataId);

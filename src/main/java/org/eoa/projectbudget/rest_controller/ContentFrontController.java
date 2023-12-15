@@ -89,7 +89,7 @@ public class ContentFrontController {
             ,@RequestParam("leadContent") Long leadContent) throws EoaException, IOException {
 
         String upload = fileService.upload(multipartFile, humanDto.getDataId());
-        File file = new FileIn().setFileName(multipartFile.getName()).setLeadContent(leadContent).setFileRoute(upload).toEntity(null);
+        File file = new FileIn().setFileName(multipartFile.getOriginalFilename()).setLeadContent(leadContent).setFileRoute(upload).toEntity(null);
         Long id = contentService.newFile(file, humanDto.getDataId());
         return new Vo<>(fileOutFactory.out(contentService.getFile(id, humanDto.getDataId())));
 

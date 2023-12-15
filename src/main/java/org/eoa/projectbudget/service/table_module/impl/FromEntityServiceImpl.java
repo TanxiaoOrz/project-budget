@@ -140,8 +140,11 @@ public class FromEntityServiceImpl implements FormService {
                     :detailMapList) {   //遍历一个明细表每一行
                 detailMap.remove("detailDataId"); //获取并去除明细id
                 String formDetailTableName = tableDataName + DETAIL_LAG + detailNo;
-                if (detailMap.size()>0)
+
+                if (detailMap.size()>0) {
+                    detailMap.put("detailMainId",dataId);
                     formDMLMapper.insertDetailForm(detailMap, formDetailTableName);
+                }
             }
         }
         return dataId;
@@ -163,8 +166,9 @@ public class FromEntityServiceImpl implements FormService {
             List<Long> newExist = new ArrayList<>(detailMapList.size());
             for (Map<String, Object> detailMap
                     :detailMapList) {
-                Long detailDataId = (Long) detailMap.remove("detailDataId");    //获取并去除明细id
+                Long detailDataId = Long.valueOf(detailMap.remove("detailDataId").toString()) ;    //获取并去除明细id
                 if (detailDataId == null || oldExist.contains(detailDataId)) {
+                    detailMap.put("detailMainId",dataId);
                     formDMLMapper.insertDetailForm(detailMap, formDetailTableName);
                 } else {
                     formDMLMapper.updateDetailForm(detailMap, detailDataId, formDetailTableName);
@@ -203,10 +207,9 @@ public class FromEntityServiceImpl implements FormService {
         List<ColumnEntity> columns = columnMapper.selectList(new QueryWrapper<ColumnEntity>().eq("tableNo", tableId)
                 .orderByAsc("columnViewNo"));
         List<Long> ids = filter.getIds(formDMLMapper,columns.stream().filter(columnEntity -> columnEntity.getColumnDetailNo() == -1).toList(),table.getTableDataName());
-        ArrayList<FormOutDto> formOutDtos = new ArrayList<>();
-        ids.forEach(id ->consistForm(id,table,columns));
+        List<FormOutDto> list = ids.stream().map(id -> consistForm(id, table, columns)).toList();
         log.info("查找到{}条数据,数据编号=>{}",ids.size(),ids);
-        return formOutDtos;
+        return list;
     }
 
     @Override
@@ -235,6 +238,9 @@ public class FromEntityServiceImpl implements FormService {
             case DELETE -> {
                 TableEntity tableEntity = tableMapper.selectById(tableId);
                 Map<String, Object> mainFormById = formDMLMapper.getMainFormById(dataId, tableEntity.getTableDataName());
+                if (mainFormById == null) {
+                    throw new ServerException("未进行修改,没有变动项");
+                }
                 String deleteAuthority = (String) mainFormById.get("deleteAuthority");
                 Long creator = (Long) mainFormById.get("creator");
                 Constraint constraint = AuthorityUtils.getConstraint(deleteAuthority);

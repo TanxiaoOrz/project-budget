@@ -9,7 +9,7 @@
         update ${formDetailTableName}
         <set>
             <foreach collection="columns.entrySet()" index="key" item="value">
-                ${key} = #{value},
+                `${key}` = #{value},
             </foreach>
         </set>
         where `detailDataId` = #{detailDataId}
@@ -19,9 +19,9 @@
         update ${formTableName}
         <set>
             <foreach collection="columns.entrySet()" index="key" item="value">
-                ${key} = #{value},
+                `${key}` = #{value},
             </foreach>
-            latestEditTime = now()
+            `lastEditTime` = now()
         </set>
         where `dataId` = #{dataId}
     </update>
@@ -48,7 +48,7 @@
         </foreach>
     </insert>
 
-    <select id="getIdsByMap" resultType="Integer">
+    <select id="getIdsByMap" resultType="Long">
         select dataId from ${formTableName}
         <where>
             <foreach collection="eqMap.entrySet()" index="key" item="value" separator=" and ">
@@ -64,7 +64,7 @@
                 and
                 <foreach collection="betweenMap.entrySet()" index="key" item="value" separator=" and ">
                     ${key}
-                        <foreach collection="value" index="key" item="valueItem" open="between" separator="and">
+                        <foreach collection="value" index="keys" item="valueItem" open="between" separator="and">
                             #{valueItem}
                         </foreach>
                 </foreach>

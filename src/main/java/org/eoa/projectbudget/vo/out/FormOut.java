@@ -47,7 +47,6 @@ public class FormOut {
         }
         title = DataProcessUtils.nullToString(title);
 
-        this.dataId = null;
         this.requestId = null;
         this.tableId = null;
         this.requestStatus = null;

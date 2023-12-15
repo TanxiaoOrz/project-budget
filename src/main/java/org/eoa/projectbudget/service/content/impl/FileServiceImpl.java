@@ -36,7 +36,7 @@ public class FileServiceImpl implements FileService {
         File file = new File(absolutePath, name);
         while (file.exists()) {
             i++;
-            file = new File(absolutePath,name+"("+i+")");
+            file = new File(absolutePath,name.replaceFirst(".","("+i+")."));
         }
         file.mkdirs();
         file.createNewFile();

@@ -82,8 +82,8 @@ class FormOutDtoDMLMapperTest {
 
     @Test
     void getIdsByMap() {
-        formDMLMapper.getIdsByMap(FormOutDtoDDLMapperTest.TEST_MAIN,null,null,null);
-
+        formDMLMapper.getIdsByMap(FormOutDtoDDLMapperTest.TEST_MAIN,new HashMap<>(),new HashMap<>(),new HashMap<>());
+        formDMLMapper.getExistDetail(16L,"form_table_null_dt_1");
     }
 
     private HashMap<String, Object> getColumnDatas(int i) {

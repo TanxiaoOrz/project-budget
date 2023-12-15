@@ -189,7 +189,7 @@ public class TableFrontController {
         FilterFormUtils filter = new FilterFormUtils(request.getParameterMap());
         if (isVirtual) {
             List<FormOut> outs = factory.outs(viewService.getFormSort(tableId, filter, humanDto.getDataId()));
-            if (columnId == null) {
+            if (columnId != null) {
                 outs.forEach(formOut -> formOut.toBrowser(columnId));
                 return new Vo<>(outs);
             }
@@ -200,6 +200,7 @@ public class TableFrontController {
             if (cache == null) {
                 outs = factory.outs(entityService.getFormSort(tableId, filter, humanDto.getDataId()).stream().
                         filter(dto -> dto.checkView(organizationService.getHumanDto(dto.getCreator(), null), humanDto)).toList());
+                cacheService.setCache(ChangeFlagUtils.Form, filter.getDescription(), humanDto.getDataId(), outs);
             } else {
                 outs = Arrays.asList(cache);
             }
@@ -269,7 +270,7 @@ public class TableFrontController {
     }
 
     @DeleteMapping("/form/{dataId}")
-    @Operation(summary = "获取指定实体表单或虚拟视图的指定数据")
+    @Operation(summary = "删除指定实体表单或虚拟视图的指定数据")
     @Parameters({
             @Parameter(name = "isVirtual", description = "是否虚拟视图", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "dataId",description = "表单编号",required = true,in = ParameterIn.PATH),

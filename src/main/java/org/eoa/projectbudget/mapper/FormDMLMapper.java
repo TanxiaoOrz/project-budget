@@ -128,7 +128,7 @@ public interface FormDMLMapper {
      * @param detailTableName 明细表名
      * @return 明细id数组
      */
-    @Select("select detailDataId from ${formDetailTableName} where `detailMainId` = #{detailMainId}")
+    @Select("select detailDataId from ${detailTableName} where `detailMainId` = #{detailMainId}")
     List<Long> getExistDetail(@Param("detailMainId")Long detailMainId,
                               @Param("detailTableName")String detailTableName);
 

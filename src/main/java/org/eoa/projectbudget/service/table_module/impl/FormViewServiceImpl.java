@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +77,7 @@ public class FormViewServiceImpl implements FormService {
                         .orderByAsc("columnViewNo"));
         //视图不存在明细表单,且不存在权限控制部分,直接使用,实体表需要过滤
         List<Long> ids = filter.getIds(formDMLMapper,mainColumns,table.getTableDataName());
-        ArrayList<FormOutDto> formOutDtos = new ArrayList<>(ids.size());
-        ids.forEach(id->consistForm(id,table,mainColumns));
+        List<FormOutDto> formOutDtos = ids.stream().map(id->consistForm(id,table,mainColumns)).toList();
         log.info("查找到{}条数据,数据编号=>{}",ids.size(),ids);
         return formOutDtos;
     }
