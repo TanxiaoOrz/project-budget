@@ -27,7 +27,7 @@ public class Section {
     String sectionIntroduction;
     Date createTime;
     Long photo;
-
+    Integer isDeprecated;
     public Long getDataId() {
         return dataId;
     }
@@ -106,6 +106,15 @@ public class Section {
 
     public Section setPhoto(Long photo) {
         this.photo = photo;
+        return this;
+    }
+
+    public Integer getIsDeprecated() {
+        return isDeprecated;
+    }
+
+    public Section setIsDeprecated(Integer isDeprecated) {
+        this.isDeprecated = isDeprecated;
         return this;
     }
 }

@@ -47,6 +47,7 @@ public class HumanResourceView {
     String signature;
     Date lastLogin;
     Integer safety;
+    Integer isDeprecated;
 
     public HumanResourceView(HumanResourceView humanResourceView) {
         this.dataId = humanResourceView.dataId;
@@ -70,5 +71,6 @@ public class HumanResourceView {
         this.lastLogin = humanResourceView.lastLogin;
         this.safety = humanResourceView.safety;
         this.age = humanResourceView.age;
+        this.isDeprecated = humanResourceView.isDeprecated;
     }
 }

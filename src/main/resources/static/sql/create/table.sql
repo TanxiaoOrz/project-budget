@@ -108,6 +108,7 @@ create table `human_resource` (
     `signature` varchar(100) null comment '个性签名',
     `lastLogin` datetime null comment '最后登录时间',
     `safety` INTEGER null default 0 comment '安全等级',
+    `isDeprecated` tinyInt null default 0 comment '0否1是废弃',
     PRIMARY KEY (`dataId`),
     UNIQUE INDEX `loginName_Unique` (`loginName` ASC),
     INDEX `section_FOREIGN` (`section` ASC),
@@ -134,6 +135,7 @@ create table `depart_resource` (
     `departIntroduction` varchar(1000) NULL comment  '上级介绍',
     `createTime` datetime null default now() comment '创建时间',
     `photo` BIGINT(64) UNSIGNED NOT NULL comment  '照片文件编号',
+    `isDeprecated` tinyInt null default 0 comment '0否1是废弃',
     PRIMARY KEY (`dataId`),
     unique INDEX `departCode_Unique` (`departCode` ASC)
 ) comment = '部门表单';
@@ -148,6 +150,7 @@ create table `section_resource` (
     `sectionIntroduction` varchar(1000) NULL comment  '上级介绍',
     `createTime` datetime null default now() comment '创建时间',
     `photo` BIGINT(64) UNSIGNED NOT NULL comment  '照片文件编号',
+    `isDeprecated` tinyInt null default 0 comment '0否1是废弃',
     PRIMARY KEY (`dataId`),
     UNIQUE INDEX `sectionName_Unique` (`sectionName` ASC),
     UNIQUE INDEX `sectionCode_Unique` (`sectionCode` ASC)

@@ -30,6 +30,8 @@ public class Depart {
     Date createTime;
     Long photo;
 
+    Integer isDeprecated;
+
     public Long getDataId() {
         return dataId;
     }
@@ -117,6 +119,15 @@ public class Depart {
 
     public Depart setPhoto(Long photo) {
         this.photo = photo;
+        return this;
+    }
+
+    public Integer getIsDeprecated() {
+        return isDeprecated;
+    }
+
+    public Depart setIsDeprecated(Integer isDeprecated) {
+        this.isDeprecated = isDeprecated;
         return this;
     }
 }

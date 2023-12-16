@@ -46,5 +46,6 @@ public class HumanResource {
     String signature;
     Date lastLogin;
     Integer safety;
+    Integer isDeprecated;
 
 }
