@@ -33,6 +33,8 @@ import java.util.List;
 public class OrganizationServiceImpl implements OrganizationService {
 
     @Autowired
+    HumanMapper humanMapper;
+    @Autowired
     HumanViewMapper humanViewMapper;
     @Autowired
     AuthorityMapper authorityMapper;
@@ -47,19 +49,30 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final Logger log = LoggerFactory.getLogger("AuthorityModule");
 
     @Override
-    public Integer newHuman(HumanResource humanResource, Long userId) {
-        return null;
+    public Long newHuman(HumanResource humanResource, Long userId) {
+        humanResource.setIsDeprecated(0);
+        log.info("用户=>{}创建人员=>{}",userId,humanResource);
+        humanMapper.insert(humanResource);
+        return humanResource.getDataId();
     }
 
     @Override
     @CacheEvict(cacheNames = "humanDto",key = "#humanResource.dataId")
     public Integer updateHuman(HumanResource humanResource, Long userId) {
-        return null;
+        humanResource.setIsDeprecated(0);
+        int update = humanMapper.updateById(humanResource);
+        log.info("用户=>{}修改人员=>{},修改数量=>{}",userId,humanResource,update);
+        return update;
     }
 
     @Override
     public HumanResourceView getHuman(Long humanId, Long userId) {
-        return null;
+        log.info("用户=>{}获取人员=>{}",userId,humanId);
+        HumanResourceView humanResourceView = humanViewMapper.selectById(humanId);
+        if (humanResourceView == null) {
+            log.error("人员=>{}不存在",humanId);
+        }
+        return humanResourceView;
     }
 
     @Override
@@ -123,47 +136,115 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     @CacheEvict(cacheNames = "humanDto",key = "#humanId")
     public Integer dropHuman(Long humanId, Long userId) {
-        return null;
+        HumanResource humanResource = humanMapper.selectById(humanId);
+        humanResource.setIsDeprecated(1);
+        int update = humanMapper.updateById(humanResource);
+        log.info("用户=>{}废弃人员=>{},废弃数量=>{}",userId,humanId,update);
+        return update;
     }
 
     @Override
-    public Integer newDepart(Depart depart, Long userId) {
-        return null;
+    public Long newDepart(Depart depart, Long userId) {
+        depart.setIsDeprecated(0);
+        log.info("用户=>{}创建部门=>{}",userId,depart);
+        departMapper.insert(depart);
+        return depart.getDataId();
     }
 
     @Override
     public Integer updateDepart(Depart depart, Long userId) {
-        return null;
+        depart.setIsDeprecated(0);
+        int update = departMapper.updateById(depart);
+        log.info("用户=>{}修改部门=>{},修改数量=>{}",userId,depart,update);
+        return update;
     }
 
     @Override
     public Depart getDepart(Long departId, Long userId) {
-        return null;
+        log.info("用户=>{}获取部门=>{}",userId,departId);
+        Depart depart = departMapper.selectById(departId);
+        if (depart == null) {
+            log.error("部门=>{}不存在",departId);
+        }
+        return depart;
     }
 
     @Override
     public Integer dropDepart(Long departId, Long userId, boolean recursion) {
-        return null;
+        Depart depart = departMapper.selectById(departId);
+        depart.setIsDeprecated(0);
+        int update = departMapper.updateById(depart);
+        log.info("用户=>{}废弃部门=>{},修改数量=>{}",userId,departId,update);
+        if (recursion) {
+            dropDepartRecursion(departId);
+        }
+        return update;
+    }
+
+    private void dropDepartRecursion(Long belongId) {
+        List<Long> belongs = departMapper.selectList(new QueryWrapper<Depart>()
+                .eq("belongDepart",belongId)
+                .eq("isDeprecated",0)).stream().map(Depart::getDataId).toList();
+        Integer dropped = departMapper.dropBelongDepart(belongId);
+        log.info("废弃部门=>{},连带废弃子部门=>{},废弃数量=>{}",belongId,belongs,dropped);
+        belongs.forEach(this::dropDepartRecursion);
+    }
+
+
+    @Override
+    public Long newSection(Section section, Long userId) {
+        section.setIsDeprecated(0);
+        log.info("用户=>{}创建分部=>{}",userId,section);
+        sectionMapper.insert(section);
+        return section.getDataId();
     }
 
     @Override
-    public Integer newSection(Section Section, Long userId) {
-        return null;
+    public Integer updateSection(Section section, Long userId) {
+        section.setIsDeprecated(0);
+        int update = sectionMapper.updateById(section);
+        log.info("用户=>{}修改部门=>{},修改数量=>{}",userId,section,update);
+        return update;
     }
 
     @Override
-    public Integer updateSection(Section Section, Long userId) {
-        return null;
+    public Section getSection(Long sectionId, Long userId) {
+        log.info("用户=>{}获取分部=>{}",userId,sectionId);
+        Section section = sectionMapper.selectById(sectionId);
+        if (section == null) {
+            log.error("分部=>{}不存在",sectionId);
+        }
+        return section;
     }
 
     @Override
-    public Section getSection(Long SectionId, Long userId) {
-        return null;
+    public Integer dropSection(Long sectionId, Long userId, boolean recursion) {
+        Section section = sectionMapper.selectById(sectionId);
+        section.setIsDeprecated(0);
+        int update = sectionMapper.updateById(section);
+        log.info("用户=>{}废弃分部=>{},修改数量=>{}",userId,sectionId,update);
+        if (recursion) {
+            dropSectionRecursion(sectionId);
+        }
+        return update;
     }
 
-    @Override
-    public Integer dropSection(Long SectionId, Long userId, boolean recursion) {
-        return null;
+    private void dropSectionRecursion(Long belongId) {
+
+        List<Long> belongDepart = departMapper.selectList(new QueryWrapper<Depart>()
+                .eq("belongSection",belongId)
+                .eq("isDeprecated",0)).stream().map(Depart::getDataId).toList();
+        Integer droppedDepartCount = departMapper.dropBelongDepart(belongId);
+        log.info("废弃分部=>{},连带废弃子部门=>{},废弃数量=>{}",belongId,belongDepart,droppedDepartCount);
+        belongDepart.forEach(this::dropDepartRecursion);
+
+
+        List<Long> belongSection = sectionMapper.selectList(new QueryWrapper<Section>()
+                .eq("belongSection",belongId)
+                .eq("isDeprecated",0)).stream().map(Section::getDataId).toList();
+        Integer droppedSectionCount = sectionMapper.dropBelongDepart(belongId);
+        log.info("废弃分部=>{},连带废弃子分部=>{},废弃数量=>{}",belongId,belongSection,droppedSectionCount);
+        belongSection.forEach(this::dropDepartRecursion);
     }
 
     @Override
