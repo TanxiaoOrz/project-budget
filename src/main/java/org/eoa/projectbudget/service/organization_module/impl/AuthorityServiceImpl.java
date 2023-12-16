@@ -59,7 +59,12 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
 
     @Override
     public Authority getAuthorityById(Long authorityId, Long userId) {
-        return null;
+        log.info("用户=>{}获取权限=>{}",userId,authorityId);
+        Authority authority = authorityMapper.selectById(userId);
+        if (authority == null) {
+            throw new ParameterException("authorityId",authorityId.toString(),"不存在该权限");
+        }
+        return authority;
     }
 
     @Override
@@ -71,8 +76,12 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
 
     @Override
     public Character getCharacterById(Long characterId, Long userId) {
-        // TODO
-        return null;
+        log.info("用户=>{}获取角色=>{}",userId,characterId);
+        Character character = characterMapper.selectById(userId);
+        if (character == null) {
+            throw new ParameterException("authorityId",characterId.toString(),"不存在该权限");
+        }
+        return character;
     }
 
     @Override
@@ -83,39 +92,72 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     }
 
     @Override
-    public Integer newCharacter(Character character, Long userId) {
-        // TODO
-        return null;
+    public Long newCharacter(Character character, Long userId) {
+        character.setCreator(userId);
+        character.setCreateTime(new Date());
+        log.info("用户=>{}创建角色=>{}",userId,character);
+        characterMapper.insert(character);
+        return character.getDataId();
     }
 
     @Override
     public Integer updateCharacter(Character character, Long userId) {
-        // TODO
-        return null;
+        int update = characterMapper.updateById(character);
+        log.info("用户=>{}修改角色=>{},修改行数=>{}",userId,character,update);
+        return update;
     }
 
     @Override
     public Integer dropCharacter(Long characterId, Long userId) {
-        // TODO
-        return null;
+        int delete = characterMapper.deleteById(characterId);
+        Integer dropHumanAll = characterMapper.dropHumanAll(characterId);
+        Integer dropAuthorityAll = characterMapper.dropAuthorityAll(characterId);
+        log.info("用户=>{}废弃角色=>{},修改行数=>{},废弃人员链接数量=>{},废弃权限链接数量=>{}",userId,characterId,delete,dropHumanAll,dropAuthorityAll);
+        return delete;
     }
 
     @Override
-    public Integer characterLinkAuthority(Long characterId, Long authorityId) {
-        // TODO
-        return null;
+    public Integer characterLinkAuthority(Long characterId, Long authorityId, Long userId) {
+        List<Integer> authorityIds = authorityMapper.getIdsFormCharacter(characterId);
+        if (authorityIds.contains(Integer.valueOf(authorityId.toString()))) {
+            log.error("用户=>{}对角色=>{}增加权限=>{},已存在",userId,characterId,authorityId);
+        }
+        Integer linked = characterMapper.linkAuthority(characterId, authorityId);
+        log.info("用户=>{}对角色=>{}增加权限=>{},修改数量=>{}",userId,characterId,authorityId,linked);
+        return linked;
     }
 
     @Override
-    public Integer characterLinkUser(Long characterId, Long userId) {
-        // TODO
-        return null;
+    public Integer characterLinkUser(Long characterId, Long humanId, Integer grade, Long userId) {
+        List<CharacterMapper.Grade> characterIds = characterMapper.getCharacterIdFromHuman(humanId);
+        if (characterIds.stream().anyMatch(gradeExist -> gradeExist.getCharacterId().equals(characterId))) {
+            log.error("用户=>{}对角色=>{}增加人员=>{},等级=>{},已存在",userId,characterId,humanId,grade);
+        }
+        Integer linked = characterMapper.linkHuman(characterId, humanId,grade);
+        log.info("用户=>{}对角色=>{}增加人员=>{},等级=>{},修改数量=>{}",userId,characterId,humanId,grade,linked);
+        return linked;
     }
 
     @Override
-    public Integer userLinkAuthority(Long authorityId, Long userId) {
-        // TODO
-        return null;
+    public Integer characterDropAuthority(Long characterId, Long authorityId, Long userId) {
+        List<Integer> authorityIds = authorityMapper.getIdsFormCharacter(characterId);
+        if (!authorityIds.contains(Integer.valueOf(authorityId.toString()))) {
+            log.error("用户=>{}对角色=>{}删除权限=>{},不存在",userId,characterId,authorityId);
+        }
+        Integer dropped = characterMapper.dropAuthority(characterId, authorityId);
+        log.info("用户=>{}对角色=>{}删除权限=>{},修改数量=>{}",userId,characterId,authorityId,dropped);
+        return dropped;
+    }
+
+    @Override
+    public Integer characterDropUser(Long characterId, Long humanId, Long userId) {
+        List<CharacterMapper.Grade> characterIds = characterMapper.getCharacterIdFromHuman(humanId);
+        if (characterIds.stream().noneMatch(gradeExist -> gradeExist.getCharacterId().equals(characterId))) {
+            log.error("用户=>{}对角色=>{}废弃人员=>{},不存在",userId,characterId,humanId);
+        }
+        Integer dropped = characterMapper.dropHuman(characterId, humanId);
+        log.info("用户=>{}对角色=>{}增加人员=>{},修改数量=>{}",userId,characterId,humanId,dropped);
+        return dropped;
     }
 
     @Override

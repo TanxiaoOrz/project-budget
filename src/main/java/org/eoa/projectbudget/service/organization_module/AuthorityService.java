@@ -15,7 +15,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service
  * @ClassName: AuthorityService
  * @Description: 权限处理业务类
- * @Version 1.3
+ * @Version 1.4
  */
 public interface  AuthorityService {
     /**
@@ -55,7 +55,7 @@ public interface  AuthorityService {
      * @param userId 操作用户
      * @return 结果数字
      */
-    Integer newCharacter(Character character, Long userId);
+    Long newCharacter(Character character, Long userId);
 
     /**
      * 修改角色
@@ -77,25 +77,40 @@ public interface  AuthorityService {
      * 连接角色权限
      * @param characterId 角色
      * @param authorityId 权限
+     * @param userId 操作人
      * @return 结果数字
      */
-    Integer characterLinkAuthority(Long characterId, Long authorityId);
+    Integer characterLinkAuthority(Long characterId, Long authorityId, Long userId);
 
     /**
      * 连接用户角色
      * @param characterId 角色
-     * @param userId 用户
+     * @param humanId 用户
+     * @param userId 操作人
      * @return 结果数字
      */
-    Integer characterLinkUser(Long characterId, Long userId);
+    Integer characterLinkUser(Long characterId, Long humanId, Integer grade, Long userId);
+
 
     /**
-     * 连接用户权限
-     * @param authorityId 全新啊
-     * @param userId 用户
+     * 废弃角色权限
+     * @param characterId 角色
+     * @param authorityId 权限
+     * @param userId 操作人
      * @return 结果数字
      */
-    Integer userLinkAuthority(Long authorityId, Long userId);
+    Integer characterDropAuthority(Long characterId, Long authorityId, Long userId);
+
+    /**
+     * 废弃用户角色
+     * @param characterId 角色
+     * @param humanId 用户
+     * @param userId 操作人
+     * @return 结果数字
+     */
+    Integer characterDropUser(Long characterId,Long humanId, Long userId);
+
+
 
     /**
      * 获取tokens
