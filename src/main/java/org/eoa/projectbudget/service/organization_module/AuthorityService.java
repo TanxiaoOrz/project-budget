@@ -2,10 +2,11 @@ package org.eoa.projectbudget.service.organization_module;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.entity.Authority;
+import org.eoa.projectbudget.entity.Character;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.exception.ParameterException;
+import org.eoa.projectbudget.mapper.CharacterMapper;
 import org.eoa.projectbudget.vo.Tokens;
-import org.eoa.projectbudget.entity.Character;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service
  * @ClassName: AuthorityService
  * @Description: 权限处理业务类
- * @Version 1.4
+ * @Version 1.5
  */
 public interface  AuthorityService {
     /**
@@ -109,6 +110,24 @@ public interface  AuthorityService {
      * @return 结果数字
      */
     Integer characterDropUser(Long characterId,Long humanId, Long userId);
+
+
+    /**
+     * 获取角色下的人员
+     * @param characterId 角色编号
+     * @param userId 操作人
+     * @return 人员数组
+     */
+    List<CharacterMapper.Grade> getHumansOfCharacter(Long characterId, Long userId);
+
+
+    /**
+     * 获取角色下的权限
+     * @param characterId 角色编号
+     * @param userId 操作人
+     * @return 权限数组
+     */
+    List<Authority> getAuthorityOfCharacter(Long characterId, Long userId);
 
 
 

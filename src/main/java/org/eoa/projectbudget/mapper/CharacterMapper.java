@@ -2,6 +2,7 @@ package org.eoa.projectbudget.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
+import org.eoa.projectbudget.entity.Authority;
 import org.eoa.projectbudget.entity.Character;
 
 import java.util.List;
@@ -39,9 +40,17 @@ public interface CharacterMapper extends BaseMapper<Character> {
     @Delete("delete from authority_character where authorityId = #{authorityId}")
     Integer dropAuthorityAll(@Param("characterId")Long characterId);
 
+    @Select("select * from `character_human` where characterId = #{characterId}")
+    List<Grade> getHumanFromCharacter(@Param("characterId")Long characterId);
+
+    @Select("select `authority`.* from `authority` right join `authority_character` on  authorityId = dataId where characterId = #{characterId}")
+    List<Authority> getAuthorityFromCharacter(@Param("characterId")Long characterId);
+
     public class Grade {
         Long characterId;
         Integer grade;
+
+        Long humanId;
 
         public Long getCharacterId() {
             return characterId;
@@ -58,6 +67,15 @@ public interface CharacterMapper extends BaseMapper<Character> {
 
         public Grade setGrade(Integer grade) {
             this.grade = grade;
+            return this;
+        }
+
+        public Long getHumanId() {
+            return humanId;
+        }
+
+        public Grade setHumanId(Long humanId) {
+            this.humanId = humanId;
             return this;
         }
     }

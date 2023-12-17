@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -32,8 +33,8 @@ import java.util.List;
  * @Date: 2023/11/6 13:08
  * @PackageName: org.eoa.projectbudget.service.organization_module.impl
  * @ClassName: AuthorityServiceImpl
- * @Description: TODO
- * @Version: 1.0
+ * @Description: 权限业务类实现接口
+ * @Version: 1.3
  **/
 
 @Service
@@ -102,12 +103,16 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
 
     @Override
     public Integer updateCharacter(Character character, Long userId) {
+        Character old = characterMapper.selectById(character.getDataId());
+        character.setCreateTime(old.getCreateTime())
+                .setCreator(old.getCreator());
         int update = characterMapper.updateById(character);
         log.info("用户=>{}修改角色=>{},修改行数=>{}",userId,character,update);
         return update;
     }
 
     @Override
+    @CacheEvict(cacheNames = "humanDto",allEntries = true)
     public Integer dropCharacter(Long characterId, Long userId) {
         int delete = characterMapper.deleteById(characterId);
         Integer dropHumanAll = characterMapper.dropHumanAll(characterId);
@@ -117,6 +122,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     }
 
     @Override
+    @CacheEvict(cacheNames = "humanDto",allEntries = true)
     public Integer characterLinkAuthority(Long characterId, Long authorityId, Long userId) {
         List<Integer> authorityIds = authorityMapper.getIdsFormCharacter(characterId);
         if (authorityIds.contains(Integer.valueOf(authorityId.toString()))) {
@@ -128,6 +134,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     }
 
     @Override
+    @CacheEvict(cacheNames = "humanDto",key = "#humanId")
     public Integer characterLinkUser(Long characterId, Long humanId, Integer grade, Long userId) {
         List<CharacterMapper.Grade> characterIds = characterMapper.getCharacterIdFromHuman(humanId);
         if (characterIds.stream().anyMatch(gradeExist -> gradeExist.getCharacterId().equals(characterId))) {
@@ -139,6 +146,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     }
 
     @Override
+    @CacheEvict(cacheNames = "humanDto",allEntries = true)
     public Integer characterDropAuthority(Long characterId, Long authorityId, Long userId) {
         List<Integer> authorityIds = authorityMapper.getIdsFormCharacter(characterId);
         if (!authorityIds.contains(Integer.valueOf(authorityId.toString()))) {
@@ -150,6 +158,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     }
 
     @Override
+    @CacheEvict(cacheNames = "humanDto",key = "#humanId")
     public Integer characterDropUser(Long characterId, Long humanId, Long userId) {
         List<CharacterMapper.Grade> characterIds = characterMapper.getCharacterIdFromHuman(humanId);
         if (characterIds.stream().noneMatch(gradeExist -> gradeExist.getCharacterId().equals(characterId))) {
@@ -158,6 +167,20 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
         Integer dropped = characterMapper.dropHuman(characterId, humanId);
         log.info("用户=>{}对角色=>{}增加人员=>{},修改数量=>{}",userId,characterId,humanId,dropped);
         return dropped;
+    }
+
+    @Override
+    public List<CharacterMapper.Grade> getHumansOfCharacter(Long characterId, Long userId) {
+        List<CharacterMapper.Grade> humanFromCharacter = characterMapper.getHumanFromCharacter(characterId);
+        log.info("用户=>{}获取角色=>{}下的人员清单,数量=>{}",userId,characterId,humanFromCharacter.size());
+        return humanFromCharacter;
+    }
+
+    @Override
+    public List<Authority> getAuthorityOfCharacter(Long characterId, Long userId) {
+        List<Authority> authorityFromCharacter = characterMapper.getAuthorityFromCharacter(characterId);
+        log.info("用户=>{}获取角色=>{}下的权限清单,数量=>{}",userId,characterId,authorityFromCharacter.size());
+        return authorityFromCharacter;
     }
 
     @Override
