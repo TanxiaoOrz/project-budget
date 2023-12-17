@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service.organization_module.impl
  * @ClassName: OrganizationServiceImpl
  * @Description: TODO
- * @Version: 1.1
+ * @Version: 1.2
  **/
 
 @Service
@@ -51,6 +52,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Long newHuman(HumanResource humanResource, Long userId) {
         humanResource.setIsDeprecated(0);
+        Depart depart = departMapper.selectById(humanResource.getDepart());
+        if (depart == null) {
+            log.error("用户=>{}创建人员=>{},部门=>{}不存在",userId,humanResource,humanResource.getDepart());
+            throw new ParameterException("depart",humanResource.getDepart().toString(),"部门不存在");
+        }
+        humanResource.setSection(depart.getBelongSection());
         log.info("用户=>{}创建人员=>{}",userId,humanResource);
         humanMapper.insert(humanResource);
         return humanResource.getDataId();
@@ -60,6 +67,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     @CacheEvict(cacheNames = "humanDto",key = "#humanResource.dataId")
     public Integer updateHuman(HumanResource humanResource, Long userId) {
         humanResource.setIsDeprecated(0);
+        Depart depart = departMapper.selectById(humanResource.getDepart());
+        if (depart == null) {
+            log.error("用户=>{}创建人员=>{},部门=>{}不存在",userId,humanResource,humanResource.getDepart());
+            throw new ParameterException("depart",humanResource.getDepart().toString(),"部门不存在");
+        }
         int update = humanMapper.updateById(humanResource);
         log.info("用户=>{}修改人员=>{},修改数量=>{}",userId,humanResource,update);
         return update;
@@ -145,7 +157,19 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Long newDepart(Depart depart, Long userId) {
+        if (depart.getBelongDepart() != null) {
+            Depart leadDepart = departMapper.selectById(depart.getBelongDepart());
+            if (leadDepart == null) {
+                log.error("用户=>{}创建部门=>{},部门=>{}不存在",userId,depart,depart.getBelongDepart());
+                throw new ParameterException("depart",depart.getBelongDepart().toString(),"部门不存在");
+            }
+            depart.setBelongSection(leadDepart.getBelongSection());
+        }
         depart.setIsDeprecated(0);
+        if (depart.getCreateTime() == null) {
+            depart.setCreateTime(new Date());
+
+        }
         log.info("用户=>{}创建部门=>{}",userId,depart);
         departMapper.insert(depart);
         return depart.getDataId();
@@ -153,7 +177,18 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Integer updateDepart(Depart depart, Long userId) {
+        if (depart.getBelongDepart() != null) {
+            Depart leadDepart = departMapper.selectById(depart.getBelongDepart());
+            if (leadDepart == null) {
+                log.error("用户=>{}修改部门=>{},部门=>{}不存在",userId,depart,depart.getBelongDepart());
+                throw new ParameterException("depart",depart.getBelongDepart().toString(),"部门不存在");
+            }
+            depart.setBelongSection(leadDepart.getBelongSection());
+        }
         depart.setIsDeprecated(0);
+        if (depart.getCreateTime() == null) {
+            depart.setCreateTime(departMapper.selectById(depart.getDataId()).getCreateTime());
+        }
         int update = departMapper.updateById(depart);
         log.info("用户=>{}修改部门=>{},修改数量=>{}",userId,depart,update);
         return update;
@@ -194,6 +229,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Long newSection(Section section, Long userId) {
         section.setIsDeprecated(0);
+        if (section.getCreateTime() == null)
+            section.setCreateTime(new Date());
         log.info("用户=>{}创建分部=>{}",userId,section);
         sectionMapper.insert(section);
         return section.getDataId();
@@ -202,6 +239,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Integer updateSection(Section section, Long userId) {
         section.setIsDeprecated(0);
+        if (section.getCreateTime() == null)
+            section.setCreateTime(sectionMapper.selectById(section.getDataId()).getCreateTime());
         int update = sectionMapper.updateById(section);
         log.info("用户=>{}修改部门=>{},修改数量=>{}",userId,section,update);
         return update;

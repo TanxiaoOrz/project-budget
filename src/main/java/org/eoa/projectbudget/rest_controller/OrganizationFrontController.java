@@ -76,7 +76,7 @@ public class OrganizationFrontController {
         FilterUtils<Depart> filter = new FilterUtils<>(request.getParameterMap(), Depart.class);
         List<DepartOut> outs;
         String methods = filter.getDescription();
-        int flag = ChangeFlagUtils.HUMAN;
+        int flag = ChangeFlagUtils.DEPART;
         DepartOut[] cache = cacheService.getCache(flag, methods, USER_ID_CACHE, DepartOut[].class);
         if (cache == null) {
             outs = departOutFactory.outs(organizationService.getDepartList(filter.getWrapper(), humanDto.getDataId()));
@@ -94,7 +94,7 @@ public class OrganizationFrontController {
         FilterUtils<Section> filter = new FilterUtils<>(request.getParameterMap(), Section.class);
         List<SectionOut> outs;
         String methods = filter.getDescription();
-        int flag = ChangeFlagUtils.HUMAN;
+        int flag = ChangeFlagUtils.SECTION;
         SectionOut[] cache = cacheService.getCache(flag, methods, USER_ID_CACHE, SectionOut[].class);
         if (cache == null) {
             outs = sectionOutFactory.outs(organizationService.getSectionList(filter.getWrapper(), humanDto.getDataId()));
