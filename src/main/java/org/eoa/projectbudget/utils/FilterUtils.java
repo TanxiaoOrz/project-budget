@@ -27,6 +27,8 @@ public class FilterUtils<Entity> {
 
     private final static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 
+    Boolean browser = false;
+
     Map<String,String[]> map;
 
     Page page;
@@ -41,6 +43,11 @@ public class FilterUtils<Entity> {
             this.page = new Page(Integer.parseInt(map.get("current")[0]), Integer.parseInt(map.get("pageSize")[0]));
         }catch (NullPointerException e) {
             this.page = new Page(1,Integer.MAX_VALUE);
+        }
+        try {
+            this.browser = Boolean.getBoolean(map.get("browser")[0]);
+        }catch (NullPointerException e) {
+            this.browser = false;
         }
 
         this.wrapper = new QueryWrapper<>();
