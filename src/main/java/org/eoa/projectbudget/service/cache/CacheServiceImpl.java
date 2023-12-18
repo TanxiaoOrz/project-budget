@@ -54,13 +54,14 @@ public class CacheServiceImpl implements CacheService{
     }
 
     public <T> T  getCache(String flag, String method,Long userId, Date changeFlag,Class<T> clazz) throws EoaException {
-        String key = String.format("%d-%s", userId, method);
-        WithTime withTime = (WithTime) redisTemplate.boundHashOps(flag).get(key);
+        String hashKey = String.format("%s-%s",flag,method);
+        String key = String.format("%d", userId);
+        WithTime withTime = (WithTime) redisTemplate.boundHashOps(hashKey).get(key);
         if (withTime == null) {
-            log.info("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>false",flag,changeFlag,key);
+            log.info("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>false",hashKey,changeFlag,key);
             return null;
         }
-        log.info("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>true",flag,changeFlag,key);
+        log.info("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>true",hashKey,changeFlag,key);
         String s = (withTime).valueEffective(changeFlag);
         if (s == null) {
             return null;
@@ -69,26 +70,27 @@ public class CacheServiceImpl implements CacheService{
             return new ObjectMapper().readValue(s,clazz);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            log.error("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>false",flag,changeFlag,key);
+            log.error("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>false",hashKey,changeFlag,key);
             throw new DataException("redis",flag,key,s,"json转换出错");
         }
     }
 
     public CacheServiceImpl setCache(String flag, String method, Long userId, Object object) throws EoaException {
-        String key = String.format("%d-%s", userId, method);
+        String hashKey = String.format("%s-%s",flag,method);
+        String key = String.format("%d", userId);
         String value;
         try {
             value = new ObjectMapper().writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            log.info("存储:Flag=>{}的缓存:=>{}success=>false",flag,key);
+            log.info("存储:Flag=>{}的缓存:=>{}success=>false",hashKey,key);
             throw new ServerException("数据转换错误", e);
         }
-        BoundHashOperations<String, Object, Object> hashFlag = redisTemplate.boundHashOps(flag);
+        BoundHashOperations<String, Object, Object> hashFlag = redisTemplate.boundHashOps(hashKey);
         if (Boolean.TRUE.equals(hashFlag.hasKey(key)))
             hashFlag.delete(key);
         hashFlag.put(key, new WithTime(value));
         hashFlag.expire(cacheTime, TimeUnit.MINUTES);
-        log.info("存储:Flag=>{}的缓存:=>{}success=>true",flag,key);
+        log.info("存储:Flag=>{}的缓存:=>{}success=>true",hashKey,key);
         return this;
     }
 
