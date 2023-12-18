@@ -16,19 +16,32 @@ import java.util.Date;
  **/
 
 @Schema(name = "ContentOut", description = "目录输出结构体")
-public class ContentOut {
+public class ContentOut implements VoOut{
+    @Schema(description = "数据编号")
     Long dataId;
+    @Schema(description = "是否废弃")
     Boolean deprecated;
+    @Schema(description = "目录名称,browserId=0")
     String contentName;
+    @Schema(description = "目录憋住,browserId=1")
     String contentRemark;
+    @Schema(description = "创建者,,browserId=2")
     Long creator;
+    @Schema(description = "创建时间")
     Date createTime;
+    @Schema(description = "默认编辑权限")
     String defaultEdit;
+    @Schema(description = "默认创建权限")
     String defaultCreate;
+    @Schema(description = "默认删除权限")
     String defaultDelete;
+    @Schema(description = "默认共享权限")
     String defaultShare;
+    @Schema(description = "上级目录")
     Long leadContent;
+    @Schema(description = "创建者姓名")
     String creatorName;
+    @Schema(description = "上级目录名称")
     String leadName;
 
     public ContentOut() {
@@ -164,4 +177,24 @@ public class ContentOut {
         this.leadName = leadName;
         return this;
     }
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.deprecated = null;
+        this.contentName = browserId!=0L?null:contentName;
+        this.contentRemark = browserId!=1L?null:contentRemark;
+        this.creator = browserId!=2L?null:creator;
+        this.createTime = browserId!=3L?null:createTime;
+        this.defaultEdit = null;
+        this.defaultCreate = null;
+        this.defaultDelete = null;
+        this.defaultShare = null;
+        this.leadContent = null;
+        this.creatorName = null;
+        this.leadName = null;
+    }
+
+
 }

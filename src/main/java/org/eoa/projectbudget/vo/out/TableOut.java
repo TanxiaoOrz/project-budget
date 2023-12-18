@@ -26,12 +26,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TableOut {
+public class TableOut implements VoOut{
     @Schema(description = "表单编号")
     Long tableId;
-    @Schema(description = "表单显示名称")
+    @Schema(description = "表单显示名称,browserId=0")
     String tableViewName;
-    @Schema(description = "表单数据库名称`")
+    @Schema(description = "表单数据库名称,browserId=1")
     String tableDataName;
     @Schema(description = "表单所属模块")
     Long moduleNo;
@@ -45,7 +45,7 @@ public class TableOut {
     String[] groupNames;
     @Schema(description = "主表选择框列表")
     List<DropSelect> groupSelect;
-    @Schema(description = "表单描述")
+    @Schema(description = "表单描述,browserId=2")
     String remark;
     @Schema(description = "是否是虚拟表单")
     Boolean virtual;
@@ -129,5 +129,30 @@ public class TableOut {
         for (int i = 0; i < groupCount; i++) {
             groupSelect.add(new DropSelect(i,groupNames[i],true,null));
         }
+    }
+
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.tableViewName = browserId!=0?null:tableViewName;
+        this.tableDataName = browserId!=1?null:tableDataName;
+        this.moduleNo = null;
+        this.workFlowNo = null;
+        this.detailNames = null;
+        this.detailSelect = null;
+        this.groupNames = null;
+        this.groupSelect = null;
+        this.remark = browserId!=2?null:remark;
+        this.virtual = null;
+        this.creator = null;
+        this.createName = null;
+        this.createTime = null;
+        this.moduleName = null;
+        this.defaultEdit = null;
+        this.defaultCreate = null;
+        this.defaultDelete = null;
+        this.defaultShare = null;
     }
 }

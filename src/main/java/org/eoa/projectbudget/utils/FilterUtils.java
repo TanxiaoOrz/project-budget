@@ -2,6 +2,7 @@ package org.eoa.projectbudget.utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.exception.ParameterException;
+import org.eoa.projectbudget.vo.out.VoOut;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -28,6 +29,7 @@ public class FilterUtils<Entity> {
     private final static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 
     Boolean browser = false;
+    Long browserId = 0L;
 
     Map<String,String[]> map;
 
@@ -46,7 +48,9 @@ public class FilterUtils<Entity> {
         }
         try {
             this.browser = Boolean.getBoolean(map.get("browser")[0]);
-        }catch (NullPointerException e) {
+            if (map.containsKey("browserId"))
+                browserId = Long.valueOf(map.get("browser")[0]);
+        }catch (NullPointerException | NumberFormatException e) {
             this.browser = false;
         }
 
@@ -104,7 +108,12 @@ public class FilterUtils<Entity> {
         return description;
     }
 
-    public <out> List<out> filt(List<out> entities) {
+    public <out extends VoOut> List<out> filt(List<out> entities) {
+        if (browser) {
+            List<out> outs = entities.stream().toList();
+            outs.forEach(out -> out.toBrowser(browserId));
+            return outs;
+        }
         return entities.subList(page.getStart(), page.getEnd(entities.size()));
     }
 }

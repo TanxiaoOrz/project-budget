@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.vo.out;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.eoa.projectbudget.entity.File;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 
@@ -13,18 +14,30 @@ import java.util.Date;
  * @Description: 文件输出结构体
  * @Version: 1.0
  **/
-public class FileOut {
+public class FileOut implements VoOut{
+    @Schema(description = "数据编号")
     Long dataId;
+    @Schema(description = "是否废弃")
     Boolean deprecated;
+    @Schema(description = "文件名称,browserId=0")
     String fileName;
+    @Schema(description = "文件路径,browserId=0")
     String fileRoute;
+    @Schema(description = "创建者")
     Long creator;
+    @Schema(description = "创建时间")
     Date createTime;
+    @Schema(description = "编辑权限")
     String editAuthority;
+    @Schema(description = "查看权限")
     String viewAuthority;
+    @Schema(description = "删除权限")
     String deleteAuthority;
+    @Schema(description = "所属目录")
     Long leadContent;
+    @Schema(description = "创建者姓名")
     String creatorName;
+    @Schema(description = "上级目录名称")
     String leadName;
 
     public FileOut() {
@@ -150,5 +163,37 @@ public class FileOut {
     public FileOut setLeadName(String leadName) {
         this.leadName = leadName;
         return this;
+    }
+
+    public FileOut(Long dataId, Boolean deprecated, String fileName, String fileRoute, Long creator, Date createTime, String editAuthority, String viewAuthority, String deleteAuthority, Long leadContent, String creatorName, String leadName) {
+        this.dataId = dataId;
+        this.deprecated = deprecated;
+        this.fileName = fileName;
+        this.fileRoute = fileRoute;
+        this.creator = creator;
+        this.createTime = createTime;
+        this.editAuthority = editAuthority;
+        this.viewAuthority = viewAuthority;
+        this.deleteAuthority = deleteAuthority;
+        this.leadContent = leadContent;
+        this.creatorName = creatorName;
+        this.leadName = leadName;
+    }
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.deprecated = null;
+        this.fileName = browserId!=0?null:fileName;
+        this.fileRoute = browserId!=1?null:fileRoute;
+        this.creator = null;
+        this.createTime = null;
+        this.editAuthority = null;
+        this.viewAuthority = null;
+        this.deleteAuthority = null;
+        this.leadContent = null;
+        this.creatorName = null;
+        this.leadName = null;
     }
 }

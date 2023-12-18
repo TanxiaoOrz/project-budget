@@ -1,6 +1,7 @@
 package org.eoa.projectbudget.vo.out;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 
@@ -15,22 +16,37 @@ import java.util.*;
  * @Version 1.1
  */
 
-public class FormOut {
+@Schema(name = "FormOut", description = "表单数据输出类,浏览框对象id为columnId")
+public class FormOut implements VoOut{
 
+    @Schema(description = "数据id")
     Long dataId;
+    @Schema(description = "审批流程id")
     Long requestId;
+    @Schema(description = "表单id")
     Long tableId;
 
+    @Schema(description = "表单名称")
     String tableName;
+    @Schema(description = "流程状态")
     Integer requestStatus;
+    @Schema(description = "创建者")
     Long creator;
+    @Schema(description = "创建时间")
     Date createTime;
+    @Schema(description = "查看权限")
     String viewAuthority;
+    @Schema(description = "创建者名称")
     String creatorName;
+    @Schema(description = "最后修改时间")
     Date latestEditTime;
+    @Schema(description = "是否虚拟图表数据")
     Boolean virtual;
+    @Schema(description = "主表分组列表")
     List<Group> groups;
+    @Schema(description = "明细表单列表")
     List<Detail> details;
+    @Schema(description = "显示浏览框标题")
     String title;
 
     public FormOut() {

@@ -15,14 +15,14 @@ import java.util.Date;
  */
 
 @Schema(name = "SectionOut", description = "分部结构体输出类")
-public class SectionOut {
+public class SectionOut implements VoOut{
     @Schema(description = "唯一id")
     Long dataId;
-    @Schema(description = "分部名称")
+    @Schema(description = "分部名称,browserId=0")
     String sectionName;
-    @Schema(description = "分布编号")
+    @Schema(description = "分布编号,browserId=1")
     String sectionCode;
-    @Schema(description = "全程")
+    @Schema(description = "全程,browserId=2")
     String fullName;
     @Schema(description = "上级分部")
     Long belongSection;
@@ -35,9 +35,9 @@ public class SectionOut {
     @Schema(description = "介绍照片编号")
     Long photo;
 
-    @Schema(description = "")
+    @Schema(description = "上级部门名称")
     String belongSectionName;
-    @Schema(description = "")
+    @Schema(description = "部门负责人姓名")
     String managerName;
 
     public SectionOut() {
@@ -153,4 +153,21 @@ public class SectionOut {
         this.managerName = managerName;
         return this;
     }
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.sectionName = browserId!=0?null:sectionName;
+        this.sectionCode = browserId!=1?null:sectionCode;
+        this.fullName = browserId!=2?null:fullName;
+        this.belongSection = null;
+        this.sectionManager = null;
+        this.sectionIntroduction = null;
+        this.createTime = null;
+        this.photo = null;
+        this.belongSectionName = null;
+        this.managerName = null;
+    }
+
 }

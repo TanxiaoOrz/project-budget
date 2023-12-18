@@ -18,13 +18,13 @@ import java.util.Date;
  */
 
 @Schema(name = "ColumnOut",description = "列字段格式输出类")
-public class ColumnOut{
+public class ColumnOut implements VoOut{
 
     @Schema(description = "主键id")
     Long columnId;
-    @Schema(description = "字段显示名称")
+    @Schema(description = "字段显示名称,browserId=0")
     String columnViewName;
-    @Schema(description = "数据库存储名称")
+    @Schema(description = "数据库存储名称,browserId=1")
     String columnDataName;
     @Schema(description = "字段类型")
     String columnType;
@@ -210,5 +210,41 @@ public class ColumnOut{
     public ColumnOut setVirtual(Boolean virtual) {
         this.virtual = virtual;
         return this;
+    }
+
+    public ColumnOut(Long columnId, String columnViewName, String columnDataName, String columnType, String columnTypeDescription, Long tableNo, Integer columnGroupNo, Integer columnViewNo, Long creator, String creatorName, Date createTime, Integer columnDetailNo, Boolean columnViewDisplay, Boolean virtual) {
+        this.columnId = columnId;
+        this.columnViewName = columnViewName;
+        this.columnDataName = columnDataName;
+        this.columnType = columnType;
+        this.columnTypeDescription = columnTypeDescription;
+        this.tableNo = tableNo;
+        this.columnGroupNo = columnGroupNo;
+        this.columnViewNo = columnViewNo;
+        this.creator = creator;
+        this.creatorName = creatorName;
+        this.createTime = createTime;
+        this.columnDetailNo = columnDetailNo;
+        this.columnViewDisplay = columnViewDisplay;
+        this.virtual = virtual;
+    }
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.columnViewName = browserId!=0?null:columnViewName;
+        this.columnDataName = browserId!=1?null:columnDataName;
+        this.columnType = null;
+        this.columnTypeDescription = null;
+        this.tableNo = null;
+        this.columnGroupNo = null;
+        this.columnViewNo = null;
+        this.creator = null;
+        this.creatorName = null;
+        this.createTime = null;
+        this.columnDetailNo = null;
+        this.columnViewDisplay = null;
+        this.virtual = null;
     }
 }

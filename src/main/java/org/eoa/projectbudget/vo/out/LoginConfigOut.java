@@ -8,5 +8,9 @@ package org.eoa.projectbudget.vo.out;
  * @Description: 登录页设置展示类
  * @Version: 1.0
  */
-public class LoginConfigOut {
+public class LoginConfigOut implements VoOut{
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+    }
 }

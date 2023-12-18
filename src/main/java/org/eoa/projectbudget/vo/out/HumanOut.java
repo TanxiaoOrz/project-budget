@@ -15,12 +15,12 @@ import java.util.Date;
  */
 
 @Schema(name = "HumanOut", description = "人员输出结构体")
-public class HumanOut {
+public class HumanOut implements VoOut{
     @Schema(description = "唯一id")
     Long dataId;
-    @Schema(description = "登录名")
+    @Schema(description = "登录名,browserId=1")
     String loginName;
-    @Schema(description = "姓名")
+    @Schema(description = "姓名,browserId=0")
     String name;
     @Schema(description = "性别男,1女")
     Integer sex;
@@ -295,5 +295,34 @@ public class HumanOut {
     public HumanOut setLeaderName(String leaderName) {
         this.leaderName = leaderName;
         return this;
+    }
+
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.loginName = browserId!=1?null:loginName;
+        this.name = browserId!=0?null:name;
+        this.sex = null;
+        this.birth = null;
+        this.age = null;
+        this.telephone = null;
+        this.mail = null;
+        this.phone = null;
+        this.fax = null;
+        this.workCode = null;
+        this.section = null;
+        this.depart = null;
+        this.job = null;
+        this.directorLeader = null;
+        this.supporter = null;
+        this.photo = null;
+        this.signature = null;
+        this.lastLogin = null;
+        this.safety = null;
+        this.departName = null;
+        this.sectionName = null;
+        this.leaderName = null;
     }
 }

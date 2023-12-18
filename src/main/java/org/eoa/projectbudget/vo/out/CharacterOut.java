@@ -15,12 +15,12 @@ import java.util.Date;
  **/
 
 @Schema(name = "CharacterOut", description = "角色输出类结构体")
-public class CharacterOut {
+public class CharacterOut implements VoOut{
     @Schema(description = "唯一编号")
     Long dataId;
-    @Schema(description = "角色名称")
+    @Schema(description = "角色名称,browserId=0")
     String characterName;
-    @Schema(description = "角色描述")
+    @Schema(description = "角色描述,browserId=1")
     String characterDescription;
     @Schema(description = "创建时间")
     Date createTime;
@@ -92,5 +92,25 @@ public class CharacterOut {
     public CharacterOut setDataId(Long dataId) {
         this.dataId = dataId;
         return this;
+    }
+
+    public CharacterOut(Long dataId, String characterName, String characterDescription, Date createTime, Long creator, String createName) {
+        this.dataId = dataId;
+        this.characterName = characterName;
+        this.characterDescription = characterDescription;
+        this.createTime = createTime;
+        this.creator = creator;
+        this.createName = createName;
+    }
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.characterName = browserId!=0?null:characterName;
+        this.characterDescription = browserId!=1?null:characterDescription;
+        this.createTime = null;
+        this.creator = null;
+        this.createName = null;
     }
 }

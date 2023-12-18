@@ -22,7 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "ModuleOut", description = "应用模块显示类")
-public class ModuleOut {
+public class ModuleOut implements VoOut{
 
     @Schema(description = "唯一id")
     private Long moduleTypeId;
@@ -45,4 +45,18 @@ public class ModuleOut {
     @Schema(description = "图标数量")
     private Integer chartsCounts;
 
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.moduleTypeName = browserId!=0?null:moduleTypeName;
+        this.workflowRemark = browserId!=1?null:workflowRemark;
+        this.creatorId = null;
+        this.creatorName = null;
+        this.createTime = null;
+        this.searchCounts = null;
+        this.flowCounts = null;
+        this.tableCounts = null;
+        this.chartsCounts = null;
+    }
 }

@@ -15,15 +15,15 @@ import java.util.Date;
  */
 
 @Schema(name = "DepartOut", description = "部门结构体输出类")
-public class DepartOut {
+public class DepartOut implements VoOut{
 
     @Schema(description = "唯一id")
     Long dataId;
-    @Schema(description = "部门名称")
+    @Schema(description = "部门名称,browserId=0")
     String departName;
-    @Schema(description = "部门编号")
+    @Schema(description = "部门编号,browserId=1")
     String departCode;
-    @Schema(description = "全名")
+    @Schema(description = "全名,browserId=2")
     String fullName;
     @Schema(description = "上级部门")
     Long belongDepart;
@@ -177,4 +177,24 @@ public class DepartOut {
         this.managerName = managerName;
         return this;
     }
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.departName = browserId!=0?null:departName;
+        this.departCode = browserId!=1?null:departCode;
+        this.fullName = browserId!=2?null:fullName;
+        this.belongDepart = null;
+        this.belongSection = null;
+        this.departManager = null;
+        this.departIntroduction = null;
+        this.createTime = null;
+        this.photo = null;
+        this.belongDepartName = null;
+        this.belongSectionName = null;
+        this.managerName = null;
+    }
+
+
 }

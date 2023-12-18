@@ -3,6 +3,8 @@ package org.eoa.projectbudget.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.eoa.projectbudget.vo.out.VoOut;
 
 /**
  * @Author: 张骏山
@@ -14,12 +16,16 @@ import com.baomidou.mybatisplus.annotation.TableName;
  **/
 
 @TableName("authority")
-public class Authority {
+public class Authority implements VoOut {
 
+    @Schema(description = "唯一编号")
     @TableId(type = IdType.AUTO)
     Long dataId;
+    @Schema(description = "权限名称,browserId=0")
     String authorityName;
+    @Schema(description = "权限描述,browserId=1")
     String authorityDescription;
+    @Schema(description = "权限备注,browserId=2")
     String authorityRemark;
 
     public Long getDataId() {
@@ -56,5 +62,21 @@ public class Authority {
     public Authority setAuthorityRemark(String authorityRemark) {
         this.authorityRemark = authorityRemark;
         return this;
+    }
+
+    public Authority(Long dataId, String authorityName, String authorityDescription, String authorityRemark) {
+        this.dataId = dataId;
+        this.authorityName = authorityName;
+        this.authorityDescription = authorityDescription;
+        this.authorityRemark = authorityRemark;
+    }
+
+    @Override
+    public void toBrowser(Long browserId) {
+        VoOut.super.toBrowser(browserId);
+
+        this.authorityName = browserId!=0?null:authorityName;
+        this.authorityDescription = browserId!=1?null:authorityDescription;
+        this.authorityRemark = browserId!=2?null:authorityRemark;
     }
 }
