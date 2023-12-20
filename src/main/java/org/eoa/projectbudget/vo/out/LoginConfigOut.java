@@ -11,6 +11,5 @@ package org.eoa.projectbudget.vo.out;
 public class LoginConfigOut implements VoOut{
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
     }
 }

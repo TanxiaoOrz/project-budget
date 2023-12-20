@@ -105,7 +105,6 @@ public class CharacterOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.characterName = browserId!=0?null:characterName;
         this.characterDescription = browserId!=1?null:characterDescription;

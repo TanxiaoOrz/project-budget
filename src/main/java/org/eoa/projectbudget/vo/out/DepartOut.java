@@ -180,7 +180,6 @@ public class DepartOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.departName = browserId!=0?null:departName;
         this.departCode = browserId!=1?null:departCode;

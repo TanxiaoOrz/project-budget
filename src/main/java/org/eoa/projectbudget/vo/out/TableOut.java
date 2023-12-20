@@ -134,7 +134,6 @@ public class TableOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.tableViewName = browserId!=0?null:tableViewName;
         this.tableDataName = browserId!=1?null:tableDataName;

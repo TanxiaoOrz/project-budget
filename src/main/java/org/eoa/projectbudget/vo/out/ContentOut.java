@@ -180,7 +180,6 @@ public class ContentOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.deprecated = null;
         this.contentName = browserId!=0L?null:contentName;

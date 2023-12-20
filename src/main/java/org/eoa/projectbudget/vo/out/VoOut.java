@@ -13,10 +13,6 @@ public interface VoOut {
      * 浏览框转换,filter过滤不在限制分页,其它字段删除
      * @param browserId form使用或VoOut自定义对应字段
      */
-    default void toBrowser(Long browserId) {
-        if (browserId == null) {
-            browserId = 0L;
-        }
-    }
+    void toBrowser(Long browserId);
 
 }

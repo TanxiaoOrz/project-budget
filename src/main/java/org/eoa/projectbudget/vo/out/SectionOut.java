@@ -156,7 +156,6 @@ public class SectionOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.sectionName = browserId!=0?null:sectionName;
         this.sectionCode = browserId!=1?null:sectionCode;

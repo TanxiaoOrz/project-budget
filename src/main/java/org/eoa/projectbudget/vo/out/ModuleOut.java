@@ -47,7 +47,6 @@ public class ModuleOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.moduleTypeName = browserId!=0?null:moduleTypeName;
         this.workflowRemark = browserId!=1?null:workflowRemark;

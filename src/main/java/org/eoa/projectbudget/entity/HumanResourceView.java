@@ -49,6 +49,30 @@ public class HumanResourceView {
     Integer safety;
     Integer isDeprecated;
 
+    public HumanResourceView(Long dataId, String loginName, String password, String name, Integer sex, Date birth, Integer age, String telephone, String mail, String phone, String fax, String workCode, Long section, Long depart, String job, Long directorLeader, Long supporter, Long photo, String signature, Date lastLogin, Integer safety) {
+        this.dataId = dataId;
+        this.loginName = loginName;
+        this.password = password;
+        this.name = name;
+        this.sex = sex;
+        this.birth = birth;
+        this.age = age;
+        this.telephone = telephone;
+        this.mail = mail;
+        this.phone = phone;
+        this.fax = fax;
+        this.workCode = workCode;
+        this.section = section;
+        this.depart = depart;
+        this.job = job;
+        this.directorLeader = directorLeader;
+        this.supporter = supporter;
+        this.photo = photo;
+        this.signature = signature;
+        this.lastLogin = lastLogin;
+        this.safety = safety;
+    }
+
     public HumanResourceView(HumanResourceView humanResourceView) {
         this.dataId = humanResourceView.dataId;
         this.loginName = humanResourceView.loginName;

@@ -73,7 +73,6 @@ public class Authority implements VoOut {
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.authorityName = browserId!=0?null:authorityName;
         this.authorityDescription = browserId!=1?null:authorityDescription;

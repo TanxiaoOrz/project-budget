@@ -231,7 +231,6 @@ public class ColumnOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.columnViewName = browserId!=0?null:columnViewName;
         this.columnDataName = browserId!=1?null:columnDataName;

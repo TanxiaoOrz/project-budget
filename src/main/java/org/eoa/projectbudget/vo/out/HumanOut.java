@@ -300,7 +300,6 @@ public class HumanOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        VoOut.super.toBrowser(browserId);
 
         this.loginName = browserId!=1?null:loginName;
         this.name = browserId!=0?null:name;
