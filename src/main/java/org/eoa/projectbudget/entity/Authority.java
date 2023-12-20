@@ -28,6 +28,9 @@ public class Authority implements VoOut {
     @Schema(description = "权限备注,browserId=2")
     String authorityRemark;
 
+    public Authority() {
+    }
+
     public Long getDataId() {
         return dataId;
     }

@@ -25,10 +25,10 @@ public interface CharacterMapper extends BaseMapper<Character> {
     @Insert("insert into character_human (humanId, characterId, grade) VALUES (#{userId},#{characterId},#{grade})")
     Integer linkHuman(@Param("characterId")Long characterId, @Param("userId") Long userId, @Param("grade")Integer grade);
 
-    @Delete("delete from character_human where characterId = #{characterId}")
+    @Delete("delete from character_human where characterId = #{characterId} and humanId = #{userId}")
     Integer dropHuman(@Param("characterId")Long characterId, @Param("userId") Long userId);
 
-    @Delete("delete from character_human where humanId = #{userId} and characterId = #{characterId}")
+    @Delete("delete from character_human where characterId = #{characterId}")
     Integer dropHumanAll(@Param("characterId")Long characterId);
 
     @Insert("insert into authority_character (characterId, authorityId) VALUES (#{characterId}, #{authorityId})")
