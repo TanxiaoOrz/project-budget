@@ -56,7 +56,7 @@ public class AuthorityBackController {
     static final Long USER_ID_CACHE = 0L;
 
     @GetMapping("/character/human")
-    @Operation(description = "获取角色下人员")
+    @Operation(summary = "获取角色下人员")
     @Parameter(name = "characterId", description = "角色编号", required = true, in = ParameterIn.QUERY)
     public Vo<List<CharacterMapper.Grade>> getCharacterHuman(@RequestAttribute("HumanDto") HumanDto humanDto,
                                                              @RequestParam Long characterId) {
@@ -72,7 +72,7 @@ public class AuthorityBackController {
     }
 
     @GetMapping("/character/authority")
-    @Operation(description = "获取角色下权限")
+    @Operation(summary = "获取角色下权限")
     @Parameter(name = "characterId", description = "角色编号", required = true, in = ParameterIn.QUERY)
     public Vo<List<Authority>> getCharacterAuthority(@RequestAttribute("HumanDto") HumanDto humanDto,
                                               @RequestParam Long characterId) {
@@ -88,7 +88,7 @@ public class AuthorityBackController {
     }
 
     @PutMapping("/link/{characterId}")
-    @Operation(description = "添加角色下属")
+    @Operation(summary = "添加角色下属")
     @Parameters({
             @Parameter(name = "characterId", description = "角色编号", required = true, in = ParameterIn.PATH),
             @Parameter(name = "dataId", description = "对象编号", required = true, in = ParameterIn.QUERY),
@@ -115,7 +115,7 @@ public class AuthorityBackController {
     }
 
     @PutMapping("/drop/{characterId}")
-    @Operation(description = "删除角色下属")
+    @Operation(summary = "删除角色下属")
     @Parameters({
             @Parameter(name = "characterId", description = "角色编号", required = true, in = ParameterIn.PATH),
             @Parameter(name = "dataId", description = "对象编号", required = true, in = ParameterIn.QUERY),
@@ -140,7 +140,7 @@ public class AuthorityBackController {
     }
 
     @GetMapping("/character/{dataId}")
-    @Operation(description = "获取具体角色")
+    @Operation(summary = "获取具体角色")
     @Parameter(name = "dataId", description = "角色编号", required = true, in = ParameterIn.PATH)
     public Vo<CharacterOut> getCharacter(@RequestAttribute("HumanDto") HumanDto humanDto,
                                          @PathVariable("dataId")Long dataId) {
@@ -153,7 +153,7 @@ public class AuthorityBackController {
     }
 
     @PostMapping("/character")
-    @Operation(description = "新建角色")
+    @Operation(summary = "新建角色")
     public Vo<Long> newCharacter(@RequestAttribute("HumanDto") HumanDto humanDto,
                                  @RequestBody CharacterIn character) {
         Long id = authorityService.newCharacter(character.toEntity(null), humanDto.getDataId());
@@ -165,7 +165,7 @@ public class AuthorityBackController {
     }
 
     @PutMapping("/character/{dataId}")
-    @Operation(description = "修改角色")
+    @Operation(summary = "修改角色")
     @Parameter(name = "dataId", description = "角色编号", required = true, in = ParameterIn.PATH)
     public Vo<String> updateCharacter(@RequestAttribute("HumanDto") HumanDto humanDto,
                                       @PathVariable("dataId")Long dataId,
@@ -179,7 +179,7 @@ public class AuthorityBackController {
     }
 
     @DeleteMapping("/character/{dataId}")
-    @Operation(description = "删除角色")
+    @Operation(summary = "删除角色")
     @Parameter(name = "dataId", description = "角色编号", required = true, in = ParameterIn.PATH)
     public Vo<String> deleteCharacter(@RequestAttribute("HumanDto") HumanDto humanDto,
                                       @PathVariable("dataId")Long dataId) {
@@ -192,7 +192,7 @@ public class AuthorityBackController {
     }
 
     @GetMapping("/character")
-    @Operation(description = "获取角色列表")
+    @Operation(summary = "获取角色列表")
     public Vo<List<CharacterOut>> getCharacterList(@RequestAttribute("HumanDto") HumanDto humanDto,
                                                    HttpServletRequest request) throws EoaException {
         FilterUtils<Character> filter = new FilterUtils<>(request.getParameterMap(),Character.class);
@@ -209,7 +209,7 @@ public class AuthorityBackController {
     }
 
     @GetMapping("/authority")
-    @Operation(description = "获取权限列表")
+    @Operation(summary = "获取权限列表")
     public Vo<List<Authority>> getAuthorityList(@RequestAttribute("HumanDto")HumanDto humanDto,
                                                 HttpServletRequest request) throws EoaException {
         FilterUtils<Authority> filter = new FilterUtils<>(request.getParameterMap(),Authority.class);

@@ -73,7 +73,7 @@ public class OrganizationBackController {
     }
 
     @PostMapping("/human")
-    @Operation(description = "新建人员")
+    @Operation(summary = "新建人员")
     public Vo<Long> newHuman(@RequestAttribute("HumanDto") HumanDto humanDto,
                                  @RequestBody HumanIn human) {
         Long id = organizationService.newHuman(human.toEntity(null), humanDto.getDataId());
@@ -85,7 +85,7 @@ public class OrganizationBackController {
     }
 
     @PutMapping("/human/{dataId}")
-    @Operation(description = "修改人员")
+    @Operation(summary = "修改人员")
     @Parameter(name = "dataId", description = "人员编号", required = true, in = ParameterIn.PATH)
     public Vo<String> updateHuman(@RequestAttribute("HumanDto") HumanDto humanDto,
                                       @PathVariable("dataId")Long dataId,
@@ -99,7 +99,7 @@ public class OrganizationBackController {
     }
 
     @DeleteMapping("/human/{dataId}")
-    @Operation(description = "删除人员")
+    @Operation(summary = "删除人员")
     @Parameter(name = "dataId", description = "人员编号", required = true, in = ParameterIn.PATH)
     public Vo<String> deleteHuman(@RequestAttribute("HumanDto") HumanDto humanDto,
                                       @PathVariable("dataId")Long dataId) {
@@ -145,7 +145,7 @@ public class OrganizationBackController {
     }
 
     @PostMapping("/depart")
-    @Operation(description = "新建分部")
+    @Operation(summary = "新建分部")
     public Vo<Long> newDepart(@RequestAttribute("HumanDto") HumanDto departDto,
                               @RequestBody DepartIn depart) {
         Long id = organizationService.newDepart(depart.toEntity(null), departDto.getDataId());
@@ -157,7 +157,7 @@ public class OrganizationBackController {
     }
 
     @PutMapping("/depart/{dataId}")
-    @Operation(description = "修改分部")
+    @Operation(summary = "修改分部")
     @Parameter(name = "dataId", description = "分部编号", required = true, in = ParameterIn.PATH)
     public Vo<String> updateDepart(@RequestAttribute("HumanDto") HumanDto departDto,
                                    @PathVariable("dataId")Long dataId,
@@ -171,7 +171,7 @@ public class OrganizationBackController {
     }
 
     @DeleteMapping("/depart/{dataId}")
-    @Operation(description = "删除分部")
+    @Operation(summary = "删除分部")
     @Parameter(name = "dataId", description = "分部编号", required = true, in = ParameterIn.PATH)
     @Parameter(name = "dataId", description = "是否递归删除子部门", in = ParameterIn.PATH)
     public Vo<String> deleteDepart(@RequestAttribute("HumanDto") HumanDto departDto,
@@ -217,7 +217,7 @@ public class OrganizationBackController {
     }
 
     @PostMapping("/section")
-    @Operation(description = "新建分部")
+    @Operation(summary = "新建分部")
     public Vo<Long> newSection(@RequestAttribute("HumanDto") HumanDto sectionDto,
                                @RequestBody SectionIn section) {
         Long id = organizationService.newSection(section.toEntity(null), sectionDto.getDataId());
@@ -229,7 +229,7 @@ public class OrganizationBackController {
     }
 
     @PutMapping("/section/{dataId}")
-    @Operation(description = "修改分部")
+    @Operation(summary = "修改分部")
     @Parameter(name = "dataId", description = "分部编号", required = true, in = ParameterIn.PATH)
     public Vo<String> updateSection(@RequestAttribute("HumanDto") HumanDto sectionDto,
                                     @PathVariable("dataId")Long dataId,
@@ -243,7 +243,7 @@ public class OrganizationBackController {
     }
 
     @DeleteMapping("/section/{dataId}")
-    @Operation(description = "删除分部")
+    @Operation(summary = "删除分部")
     @Parameter(name = "dataId", description = "是否递归删除子部门及子分部", in = ParameterIn.PATH)
     @Parameter(name = "dataId", description = "分部编号", required = true, in = ParameterIn.PATH)
 
