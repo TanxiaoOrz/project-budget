@@ -47,7 +47,7 @@ public class FilterUtils<Entity> {
             this.page = new Page(1,Integer.MAX_VALUE);
         }
         try {
-            this.browser = Boolean.getBoolean(map.get("toBrowser")[0]);
+            this.browser = Boolean.parseBoolean(map.get("toBrowser")[0]);
             if (map.containsKey("browserId"))
                 browserId = Long.valueOf(map.get("browserId")[0]);
         }catch (NullPointerException | NumberFormatException e) {

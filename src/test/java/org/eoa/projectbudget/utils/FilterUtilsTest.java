@@ -19,4 +19,9 @@ class FilterUtilsTest {
         String s = new StringBuilder().toString();
         System.out.println(s);
     }
+
+    @Test
+    void booleans() {
+        System.out.println("Boolean.parseBoolean(\"true\") = " + Boolean.parseBoolean("true"));
+    }
 }
