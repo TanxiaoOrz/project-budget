@@ -9,6 +9,7 @@ import org.eoa.projectbudget.entity.Section;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.*;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
+import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ import java.util.List;
  * @Date: 2023/11/6 13:58
  * @PackageName: org.eoa.projectbudget.service.organization_module.impl
  * @ClassName: OrganizationServiceImpl
- * @Description: TODO
- * @Version: 1.2
+ * @Description: 组织结构业务是实现类
+ * @Version: 1.3
  **/
 
 @Service
@@ -52,11 +53,18 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Long newHuman(HumanResource humanResource, Long userId) {
         humanResource.setIsDeprecated(0);
+        if (DataProcessUtils.isEmpty(humanResource.getPassword()))
+            throw new ParameterException("password","","密码为空");
+
         Depart depart = departMapper.selectById(humanResource.getDepart());
+
         if (depart == null) {
             log.error("用户=>{}创建人员=>{},部门=>{}不存在",userId,humanResource,humanResource.getDepart());
             throw new ParameterException("depart",humanResource.getDepart().toString(),"部门不存在");
         }
+        if (DataProcessUtils.translateIntegerToBoolean(depart.getIsDeprecated()))
+            throw new ParameterException("depart",humanResource.getDepart().toString(),"部门已废弃");
+
         humanResource.setSection(depart.getBelongSection());
         log.info("用户=>{}创建人员=>{}",userId,humanResource);
         humanMapper.insert(humanResource);
@@ -67,11 +75,21 @@ public class OrganizationServiceImpl implements OrganizationService {
     @CacheEvict(cacheNames = "humanDto",key = "#humanResource.dataId")
     public Integer updateHuman(HumanResource humanResource, Long userId) {
         humanResource.setIsDeprecated(0);
+
+        if (DataProcessUtils.isEmpty(humanResource.getPassword()))
+            humanResource.setPassword(humanMapper.selectById(humanResource.getDataId()).getPassword());
+
         Depart depart = departMapper.selectById(humanResource.getDepart());
+
         if (depart == null) {
             log.error("用户=>{}创建人员=>{},部门=>{}不存在",userId,humanResource,humanResource.getDepart());
             throw new ParameterException("depart",humanResource.getDepart().toString(),"部门不存在");
         }
+        if (DataProcessUtils.translateIntegerToBoolean(depart.getIsDeprecated()))
+            throw new ParameterException("depart",humanResource.getDepart().toString(),"部门已废弃");
+        humanResource.setSection(depart.getBelongSection());
+
+
         int update = humanMapper.updateById(humanResource);
         log.info("用户=>{}修改人员=>{},修改数量=>{}",userId,humanResource,update);
         return update;
@@ -163,12 +181,21 @@ public class OrganizationServiceImpl implements OrganizationService {
                 log.error("用户=>{}创建部门=>{},部门=>{}不存在",userId,depart,depart.getBelongDepart());
                 throw new ParameterException("depart",depart.getBelongDepart().toString(),"部门不存在");
             }
+            if (DataProcessUtils.translateIntegerToBoolean(leadDepart.getIsDeprecated())) {
+                log.error("用户=>{}创建部门=>{},部门=>{}不存在",userId,depart,depart.getBelongDepart());
+                throw new ParameterException("depart",depart.getBelongDepart().toString(),"部门已废弃");
+            }
             depart.setBelongSection(leadDepart.getBelongSection());
         }
         depart.setIsDeprecated(0);
         if (depart.getCreateTime() == null) {
             depart.setCreateTime(new Date());
 
+        }
+        Section section = sectionMapper.selectById(depart.getBelongSection());
+        if (section == null||DataProcessUtils.translateIntegerToBoolean(section.getIsDeprecated())) {
+            log.error("用户=>{}创建部门=>{},分部=>{}不存在",userId,depart,depart.getBelongSection());
+            throw new ParameterException("depart",depart.getBelongSection().toString(),"分部不存在或已废弃");
         }
         log.info("用户=>{}创建部门=>{}",userId,depart);
         departMapper.insert(depart);
@@ -183,11 +210,20 @@ public class OrganizationServiceImpl implements OrganizationService {
                 log.error("用户=>{}修改部门=>{},部门=>{}不存在",userId,depart,depart.getBelongDepart());
                 throw new ParameterException("depart",depart.getBelongDepart().toString(),"部门不存在");
             }
+            if (DataProcessUtils.translateIntegerToBoolean(leadDepart.getIsDeprecated())) {
+                log.error("用户=>{}创建部门=>{},部门=>{}不存在",userId,depart,depart.getBelongDepart());
+                throw new ParameterException("depart",depart.getBelongDepart().toString(),"部门已废弃");
+            }
             depart.setBelongSection(leadDepart.getBelongSection());
         }
         depart.setIsDeprecated(0);
         if (depart.getCreateTime() == null) {
             depart.setCreateTime(departMapper.selectById(depart.getDataId()).getCreateTime());
+        }
+        Section section = sectionMapper.selectById(depart.getBelongSection());
+        if (section == null||DataProcessUtils.translateIntegerToBoolean(section.getIsDeprecated())) {
+            log.error("用户=>{}创建部门=>{},分部=>{}不存在",userId,depart,depart.getBelongSection());
+            throw new ParameterException("depart",depart.getBelongSection().toString(),"分部不存在或已废弃");
         }
         int update = departMapper.updateById(depart);
         log.info("用户=>{}修改部门=>{},修改数量=>{}",userId,depart,update);
@@ -231,6 +267,13 @@ public class OrganizationServiceImpl implements OrganizationService {
         section.setIsDeprecated(0);
         if (section.getCreateTime() == null)
             section.setCreateTime(new Date());
+
+        Section sectionLead = sectionMapper.selectById(section.getBelongSection());
+        if (sectionLead == null||DataProcessUtils.translateIntegerToBoolean(sectionLead.getIsDeprecated())) {
+            log.error("用户=>{}创建分部=>{},分部=>{}不存在",userId,section,section.getBelongSection());
+            throw new ParameterException("section",section.getBelongSection().toString(),"分部不存在或已废弃");
+        }
+
         log.info("用户=>{}创建分部=>{}",userId,section);
         sectionMapper.insert(section);
         return section.getDataId();
@@ -241,6 +284,13 @@ public class OrganizationServiceImpl implements OrganizationService {
         section.setIsDeprecated(0);
         if (section.getCreateTime() == null)
             section.setCreateTime(sectionMapper.selectById(section.getDataId()).getCreateTime());
+
+        Section sectionLead = sectionMapper.selectById(section.getBelongSection());
+        if (sectionLead == null||DataProcessUtils.translateIntegerToBoolean(sectionLead.getIsDeprecated())) {
+            log.error("用户=>{}创建分部=>{},分部=>{}不存在",userId,section,section.getBelongSection());
+            throw new ParameterException("section",section.getBelongSection().toString(),"分部不存在或已废弃");
+        }
+
         int update = sectionMapper.updateById(section);
         log.info("用户=>{}修改部门=>{},修改数量=>{}",userId,section,update);
         return update;

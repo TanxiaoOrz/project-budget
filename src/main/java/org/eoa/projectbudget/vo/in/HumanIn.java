@@ -40,8 +40,6 @@ public class HumanIn implements CheckParameter<HumanResource>{
     public void checkSelf() throws ParameterException {
         if (DataProcessUtils.isEmpty(loginName))
             throw new ParameterException("loginName","","登录名为空");
-        if (DataProcessUtils.isEmpty(password))
-            throw new ParameterException("password","","密码为空");
         if (DataProcessUtils.isEmpty(name))
             throw new ParameterException("name","","姓名为空");
         if (depart == null) {
