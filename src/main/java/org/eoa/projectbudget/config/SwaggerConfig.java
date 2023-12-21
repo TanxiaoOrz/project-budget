@@ -14,7 +14,7 @@ import io.swagger.v3.oas.models.info.License;
  * @Date 2023/9/26 16:20
  * @PackageName: org.eoa.projectbudget.config
  * @ClassName: SwaggerConfig
- * @Description: TODO
+ * @Description: swagger页面介绍配置
  * @Version 1.0
  */
 
@@ -33,6 +33,6 @@ public class SwaggerConfig {
                                     .url("https://www.apache.org/licenses/LICENSE-2.0")))
                     .externalDocs(new ExternalDocumentation()
                             .description("张骏山的毕业设计")
-                            .url("https://www.cnblogs.com/jddreams/p/15922674.html"));
+                            .url("https://github.com/TanxiaoOrz/project-budget"));
         }
 }
