@@ -2,6 +2,7 @@ package org.eoa.projectbudget.vo.out;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.eoa.projectbudget.entity.HumanResourceView;
+import org.eoa.projectbudget.utils.DataProcessUtils;
 
 import java.util.Date;
 
@@ -10,7 +11,7 @@ import java.util.Date;
  * @Date: 2023/11/29 19:01
  * @PackageName: org.eoa.projectbudget.vo.out
  * @ClassName: HumanOut
- * @Description: TODO
+ * @Description: 人员输出结构体
  * @Version: 1.0
  */
 
@@ -56,7 +57,8 @@ public class HumanOut implements VoOut{
     Date lastLogin;
     @Schema(description = "安全等级")
     Integer safety;
-
+    @Schema(description = "是否废弃")
+    Integer isDeprecated;
     @Schema(description = "部门名称")
     String departName;
     @Schema(description = "分部名称")
@@ -88,6 +90,7 @@ public class HumanOut implements VoOut{
         this.lastLogin = humanResourceView.getLastLogin();
         this.safety = humanResourceView.getSafety();
         this.age = humanResourceView.getAge();
+        this.isDeprecated= humanResourceView.getIsDeprecated();
     }
 
     public Long getDataId() {
@@ -297,6 +300,14 @@ public class HumanOut implements VoOut{
         return this;
     }
 
+    public Integer getIsDeprecated() {
+        return isDeprecated;
+    }
+
+    public HumanOut setIsDeprecated(Integer isDeprecated) {
+        this.isDeprecated = isDeprecated;
+        return this;
+    }
 
     @Override
     public void toBrowser(Long browserId) {
@@ -323,5 +334,6 @@ public class HumanOut implements VoOut{
         this.departName = null;
         this.sectionName = null;
         this.leaderName = null;
+        this.isDeprecated = null;
     }
 }

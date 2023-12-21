@@ -37,6 +37,8 @@ public class DepartOut implements VoOut{
     Date createTime;
     @Schema(description = "照片id")
     Long photo;
+    @Schema(description = "是否废弃")
+    Integer isDeprecated;
 
     @Schema(description = "上级部门名称")
     String belongDepartName;
@@ -59,6 +61,7 @@ public class DepartOut implements VoOut{
         this.departIntroduction = depart.getDepartIntroduction();
         this.createTime = depart.getCreateTime();
         this.photo = depart.getPhoto();
+        this.isDeprecated = depart.getIsDeprecated();
     }
 
     public Long getDataId() {
@@ -175,6 +178,15 @@ public class DepartOut implements VoOut{
 
     public DepartOut setManagerName(String managerName) {
         this.managerName = managerName;
+        return this;
+    }
+
+    public Integer getIsDeprecated() {
+        return isDeprecated;
+    }
+
+    public DepartOut setIsDeprecated(Integer isDeprecated) {
+        this.isDeprecated = isDeprecated;
         return this;
     }
 

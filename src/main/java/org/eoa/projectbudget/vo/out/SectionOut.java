@@ -39,7 +39,8 @@ public class SectionOut implements VoOut{
     String belongSectionName;
     @Schema(description = "部门负责人姓名")
     String managerName;
-
+    @Schema(description = "是否废弃")
+    Integer isDeprecated;
     public SectionOut() {
     }
 
@@ -53,6 +54,7 @@ public class SectionOut implements VoOut{
         this.sectionIntroduction = section.getSectionIntroduction();
         this.createTime = section.getCreateTime();
         this.photo = section.getPhoto();
+        this.isDeprecated = section.getIsDeprecated();
     }
 
     public Long getDataId() {
@@ -154,6 +156,15 @@ public class SectionOut implements VoOut{
         return this;
     }
 
+    public Integer getIsDeprecated() {
+        return isDeprecated;
+    }
+
+    public SectionOut setIsDeprecated(Integer isDeprecated) {
+        this.isDeprecated = isDeprecated;
+        return this;
+    }
+
     @Override
     public void toBrowser(Long browserId) {
 
@@ -167,6 +178,7 @@ public class SectionOut implements VoOut{
         this.photo = null;
         this.belongSectionName = null;
         this.managerName = null;
+        this.isDeprecated = null;
     }
 
 }
