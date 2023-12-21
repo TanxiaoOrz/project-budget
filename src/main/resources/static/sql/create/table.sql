@@ -141,7 +141,7 @@ create table `depart_resource` (
 ) comment = '部门表单';
 
 create table `section_resource` (
-    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '数据编号,分部唯一id',
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,分部唯一id',
     `sectionName` varchar(100) not null comment  '分部名称',
     `sectionCode` varchar(100) not null comment  '分部编号',
     `fullName` varchar(100) null comment  '分部全称',

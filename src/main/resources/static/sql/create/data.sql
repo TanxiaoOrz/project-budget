@@ -57,14 +57,14 @@ INSERT INTO `character_human` (`characterId`,`humanId`)
 -- 链接系统管理员人员与角色
 
 Insert Into `content_list` (dataId, contentName, contentRemark, creator, createTime, defaultEdit, defaultCreate, defaultDelete, defaultShare, leadContent) VALUES
-   (1,'组织架构展示资料','系统默认目录,勿动',1,now(),'','{
+(1,'组织架构展示资料','系统默认目录,勿动',1,now(),null,'{
      "bodyType":"allConstraint",
      "body":{
        "allConstraint":"{\\"start\\":0,\\"end\\":100}"
      },
      "tableType":null,
      "table":null
-   }','','{
+   }',null,'{
      "bodyType":"allConstraint",
      "body":{
        "allConstraint":"{\\"start\\":0,\\"end\\":100}"
@@ -72,14 +72,14 @@ Insert Into `content_list` (dataId, contentName, contentRemark, creator, createT
      "tableType":null,
      "table":null
    }',0),
-   (2,'人员头像','系统默认目录,勿动',1,now(),'','{
+(2,'人员头像','系统默认目录,勿动',1,now(),null,'{
      "bodyType":"allConstraint",
      "body":{
        "allConstraint":"{\\"start\\":0,\\"end\\":100}"
      },
      "tableType":null,
      "table":null
-   }','','{
+   }',null,'{
      "bodyType":"allConstraint",
      "body":{
        "allConstraint":"{\\"start\\":0,\\"end\\":100}"
@@ -87,44 +87,14 @@ Insert Into `content_list` (dataId, contentName, contentRemark, creator, createT
      "tableType":null,
      "table":null
    }',1),
-   (1,'部门头像','系统默认目录,勿动',1,now(),'','{
+(3,'部门头像','系统默认目录,勿动',1,now(),null,'{
      "bodyType":"allConstraint",
      "body":{
        "allConstraint":"{\\"start\\":0,\\"end\\":100}"
      },
      "tableType":null,
      "table":null
-   }','','{
-     "bodyType":"allConstraint",
-     "body":{
-       "allConstraint":"{\\"start\\":0,\\"end\\":100}"
-     },
-     "tableType":null,
-     "table":null
-   }',0),
-   (2,'人员头像','系统默认目录,勿动',1,now(),'','{
-     "bodyType":"allConstraint",
-     "body":{
-       "allConstraint":"{\\"start\\":0,\\"end\\":100}"
-     },
-     "tableType":null,
-     "table":null
-   }','','{
-     "bodyType":"allConstraint",
-     "body":{
-       "allConstraint":"{\\"start\\":0,\\"end\\":100}"
-     },
-     "tableType":null,
-     "table":null
-   }',1),
-   (1,'分部头像','系统默认目录,勿动',1,now(),'','{
-     "bodyType":"allConstraint",
-     "body":{
-       "allConstraint":"{\\"start\\":0,\\"end\\":100}"
-     },
-     "tableType":null,
-     "table":null
-   }','','{
+   }',null,'{
      "bodyType":"allConstraint",
      "body":{
        "allConstraint":"{\\"start\\":0,\\"end\\":100}"
@@ -132,20 +102,21 @@ Insert Into `content_list` (dataId, contentName, contentRemark, creator, createT
      "tableType":null,
      "table":null
    }',0),
-   (2,'人员头像','系统默认目录,勿动',1,now(),'','{
+(4,'分部头像','系统默认目录,勿动',1,now(),null,'{
      "bodyType":"allConstraint",
      "body":{
        "allConstraint":"{\\"start\\":0,\\"end\\":100}"
      },
      "tableType":null,
      "table":null
-   }','','{
+   }',null,'{
      "bodyType":"allConstraint",
      "body":{
        "allConstraint":"{\\"start\\":0,\\"end\\":100}"
      },
      "tableType":null,
      "table":null
-   }',1)
+   }',0)
+
 
 
