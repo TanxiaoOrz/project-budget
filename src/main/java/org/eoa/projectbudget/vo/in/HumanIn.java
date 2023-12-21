@@ -46,8 +46,7 @@ public class HumanIn implements CheckParameter<HumanResource>{
             throw new ParameterException("depart","","所属部门为空");
         }
         if (safety == null) {
-            throw new ParameterException("safety","","安全等级为空");
-
+            safety = 0;
         }
     }
 
@@ -59,6 +58,7 @@ public class HumanIn implements CheckParameter<HumanResource>{
         humanResource.setDataId(dataId)
                 .setLoginName(loginName)
                 .setPassword(password)
+                .setName(name)
                 .setSex(sex)
                 .setBirth(birth)
                 .setTelephone(telephone)

@@ -165,7 +165,7 @@ public class ContentFrontController {
     }
 
     @GetMapping(value = "/file/{id}")
-    @Operation(summary = "获取文件清单")
+    @Operation(summary = "获取文件")
     @Parameter(name = "id",description = "数据编号",required = true,in = ParameterIn.PATH)
     public Vo<FileOut> getFile(@RequestAttribute("HumanDto")HumanDto humanDto,
                                @PathVariable Long id) throws EoaException {
@@ -174,7 +174,7 @@ public class ContentFrontController {
             FileOut out = cacheService.getCache(ChangeFlagUtils.FILE, id.toString(), USER_ID_CACHE, FileOut.class);
             if (out == null) {
                 out = fileOutFactory.out(contentService.getFile(id, humanDto.getDataId()));
-                cacheService.setCache(ChangeFlagUtils.FILE, id.toString(), USER_ID_CACHE, FileOut.class);
+                cacheService.setCache(ChangeFlagUtils.FILE, id.toString(), USER_ID_CACHE, out);
             }
             if (viewCache == null) {
                 viewCache = AuthorityUtils.checkAuthority(humanDto, organizationService.getHumanDto(out.getCreator(), null), AuthorityUtils.getConstraint(out.getViewAuthority()));
