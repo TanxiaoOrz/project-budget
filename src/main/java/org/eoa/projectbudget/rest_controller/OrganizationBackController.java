@@ -132,23 +132,23 @@ public class OrganizationBackController {
     }
 
     @GetMapping("/depart/{dataId}")
-    @Operation(summary = "获取指定分部数据")
+    @Operation(summary = "获取指定部门数据")
     @Parameter(name = "dataId", description = "对象编号", required = true, in = ParameterIn.PATH)
-    public Vo<DepartOut> getDepart(@RequestAttribute("HumanDto") HumanDto departDto,
+    public Vo<DepartOut> getDepart(@RequestAttribute("HumanDto") HumanDto humanDto,
                                    @PathVariable Long dataId) {
         DepartOut out = cacheService.getCache(ChangeFlagUtils.DEPART,dataId.toString(),USER_ID_CACHE,DepartOut.class);
         if (out == null) {
-            out = departOutFactory.out(organizationService.getDepart(dataId, departDto.getDataId()));
+            out = departOutFactory.out(organizationService.getDepart(dataId, humanDto.getDataId()));
             cacheService.setCache(ChangeFlagUtils.DEPART, dataId.toString(),USER_ID_CACHE,out);
         }
         return new Vo<>(out);
     }
 
     @PostMapping("/depart")
-    @Operation(summary = "新建分部")
-    public Vo<Long> newDepart(@RequestAttribute("HumanDto") HumanDto departDto,
+    @Operation(summary = "新建部门")
+    public Vo<Long> newDepart(@RequestAttribute("HumanDto") HumanDto humanDto,
                               @RequestBody DepartIn depart) {
-        Long id = organizationService.newDepart(depart.toEntity(null), departDto.getDataId());
+        Long id = organizationService.newDepart(depart.toEntity(null), humanDto.getDataId());
         if (id != null) {
             changeFlagUtils.freshDate(ChangeFlagUtils.DEPART);
             return new Vo<>(id);
@@ -157,12 +157,12 @@ public class OrganizationBackController {
     }
 
     @PutMapping("/depart/{dataId}")
-    @Operation(summary = "修改分部")
+    @Operation(summary = "修改部门")
     @Parameter(name = "dataId", description = "分部编号", required = true, in = ParameterIn.PATH)
-    public Vo<String> updateDepart(@RequestAttribute("HumanDto") HumanDto departDto,
+    public Vo<String> updateDepart(@RequestAttribute("HumanDto") HumanDto humanDto,
                                    @PathVariable("dataId")Long dataId,
                                    @RequestBody DepartIn depart) {
-        Integer update = organizationService.updateDepart(depart.toEntity(dataId), departDto.getDataId());
+        Integer update = organizationService.updateDepart(depart.toEntity(dataId), humanDto.getDataId());
         if (update==1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.DEPART);
             return new Vo<>("修改成功");
@@ -171,13 +171,13 @@ public class OrganizationBackController {
     }
 
     @DeleteMapping("/depart/{dataId}")
-    @Operation(summary = "删除分部")
+    @Operation(summary = "删除部门")
     @Parameter(name = "dataId", description = "分部编号", required = true, in = ParameterIn.PATH)
     @Parameter(name = "dataId", description = "是否递归删除子部门", in = ParameterIn.PATH)
-    public Vo<String> deleteDepart(@RequestAttribute("HumanDto") HumanDto departDto,
+    public Vo<String> deleteDepart(@RequestAttribute("HumanDto") HumanDto humanDto,
                                    @PathVariable("dataId")Long dataId,
                                    @RequestParam(required = false,defaultValue = "false") Boolean recursion) {
-        Integer deletes = organizationService.dropDepart(dataId, departDto.getDataId(),recursion);
+        Integer deletes = organizationService.dropDepart(dataId, humanDto.getDataId(),recursion);
         if (deletes==1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.DEPART);
             return new Vo<>("删除成功");
@@ -206,11 +206,11 @@ public class OrganizationBackController {
     @GetMapping("/section/{dataId}")
     @Operation(summary = "获取指定分部数据")
     @Parameter(name = "dataId", description = "对象编号", required = true, in = ParameterIn.PATH)
-    public Vo<SectionOut> getSection(@RequestAttribute("HumanDto") HumanDto sectionDto,
+    public Vo<SectionOut> getSection(@RequestAttribute("HumanDto") HumanDto humanDto,
                                      @PathVariable Long dataId) {
         SectionOut out = cacheService.getCache(ChangeFlagUtils.SECTION,dataId.toString(),USER_ID_CACHE,SectionOut.class);
         if (out == null) {
-            out = sectionOutFactory.out(organizationService.getSection(dataId, sectionDto.getDataId()));
+            out = sectionOutFactory.out(organizationService.getSection(dataId, humanDto.getDataId()));
             cacheService.setCache(ChangeFlagUtils.SECTION, dataId.toString(),USER_ID_CACHE,out);
         }
         return new Vo<>(out);
@@ -218,9 +218,9 @@ public class OrganizationBackController {
 
     @PostMapping("/section")
     @Operation(summary = "新建分部")
-    public Vo<Long> newSection(@RequestAttribute("HumanDto") HumanDto sectionDto,
+    public Vo<Long> newSection(@RequestAttribute("HumanDto") HumanDto humanDto,
                                @RequestBody SectionIn section) {
-        Long id = organizationService.newSection(section.toEntity(null), sectionDto.getDataId());
+        Long id = organizationService.newSection(section.toEntity(null), humanDto.getDataId());
         if (id != null) {
             changeFlagUtils.freshDate(ChangeFlagUtils.SECTION);
             return new Vo<>(id);
@@ -231,10 +231,10 @@ public class OrganizationBackController {
     @PutMapping("/section/{dataId}")
     @Operation(summary = "修改分部")
     @Parameter(name = "dataId", description = "分部编号", required = true, in = ParameterIn.PATH)
-    public Vo<String> updateSection(@RequestAttribute("HumanDto") HumanDto sectionDto,
+    public Vo<String> updateSection(@RequestAttribute("HumanDto") HumanDto humanDto,
                                     @PathVariable("dataId")Long dataId,
                                     @RequestBody SectionIn section) {
-        Integer update = organizationService.updateSection(section.toEntity(dataId), sectionDto.getDataId());
+        Integer update = organizationService.updateSection(section.toEntity(dataId), humanDto.getDataId());
         if (update==1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.SECTION);
             return new Vo<>("修改成功");
@@ -247,10 +247,10 @@ public class OrganizationBackController {
     @Parameter(name = "dataId", description = "是否递归删除子部门及子分部", in = ParameterIn.PATH)
     @Parameter(name = "dataId", description = "分部编号", required = true, in = ParameterIn.PATH)
 
-    public Vo<String> deleteSection(@RequestAttribute("HumanDto") HumanDto sectionDto,
+    public Vo<String> deleteSection(@RequestAttribute("HumanDto") HumanDto humanDto,
                                     @PathVariable("dataId")Long dataId,
                                     @RequestParam(required = false,defaultValue = "false") Boolean recursion) {
-        Integer deletes = organizationService.dropSection(dataId, sectionDto.getDataId(),recursion);
+        Integer deletes = organizationService.dropSection(dataId, humanDto.getDataId(),recursion);
         if (deletes==1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.SECTION);
             return new Vo<>("删除成功");
