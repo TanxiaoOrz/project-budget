@@ -153,7 +153,8 @@ public class OrganizationServiceImpl implements OrganizationService {
             }
             return getHumanDto(humanResourceView);
         }
-        log.info("用户=>{}重新获取人员数据=>{}",userId,humanId);
+
+        log.info("用户=>{}获取人员数据=>{}",userId,humanId);
         HumanResourceView humanResourceView = humanViewMapper.selectById(humanId);
         if (humanResourceView == null) {
             log.info("无该编号成员");

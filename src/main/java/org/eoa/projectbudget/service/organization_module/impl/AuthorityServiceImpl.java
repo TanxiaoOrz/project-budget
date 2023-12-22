@@ -13,6 +13,7 @@ import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.AuthorityMapper;
 import org.eoa.projectbudget.mapper.CharacterMapper;
+import org.eoa.projectbudget.mapper.HumanMapper;
 import org.eoa.projectbudget.service.organization_module.AuthorityService;
 import org.eoa.projectbudget.vo.Tokens;
 import org.slf4j.Logger;
@@ -57,6 +58,8 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     AuthorityMapper authorityMapper;
     @Autowired
     CharacterMapper characterMapper;
+    @Autowired
+    HumanMapper humanMapper;
 
     @Override
     public Authority getAuthorityById(Long authorityId, Long userId) {
@@ -184,6 +187,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     }
 
     @Override
+    @CacheEvict(cacheNames = "humanDto",key = "#userId")
     public Tokens getTokens(Long userId) {
         log.info("用户=>{}申请tokens",userId);
         Calendar shortToken = Calendar.getInstance();
@@ -204,7 +208,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
                     .withClaim("type","long")
                     .withExpiresAt(longTime.getTime())
                     .sign(algorithm));
-
+        humanMapper.freshLogin(userId);
 
         return tokens;
     }

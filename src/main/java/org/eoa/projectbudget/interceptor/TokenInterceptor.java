@@ -103,7 +103,8 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
             }
         }
 
-        HumanDto cache = cache = organizationService.getHumanDto(userId, null);
+        HumanDto cache = organizationService.getHumanDto(userId, userId);
+
 
         if (gets.isUpdate()) {
             tokens = authorityService.getTokens(userId);

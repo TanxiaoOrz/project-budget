@@ -2,6 +2,8 @@ package org.eoa.projectbudget.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.eoa.projectbudget.entity.HumanResource;
 
 /**
@@ -15,4 +17,7 @@ import org.eoa.projectbudget.entity.HumanResource;
 
 @Mapper
 public interface HumanMapper extends BaseMapper<HumanResource> {
+
+    @Update("update human_resource set lastLogin = now() where dataId = #{dataId}")
+    Integer freshLogin(@Param("dataId")Long dataId);
 }
