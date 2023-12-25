@@ -26,11 +26,13 @@ import org.eoa.projectbudget.vo.in.SectionIn;
 import org.eoa.projectbudget.vo.out.DepartOut;
 import org.eoa.projectbudget.vo.out.HumanOut;
 import org.eoa.projectbudget.vo.out.SectionOut;
+import org.eoa.projectbudget.vo.out.ViewData.GraphNode;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -214,6 +216,40 @@ public class OrganizationFrontController {
             cacheService.setCache(ChangeFlagUtils.HUMAN, dataId.toString(),USER_ID_CACHE,out);
         }
         return new Vo<>(out);
+    }
+
+    @GetMapping("/tree")
+    @Operation(summary = "获取组织架构树图")
+    public  Vo<GraphNode> getOrganizationTree(@RequestAttribute("HumanDto")HumanDto humanDto) throws EoaException {
+
+        HashMap<String, String[]> map = new HashMap<>();
+        map.put("isDeprecated",new String[]{"0"});
+        FilterUtils<Section> sectionFilter = new FilterUtils<>(map,Section.class);
+        List<SectionOut> sectionOuts;
+        int sectionFlag = ChangeFlagUtils.SECTION;
+        SectionOut[] sectionCache = cacheService.getCache(sectionFlag, sectionFilter.getDescription(), USER_ID_CACHE, SectionOut[].class);
+        if (sectionCache == null) {
+            sectionOuts = sectionOutFactory.outs(organizationService.getSectionList(sectionFilter.getWrapper(), humanDto.getDataId()));
+            cacheService.setCache(sectionFlag,sectionFilter.getDescription(),USER_ID_CACHE,sectionOuts);
+        } else {
+            sectionOuts =  Arrays.asList(sectionCache);
+        }
+
+        List<DepartOut> departOuts;
+        FilterUtils<Depart> departFilter = new FilterUtils<>(map,Depart.class);
+        int flag = ChangeFlagUtils.DEPART;
+        DepartOut[] departCache = cacheService.getCache(flag, departFilter.getDescription(), USER_ID_CACHE, DepartOut[].class);
+        if (departCache == null) {
+            departOuts = departOutFactory.outs(organizationService.getDepartList(departFilter.getWrapper(), humanDto.getDataId()));
+            cacheService.setCache(flag,departFilter.getDescription(),USER_ID_CACHE,departOuts);
+        } else {
+            departOuts =  Arrays.asList(departCache);
+        }
+
+        GraphNode base = new GraphNode("0", "总部", null, "sum", null);
+
+
+        return new Vo<>(base.consist(sectionOuts,departOuts));
     }
 
 

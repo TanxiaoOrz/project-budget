@@ -1,5 +1,6 @@
 package org.eoa.projectbudget.rest_controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -23,10 +24,12 @@ import org.eoa.projectbudget.vo.in.SectionIn;
 import org.eoa.projectbudget.vo.out.DepartOut;
 import org.eoa.projectbudget.vo.out.HumanOut;
 import org.eoa.projectbudget.vo.out.SectionOut;
+import org.eoa.projectbudget.vo.out.ViewData.GraphNode;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -274,6 +277,37 @@ public class OrganizationBackController {
             outs =  Arrays.asList(cache);
         }
         return new Vo<>(filter.filt(outs),outs.size());
+    }
+
+    @GetMapping("/tree")
+    @Operation(summary = "获取组织架构树图")
+    public  Vo<GraphNode> getOrganizationTree(@RequestAttribute("HumanDto")HumanDto humanDto) throws EoaException {
+        String methods = "";
+
+        List<SectionOut> sectionOuts;
+        int sectionFlag = ChangeFlagUtils.SECTION;
+        SectionOut[] sectionCache = cacheService.getCache(sectionFlag, methods, USER_ID_CACHE, SectionOut[].class);
+        if (sectionCache == null) {
+            sectionOuts = sectionOutFactory.outs(organizationService.getSectionList(new QueryWrapper<>(), humanDto.getDataId()));
+            cacheService.setCache(sectionFlag,methods,USER_ID_CACHE,sectionOuts);
+        } else {
+            sectionOuts =  Arrays.asList(sectionCache);
+        }
+
+        List<DepartOut> departOuts;
+        int flag = ChangeFlagUtils.DEPART;
+        DepartOut[] departCache = cacheService.getCache(flag, methods, USER_ID_CACHE, DepartOut[].class);
+        if (departCache == null) {
+            departOuts = departOutFactory.outs(organizationService.getDepartList(new QueryWrapper<>(), humanDto.getDataId()));
+            cacheService.setCache(flag,methods,USER_ID_CACHE,departOuts);
+        } else {
+            departOuts =  Arrays.asList(departCache);
+        }
+
+        GraphNode base = new GraphNode("0", "总部", null, "sum", null);
+
+
+        return new Vo<>(base.consist(sectionOuts,departOuts));
     }
 
 }
