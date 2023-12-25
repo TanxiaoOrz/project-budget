@@ -291,7 +291,7 @@ public class OrganizationBackController {
             sectionOuts = sectionOutFactory.outs(organizationService.getSectionList(new QueryWrapper<>(), humanDto.getDataId()));
             cacheService.setCache(sectionFlag,methods,USER_ID_CACHE,sectionOuts);
         } else {
-            sectionOuts =  Arrays.asList(sectionCache);
+            sectionOuts =  new ArrayList<>(Arrays.asList(sectionCache));
         }
 
         List<DepartOut> departOuts;
@@ -301,13 +301,13 @@ public class OrganizationBackController {
             departOuts = departOutFactory.outs(organizationService.getDepartList(new QueryWrapper<>(), humanDto.getDataId()));
             cacheService.setCache(flag,methods,USER_ID_CACHE,departOuts);
         } else {
-            departOuts =  Arrays.asList(departCache);
+            departOuts =  new ArrayList<>(Arrays.asList(departCache));
         }
 
-        GraphNode base = new GraphNode("0", "总部", null, "sum", null);
+        GraphNode base = new GraphNode("0", "总部", "总部", "sum", null);
 
 
-        return new Vo<>(base.consist(sectionOuts,departOuts));
+        return new Vo<>(base.consist(new ArrayList<>(sectionOuts),new ArrayList<>(departOuts)));
     }
 
 }

@@ -124,8 +124,8 @@ public class GraphNode {
         departOuts.removeAll(belongDeparts);
         List<GraphNode> departNodes = belongDeparts.stream().map(departOut -> new GraphNode(departOut.getDataId().toString(), departOut.getDepartName(), departOut.getDepartCode(), "depart", null,departOut.getIsDeprecated().toString())).toList();
 
-        sectionNodes.forEach(graphNode -> consist(sectionOuts,departOuts));
-        departNodes.forEach(graphNode -> consistDepart(departOuts));
+        sectionNodes.forEach(graphNode -> graphNode.consist(sectionOuts,departOuts));
+        departNodes.forEach(graphNode -> graphNode.consistDepart(departOuts));
 
         children.addAll(sectionNodes);
         children.addAll(departNodes);

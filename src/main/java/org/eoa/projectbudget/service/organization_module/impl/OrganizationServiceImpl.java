@@ -244,7 +244,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Integer dropDepart(Long departId, Long userId, boolean recursion) {
         Depart depart = departMapper.selectById(departId);
-        depart.setIsDeprecated(0);
+        depart.setIsDeprecated(1);
         int update = departMapper.updateById(depart);
         log.info("用户=>{}废弃部门=>{},修改数量=>{}",userId,departId,update);
         if (recursion) {
@@ -310,7 +310,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Integer dropSection(Long sectionId, Long userId, boolean recursion) {
         Section section = sectionMapper.selectById(sectionId);
-        section.setIsDeprecated(0);
+        section.setIsDeprecated(1);
         int update = sectionMapper.updateById(section);
         log.info("用户=>{}废弃分部=>{},修改数量=>{}",userId,sectionId,update);
         if (recursion) {

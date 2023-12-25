@@ -31,10 +31,7 @@ import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @Author: 张骏山
@@ -117,6 +114,8 @@ public class OrganizationFrontController {
     public Vo<String> updateSection(@RequestAttribute("HumanDto") HumanDto humanDto,
                                     @PathVariable("dataId")Long dataId,
                                     @RequestBody SectionIn section) {
+        if (Objects.equals(sectionMapper.selectById(dataId).getSectionManager(),humanDto.getDataId()))
+            throw new AuthorityException(humanDto.getDataId(),"depart",dataId,"编辑");
         Integer update = organizationService.updateSection(section.toEntity(dataId), humanDto.getDataId());
         if (update==1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.SECTION);
@@ -232,7 +231,7 @@ public class OrganizationFrontController {
             sectionOuts = sectionOutFactory.outs(organizationService.getSectionList(sectionFilter.getWrapper(), humanDto.getDataId()));
             cacheService.setCache(sectionFlag,sectionFilter.getDescription(),USER_ID_CACHE,sectionOuts);
         } else {
-            sectionOuts =  Arrays.asList(sectionCache);
+            sectionOuts =  new ArrayList<>(Arrays.asList(sectionCache));
         }
 
         List<DepartOut> departOuts;
@@ -243,13 +242,13 @@ public class OrganizationFrontController {
             departOuts = departOutFactory.outs(organizationService.getDepartList(departFilter.getWrapper(), humanDto.getDataId()));
             cacheService.setCache(flag,departFilter.getDescription(),USER_ID_CACHE,departOuts);
         } else {
-            departOuts =  Arrays.asList(departCache);
+            departOuts =  new ArrayList<>(Arrays.asList(departCache));
         }
 
-        GraphNode base = new GraphNode("0", "总部", null, "sum", null);
+        GraphNode base = new GraphNode("0", "总部", "总部", "sum", null);
 
 
-        return new Vo<>(base.consist(sectionOuts,departOuts));
+        return new Vo<>(base.consist(new ArrayList<>(sectionOuts),new ArrayList<>(departOuts)));
     }
 
 
