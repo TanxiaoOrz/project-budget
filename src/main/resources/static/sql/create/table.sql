@@ -225,3 +225,52 @@ create table `content_list` (
     primary key (`dataId`),
     INDEX `leadContent_FOREIGN` (`leadContent` ASC)
 ) COMMENT = '目录';
+
+-- 流程表单
+
+create table `workflow` (
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,流程唯一id',
+    `moduleTypeId` BIGINT(64) UNSIGNED  NOT NULL COMMENT '所属模块id',
+    `tableId` BIGINT(64) UNSIGNED  NOT NULL COMMENT '对应表单id',
+    `workFlowName` varchar(100) not null comment '流程名称',
+    `workflowDescription` varchar(1000) null comment '流程描述',
+    `workflowBaseTitle` varchar(100) null comment '流程默认标题',
+    `creator`  BIGINT(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+    `createTime` datetime null comment  '创建时间',
+    `workflowStatus` tinyint not null default '0' comment '流程当前状态',
+    primary key (`dataId`),
+    UNIQUE INDEX `workFlowName_Unique` (`workFlowName` asc)
+) comment = '流程表单';
+
+create table `workflow_request` (
+    `requestId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '流程数据编号',
+    `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+    `currentNode` BIGINT(64) UNSIGNED NOT NULL COMMENT '当前节点编号',
+    `doneHistory` json null comment '操作历史',
+    `requestTitle` varchar(100) comment '流程标题',
+    `requestStatus` int comment '流程状态',
+    `flowHistory` json null  comment '流转历史',
+    `submitTime` datetime null comment '发起事件',
+    `finishTime` datetime null comment '归档事件',
+    primary key (`requestId`),
+    index `request_workflowId_index` (`workflowId` asc ),
+    index `requestStatus` (`requestStatus` asc )
+) comment = '审批数据';
+
+create table `node` (
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '节点编号',
+    `nodeName` varchar(100) comment '节点名称',
+    `userAuthorityLimit` json null comment '操作对象权限组',
+    `isCounterSign` int not null default 0 comment '是否需要会签',
+    `nodeType` int not null comment '节点类型 0、创建，1、提交，2、审批，3、抄送，4、归档',
+    `tableModifyAuthority` json null comment '当前节点允许修改的表单字段',
+    `beforeSubmit` json null comment '提交前操作',
+    `checkCondition` json null comment '提交需要满足的条件',
+    `afterSubmit` json null comment '提交前操作',
+    `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+    `creator`  BIGINT(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+    `createTime` datetime null comment  '创建时间',
+    primary key (`dataId`),
+    index `node_workflowId_index` (`workflowId` asc )
+) comment = '节点数据';
+
