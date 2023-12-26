@@ -242,7 +242,7 @@ create table `workflow` (
     UNIQUE INDEX `workFlowName_Unique` (`workFlowName` asc)
 ) comment = '流程表单';
 
-create table `workflow_request` (
+create table `request` (
     `requestId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '流程数据编号',
     `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
     `currentNode` BIGINT(64) UNSIGNED NOT NULL COMMENT '当前节点编号',
@@ -257,7 +257,7 @@ create table `workflow_request` (
     index `requestStatus` (`requestStatus` asc )
 ) comment = '审批数据';
 
-create table `node` (
+create table `workflow_node` (
     `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '节点编号',
     `nodeName` varchar(100) comment '节点名称',
     `userAuthorityLimit` json null comment '操作对象权限组',
@@ -268,9 +268,44 @@ create table `node` (
     `checkCondition` json null comment '提交需要满足的条件',
     `afterSubmit` json null comment '提交前操作',
     `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+    `viewNo` int not null comment '显示顺序',
     `creator`  BIGINT(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
     `createTime` datetime null comment  '创建时间',
     primary key (`dataId`),
     index `node_workflowId_index` (`workflowId` asc )
 ) comment = '节点数据';
 
+create table `workflow_route` (
+    `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '路径编号',
+    `routeName` VARBINARY(100) not null comment '路径名称',
+    `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+    `startNodeId` BIGINT(64) UNSIGNED NOT NULL COMMENT '起点节点编号',
+    `endNodeId` BIGINT(64) UNSIGNED NOT NULL COMMENT '终点节点编号',
+    `viewNo` int not null comment '显示顺序',
+    `enterCondition` json null comment '进入条件',
+    `routeAction` json null comment '路径操作',
+    `creator`  BIGINT(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+    `createTime` datetime null comment  '创建时间',
+    primary key (`dataId`),
+    INDEX `route_node_start_index` (`startNodeId` asc )
+) comment = '路径表单';
+
+create table `request_backlog` (
+    `humanId` BIGINT(64) UNSIGNED NOT NULL COMMENT '人员编号',
+    `requestId` BIGINT(64) UNSIGNED NOT NULL COMMENT '请求编号',
+    `arriveTime` datetime not null default now() comment '到达时间',
+    `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+    primary key (`humanId`, `requestId`),
+    INDEX `request_backlog_workflowId_index` (`workflowId` asc ),
+    INDEX `request_backlog_arriveTime_index` (`arriveTime` asc )
+) comment = '待办列表';
+
+create table `request_done` (
+    `humanId` BIGINT(64) UNSIGNED NOT NULL COMMENT '人员编号',
+    `requestId` BIGINT(64) UNSIGNED NOT NULL COMMENT '请求编号',
+    `doneTime` datetime not null default now() comment '完成时间',
+    `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+    primary key (`humanId`, `requestId`),
+    INDEX `request_done_workflowId_index` (`workflowId` asc ),
+    INDEX `request_done_doneTime_index` (`doneTime` asc )
+) comment = '已办列表';
