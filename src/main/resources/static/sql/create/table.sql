@@ -232,18 +232,20 @@ create table `workflow` (
     `dataId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '数据编号,流程唯一id',
     `moduleTypeId` BIGINT(64) UNSIGNED  NOT NULL COMMENT '所属模块id',
     `tableId` BIGINT(64) UNSIGNED  NOT NULL COMMENT '对应表单id',
+    `titleColumnId` BIGINT(64) UNSIGNED  NOT NULL COMMENT '流程标题字段id',
     `workFlowName` varchar(100) not null comment '流程名称',
     `workflowDescription` varchar(1000) null comment '流程描述',
     `workflowBaseTitle` varchar(100) null comment '流程默认标题',
     `creator`  BIGINT(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
     `createTime` datetime null comment  '创建时间',
-    `workflowStatus` tinyint not null default '0' comment '流程当前状态',
+    `isDeprecated` tinyint not null default '0' comment '是否废弃',
     primary key (`dataId`),
     UNIQUE INDEX `workFlowName_Unique` (`workFlowName` asc)
 ) comment = '流程表单';
 
 create table `request` (
     `requestId` BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '流程数据编号',
+    `dataId` BIGINT(64) UNSIGNED NOT NULL COMMENT '表单数据编号',
     `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
     `currentNode` BIGINT(64) UNSIGNED NOT NULL COMMENT '当前节点编号',
     `doneHistory` json null comment '操作历史',
@@ -264,9 +266,9 @@ create table `workflow_node` (
     `isCounterSign` int not null default 0 comment '是否需要会签',
     `nodeType` int not null comment '节点类型 0、创建，1、提交，2、审批，3、抄送，4、归档',
     `tableModifyAuthority` json null comment '当前节点允许修改的表单字段',
-    `beforeSubmit` json null comment '提交前操作',
+    `beforeAction` json null comment '节点前操作',
     `checkCondition` json null comment '提交需要满足的条件',
-    `afterSubmit` json null comment '提交前操作',
+    `afterAction` json null comment '节点后操作',
     `workflowId` BIGINT(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
     `viewNo` int not null comment '显示顺序',
     `creator`  BIGINT(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
@@ -309,3 +311,4 @@ create table `request_done` (
     INDEX `request_done_workflowId_index` (`workflowId` asc ),
     INDEX `request_done_doneTime_index` (`doneTime` asc )
 ) comment = '已办列表';
+
