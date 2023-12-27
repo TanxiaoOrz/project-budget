@@ -5,8 +5,8 @@ package org.eoa.projectbudget.dto;
  * @Date: 2023/12/27 11:42
  * @PackageName: org.eoa.projectbudget.dto
  * @ClassName: RequestDto
- * @Description: 流程操作Dto类
+ * @Description: 流程操作输出Dto类
  * @Version: 1.0
  **/
-public class RequestDto {
+public class RequestOutDto {
 }
