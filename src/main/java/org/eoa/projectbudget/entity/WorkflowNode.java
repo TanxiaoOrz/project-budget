@@ -18,6 +18,12 @@ import java.util.Date;
 @TableName("`workflow_node`")
 public class WorkflowNode {
 
+    Integer CREATE = 0;
+    Integer ADMIT = 1;
+    Integer SUBMIT = 2;
+    Integer FILE = 3;
+
+
     @TableId(type = IdType.AUTO)
     Long dataId;
 
