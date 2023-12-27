@@ -312,3 +312,11 @@ create table `request_done` (
     INDEX `request_done_doneTime_index` (`doneTime` asc )
 ) comment = '已办列表';
 
+create view `request_done_view` as (
+    select r.*,request_done.humanId,request_done.doneTime from `request_done` left join request r on request_done.requestId = r.requestId
+);
+
+create view `request_back_log_view` as (
+    select r.*,request_backlog.humanId,request_backlog.arriveTime from `request_backlog` left join request r on request_backlog.requestId = r.requestId
+);
+
