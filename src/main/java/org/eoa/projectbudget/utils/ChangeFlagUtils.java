@@ -33,6 +33,9 @@ public class ChangeFlagUtils {
     public static final int LINK = 11;
     public static final int DEPART = 12;
     public static final int SECTION = 13;
+    public static final int WORKFLOW = 14;
+    public static final int WORKFLOW_NODE = 15;
+    public static final int WORKFLOW_ROUTE = 16;
 
     public static final String[] Flags = {
             "HUMAN","MODUlE",
@@ -41,7 +44,8 @@ public class ChangeFlagUtils {
             "CHARACTER","AUTHORITY",
             "CONTENT","FILE",
             "Form","Link",
-            "DEPART","SECTION"
+            "DEPART","SECTION",
+            "WORKFLOW","WORKFLOW_NODE","WORKFLOW_ROUTE"
     };
     private final HashMap<String, Date> flagMap = new HashMap<>();
     private final HashMap<Long, Date> userMap = new HashMap<>();
