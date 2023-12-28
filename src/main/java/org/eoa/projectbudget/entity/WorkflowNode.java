@@ -18,10 +18,10 @@ import java.util.Date;
 @TableName("`workflow_node`")
 public class WorkflowNode {
 
-    Integer CREATE = 0;
-    Integer ADMIT = 1;
-    Integer SUBMIT = 2;
-    Integer FILE = 3;
+    public static Integer CREATE = 0;
+    public static Integer ADMIT = 1;
+    public static Integer SUBMIT = 2;
+    public static Integer FILE = 3;
 
 
     @TableId(type = IdType.AUTO)
