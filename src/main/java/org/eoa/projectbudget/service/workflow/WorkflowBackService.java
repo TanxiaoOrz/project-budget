@@ -1,7 +1,6 @@
 package org.eoa.projectbudget.service.workflow;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import jakarta.annotation.Nullable;
 import org.eoa.projectbudget.dto.RequestOutDto;
 import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.Workflow;
@@ -16,7 +15,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service.workflow
  * @ClassName: WorkflowBackService
  * @Description: 流程模块后端操作接口
- * @Version: 1.0
+ * @Version: 1.1
  **/
 public interface WorkflowBackService {
 
@@ -57,6 +56,14 @@ public interface WorkflowBackService {
     Integer transferRequest(Long requestId, Long nodeId, List<Long> receivers, Long userId);
 
     /**
+     * 批量获取工作流
+     * @param wrapper 条件构造器
+     * @param userId 操作人
+     * @return 工作流数组
+     */
+    List<Workflow> getWorkflows(QueryWrapper<Workflow> wrapper, Long userId);
+
+    /**
      * 获取流程
      * @param dataId 流程编号
      * @param userId 操作人
@@ -87,6 +94,14 @@ public interface WorkflowBackService {
      * @return 结果数字
      */
     Integer dropWorkFlow(Long dataId, Long userId);
+
+    /**
+     * 批量获取工作节点
+     * @param wrapper 条件构造器
+     * @param userId 操作人
+     * @return 工作流节点数组
+     */
+    List<WorkflowNode> getWorkflowNodes(QueryWrapper<WorkflowNode> wrapper, Long userId);
 
 
     /**
@@ -120,6 +135,14 @@ public interface WorkflowBackService {
      * @return 结果数字
      */
     Integer dropWorkflowNode(Long dataId, Long userId);
+
+    /**
+     * 批量获取工作流路径
+     * @param wrapper 条件构造器
+     * @param userId 操作人
+     * @return 工作流路径数组
+     */
+    List<WorkflowRoute> getWorkflowRoutes(QueryWrapper<WorkflowRoute> wrapper, Long userId);
 
 
     /**
