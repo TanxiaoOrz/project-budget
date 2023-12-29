@@ -1,12 +1,14 @@
 package org.eoa.projectbudget.service.workflow.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.dto.RequestOutDto;
+import org.eoa.projectbudget.dto.RequestDto;
 import org.eoa.projectbudget.entity.*;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.exception.ServerException;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
 import org.eoa.projectbudget.mapper.WorkflowMapper;
+import org.eoa.projectbudget.mapper.WorkflowNodeMapper;
+import org.eoa.projectbudget.mapper.WorkflowRouteMapper;
 import org.eoa.projectbudget.service.workflow.WorkflowBackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,10 @@ public class WorkflowBackServiceImpl implements WorkflowBackService {
 
     @Autowired
     WorkflowMapper workflowMapper;
+    @Autowired
+    WorkflowNodeMapper workflowNodeMapper;
+    @Autowired
+    WorkflowRouteMapper workflowRouteMapper;
 
     @Autowired
     ColumnEntityMapper columnEntityMapper;
@@ -44,7 +50,7 @@ public class WorkflowBackServiceImpl implements WorkflowBackService {
     }
 
     @Override
-    public RequestOutDto getRequest(Long requestId, Long userId) {
+    public RequestDto getRequest(Long requestId, Long userId) {
         // TODO
         return null;
     }
@@ -76,12 +82,11 @@ public class WorkflowBackServiceImpl implements WorkflowBackService {
         }
         log.info("用户=>{}获取工作流=>{}", userId, dataId);
         return workflow;
-
     }
 
     @Override
-    public Long newWorkFlow(Workflow workflow, Long userId) {
-        if (workflow.getTitleColumnId() == null) {
+    public Long newWorkflow(Workflow workflow, Long userId) {
+        if (workflow.getTitleColumnId() != null) {
             ColumnEntity columnEntity = columnEntityMapper.selectById(workflow.getTitleColumnId());
             if (!Objects.equals(columnEntity.getTableNo(), workflow.getTableId())) {
                 log.error("用户=>{}新建工作流出错,标题字段=>{}不属于关联表单=>{}", userId, workflow.getTitleColumnId(), workflow.getTableId());
@@ -100,16 +105,16 @@ public class WorkflowBackServiceImpl implements WorkflowBackService {
     }
 
     @Override
-    public Integer updateWorkFlow(Workflow workflow, Long userId) {
+    public Integer updateWorkflow(Workflow workflow, Long userId) {
         Workflow old = workflowMapper.selectById(workflow.getDataId());
         if (old == null) {
             log.error("用户=>{}修改工作流出错,workflow=>{}不存在", userId, workflow.getDataId());
-            throw new ParameterException("dataId",workflow.getDataId().toString(),"数据不存在");
+            throw new ParameterException("dataId", workflow.getDataId().toString(), "数据不存在");
         }
         workflow.setCreateTime(old.getCreateTime())
                 .setCreator(old.getCreator());
 
-        if (workflow.getTitleColumnId() == null) {
+        if (workflow.getTitleColumnId() != null) {
             ColumnEntity columnEntity = columnEntityMapper.selectById(workflow.getTitleColumnId());
             if (!Objects.equals(columnEntity.getTableNo(), workflow.getTableId())) {
                 log.error("用户=>{}修改工作流出错,标题字段=>{}不属于关联表单=>{}", userId, workflow.getTitleColumnId(), workflow.getTableId());
@@ -122,11 +127,11 @@ public class WorkflowBackServiceImpl implements WorkflowBackService {
     }
 
     @Override
-    public Integer dropWorkFlow(Long dataId, Long userId) {
+    public Integer dropWorkflow(Long dataId, Long userId) {
         Workflow old = workflowMapper.selectById(dataId);
         if (old == null) {
             log.error("用户=>{}废弃工作流出错,workflow=>{}不存在", userId, dataId);
-            throw new ParameterException("dataId",dataId.toString(),"数据不存在");
+            throw new ParameterException("dataId", dataId.toString(), "数据不存在");
         }
         old.setIsDeprecated(1);
         int update = workflowMapper.updateById(old);
@@ -136,59 +141,142 @@ public class WorkflowBackServiceImpl implements WorkflowBackService {
 
     @Override
     public List<WorkflowNode> getWorkflowNodes(QueryWrapper<WorkflowNode> wrapper, Long userId) {
-        return null;
+        List<WorkflowNode> workflowNodes = workflowNodeMapper.selectList(wrapper);
+        log.info("用户=>{}获取工作流节点数组=>{}", userId, workflowNodes.stream().map(WorkflowNode::getDataId).toList());
+        return workflowNodes;
     }
 
     @Override
     public WorkflowNode getWorkflowNode(Long dataId, Long userId) {
-        // TODO
-        return null;
+        WorkflowNode workflowNode = workflowNodeMapper.selectById(dataId);
+        if (workflowNode == null) {
+            log.error("用户=>{}获取工作流节点=>{},没有该数据", userId, dataId);
+        }
+        log.info("用户=>{}获取工作流节点=>{}", userId, dataId);
+        return workflowNode;
     }
 
     @Override
     public Long newWorkflowNode(WorkflowNode workflowNode, Long userId) {
-        // TODO
-        return null;
+        Long workflowId = workflowNode.getWorkflowId();
+        Workflow workflow = workflowMapper.selectById(workflowId);
+        if (workflow == null) {
+            throw new ParameterException("workflowId", workflowId.toString(), "不存在该流程");
+        }
+        if (workflowNode.getViewNo() == null) {
+            workflowNode.setViewNo(workflowNodeMapper.getViewNo(workflowId));
+        }
+        workflowNode.setCreator(userId)
+                .setCreateTime(new Date());
+        workflowNodeMapper.insert(workflowNode);
+        if (workflowNode.getDataId() != null) {
+            log.info("用户=>{}新建工作流节点=>{}", userId, workflowNode);
+            return workflowNode.getDataId();
+        }
+        log.error("用户=>{}新建工作流节点=>{}失败", userId, workflowNode);
+        throw new ServerException("新增数据失败");
     }
 
     @Override
     public Integer updateWorkflowNode(WorkflowNode workflowNode, Long userId) {
-        // TODO
-        return null;
+        if (Objects.equals(workflowNode.getNodeType(), WorkflowNode.CREATE)) {
+            if (workflowNodeMapper.getCreateNodeElseCounts(workflowNode.getWorkflowId(), workflowNode.getDataId())!=0) {
+                log.error("用户=>{}修改工作流节点出错,workflowNode=>{},创建节点已有", userId, workflowNode.getDataId());
+                throw new ParameterException("nodeType", "0", "创建节点只能添加一个");
+            }
+        }
+
+        WorkflowNode old = workflowNodeMapper.selectById(workflowNode.getDataId());
+        if (old == null) {
+            log.error("用户=>{}修改工作流节点出错,workflowNode=>{}不存在", userId, workflowNode.getDataId());
+            throw new ParameterException("dataId", workflowNode.getDataId().toString(), "数据不存在");
+        }
+        if (!old.getWorkflowId().equals(workflowNode.getWorkflowId())) {
+            log.error("用户=>{}修改工作流节点出错,workflowId不一致,原所属流程=>{},现所属流程=>{}", userId, old.getWorkflowId(), workflowNode.getWorkflowId());
+            throw new ParameterException("dataId", workflowNode.getDataId().toString(), "和原有节点所属流程不一致");
+        }
+        if (workflowNode.getViewNo() == null) {
+            workflowNode.setViewNo(old.getViewNo());
+        }
+        workflowNode.setCreateTime(old.getCreateTime())
+                .setCreator(old.getCreator());
+
+        Integer update = workflowNodeMapper.updateById(workflowNode);
+        log.info("用户=>{}修改工作流节点=>{},修改数量=>{}", userId, workflowNode, update);
+        return update;
     }
 
     @Override
     public Integer dropWorkflowNode(Long dataId, Long userId) {
-        // TODO
-        return null;
+        int update = workflowNodeMapper.deleteById(dataId);
+        log.info("用户=>{}修改工作流节点=>{},修改数量=>{}", userId, dataId, update);
+        return update;
     }
 
     @Override
     public List<WorkflowRoute> getWorkflowRoutes(QueryWrapper<WorkflowRoute> wrapper, Long userId) {
-        return null;
+        List<WorkflowRoute> workflowRoutes = workflowRouteMapper.selectList(wrapper);
+        log.info("用户=>{}获取工作流路径数组=>{}", userId, workflowRoutes.stream().map(WorkflowRoute::getDataId).toList());
+        return workflowRoutes;
     }
 
     @Override
     public WorkflowRoute getWorkflowRoute(Long dataId, Long userId) {
-        // TODO
-        return null;
+        WorkflowRoute workflowRoute = workflowRouteMapper.selectById(dataId);
+        if (workflowRoute == null) {
+            log.error("用户=>{}获取工作流路径=>{},没有该数据", userId, dataId);
+        }
+        log.info("用户=>{}获取工作流路径=>{}", userId, dataId);
+        return workflowRoute;
     }
 
     @Override
     public Long newWorkflowRoute(WorkflowRoute workflowRoute, Long userId) {
-        // TODO
-        return null;
+        Long workflowId = workflowRoute.getWorkflowId();
+        Workflow workflow = workflowMapper.selectById(workflowId);
+        if (workflow == null) {
+            throw new ParameterException("workflowId", workflowId.toString(), "不存在该流程");
+        }
+        if (workflowRoute.getViewNo() == null) {
+            workflowRoute.setViewNo(workflowRouteMapper.getViewNo(workflowRoute.getWorkflowId()));
+        }
+        workflowRoute.setCreator(userId)
+                .setCreateTime(new Date());
+        workflowRouteMapper.insert(workflowRoute);
+        if (workflowRoute.getDataId() != null) {
+            log.info("用户=>{}新建工作流路径=>{}", userId, workflowRoute);
+            return workflowRoute.getDataId();
+        }
+        log.error("用户=>{}新建工作流路径=>{}失败", userId, workflowRoute);
+        throw new ServerException("新增数据失败");
     }
 
     @Override
     public Integer updateWorkflowRoute(WorkflowRoute workflowRoute, Long userId) {
-        // TODO
-        return null;
+        WorkflowRoute old = workflowRouteMapper.selectById(workflowRoute.getDataId());
+        if (old == null) {
+            log.error("用户=>{}修改工作流路径出错,workflowRoute=>{}不存在", userId, workflowRoute.getDataId());
+            throw new ParameterException("dataId", workflowRoute.getDataId().toString(), "数据不存在");
+        }
+        if (!old.getWorkflowId().equals(workflowRoute.getWorkflowId())) {
+            log.error("用户=>{}修改工作流路径出错,workflowId不一致,原所属流程=>{},现所属流程=>{}", userId, old.getWorkflowId(), workflowRoute.getWorkflowId());
+            throw new ParameterException("dataId", workflowRoute.getDataId().toString(), "和原有路径所属流程不一致");
+        }
+        if (workflowRoute.getViewNo() == null) {
+            workflowRoute.setViewNo(old.getViewNo());
+        }
+        workflowRoute.setCreateTime(old.getCreateTime())
+                .setCreator(old.getCreator());
+
+        Integer update = workflowRouteMapper.updateById(workflowRoute);
+        log.info("用户=>{}修改工作流路径=>{},修改数量=>{}", userId, workflowRoute, update);
+        return update;
     }
 
     @Override
     public Integer dropWorkflowRoute(Long dataId, Long userId) {
-        // TODO
-        return null;
+        int update = workflowRouteMapper.deleteById(dataId);
+        log.info("用户=>{}修改工作流路径=>{},修改数量=>{}", userId, dataId, update);
+        return update;
     }
 }

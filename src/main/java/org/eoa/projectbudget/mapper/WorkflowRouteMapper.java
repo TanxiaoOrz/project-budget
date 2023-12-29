@@ -2,6 +2,8 @@ package org.eoa.projectbudget.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.eoa.projectbudget.entity.WorkflowRoute;
 
 /**
@@ -15,4 +17,8 @@ import org.eoa.projectbudget.entity.WorkflowRoute;
 
 @Mapper
 public interface WorkflowRouteMapper extends BaseMapper<WorkflowRoute> {
+
+    @Select("select max(viewNo) + 1 from workflow_route where workflowId = #{workflowId};")
+    Integer getViewNo(@Param("workflowId")Long workflowId);
+
 }
