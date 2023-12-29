@@ -2,8 +2,7 @@ package org.eoa.projectbudget.service.workflow;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.dto.RequestInDto;
-import org.eoa.projectbudget.dto.RequestOutDto;
+import org.eoa.projectbudget.dto.RequestDto;
 import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.RequestBacklogView;
 import org.eoa.projectbudget.entity.RequestDoneView;
@@ -61,7 +60,7 @@ public interface WorkflowFrontService {
      * @param user 操作人
      * @return 流程数据
      */
-    RequestOutDto getRequest(Long requestId, HumanDto user);
+    RequestDto getRequest(Long requestId, HumanDto user);
 
     /**
      * 创建请求
@@ -69,7 +68,7 @@ public interface WorkflowFrontService {
      * @param user 操作人
      * @return 流程编号
      */
-    Long createRequest(RequestInDto request, HumanDto user);
+    Long createRequest(RequestDto request, HumanDto user);
 
     /**
      * 退回请求
@@ -77,7 +76,7 @@ public interface WorkflowFrontService {
      * @param user 操作人
      * @return 修改数字
      */
-    Integer refuseRequest(RequestInDto request, HumanDto user);
+    Integer refuseRequest(RequestDto request, HumanDto user);
 
     /**
      * 提交流程
@@ -85,7 +84,7 @@ public interface WorkflowFrontService {
      * @param user 操作人
      * @return 修改数字
      */
-    Integer submitRequest(RequestInDto request, HumanDto user);
+    Integer submitRequest(RequestDto request, HumanDto user);
 
     /**
      * 批准流程
@@ -93,7 +92,7 @@ public interface WorkflowFrontService {
      * @param user 操作人
      * @return 修改数字
      */
-    Integer admitRequest(RequestInDto request, HumanDto user);
+    Integer admitRequest(RequestDto request, HumanDto user);
 
     /**
      * 检查操作权限
@@ -102,7 +101,7 @@ public interface WorkflowFrontService {
      * @param user 操作人
      * @return 结果
      */
-    Boolean checkAuthority(RequestInDto request,Integer method, HumanDto user);
+    Boolean checkAuthority(RequestDto request, Integer method, HumanDto user);
 
     /**
      * 检查查看权限

@@ -2,8 +2,7 @@ package org.eoa.projectbudget.service.workflow.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.HumanDto;
-import org.eoa.projectbudget.dto.RequestInDto;
-import org.eoa.projectbudget.dto.RequestOutDto;
+import org.eoa.projectbudget.dto.RequestDto;
 import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.RequestBacklogView;
 import org.eoa.projectbudget.entity.RequestDoneView;
@@ -50,32 +49,32 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
     }
 
     @Override
-    public RequestOutDto getRequest(Long requestId, HumanDto user) {
+    public RequestDto getRequest(Long requestId, HumanDto user) {
         return null;
     }
 
     @Override
-    public Long createRequest(RequestInDto request, HumanDto user) {
+    public Long createRequest(RequestDto request, HumanDto user) {
         return null;
     }
 
     @Override
-    public Integer refuseRequest(RequestInDto request, HumanDto user) {
+    public Integer refuseRequest(RequestDto request, HumanDto user) {
         return null;
     }
 
     @Override
-    public Integer submitRequest(RequestInDto request, HumanDto user) {
+    public Integer submitRequest(RequestDto request, HumanDto user) {
         return null;
     }
 
     @Override
-    public Integer admitRequest(RequestInDto request, HumanDto user) {
+    public Integer admitRequest(RequestDto request, HumanDto user) {
         return null;
     }
 
     @Override
-    public Boolean checkAuthority(RequestInDto request, Integer method, HumanDto user) {
+    public Boolean checkAuthority(RequestDto request, Integer method, HumanDto user) {
         return null;
     }
 

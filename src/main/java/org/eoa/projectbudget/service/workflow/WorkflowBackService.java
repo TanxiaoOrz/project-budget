@@ -1,7 +1,7 @@
 package org.eoa.projectbudget.service.workflow;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.dto.RequestOutDto;
+import org.eoa.projectbudget.dto.RequestDto;
 import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.Workflow;
 import org.eoa.projectbudget.entity.WorkflowNode;
@@ -35,7 +35,7 @@ public interface WorkflowBackService {
      * @param userId 操作人
      * @return 请求展示数据
      */
-    RequestOutDto getRequest(Long requestId, Long userId);
+    RequestDto getRequest(Long requestId, Long userId);
 
     /**
      * 删除请求和相关数据
@@ -77,7 +77,7 @@ public interface WorkflowBackService {
      * @param userId 操作人
      * @return 数据编号
      */
-    Long newWorkFlow(Workflow workflow, Long userId);
+    Long newWorkflow(Workflow workflow, Long userId);
 
     /**
      * 修改流程
@@ -85,7 +85,7 @@ public interface WorkflowBackService {
      * @param userId 操作人
      * @return 结果数字
      */
-    Integer updateWorkFlow(Workflow workflow, Long userId);
+    Integer updateWorkflow(Workflow workflow, Long userId);
 
     /**
      * 废弃流程
@@ -93,7 +93,7 @@ public interface WorkflowBackService {
      * @param userId 操作人
      * @return 结果数字
      */
-    Integer dropWorkFlow(Long dataId, Long userId);
+    Integer dropWorkflow(Long dataId, Long userId);
 
     /**
      * 批量获取工作节点
