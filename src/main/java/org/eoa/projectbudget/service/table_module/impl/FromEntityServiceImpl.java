@@ -69,8 +69,9 @@ public class FromEntityServiceImpl implements FormService {
 
     private FormOutDto consistForm(Long dataId, TableEntity table, List<ColumnEntity> columns) {
         FormOutDto form = new FormOutDto();
-        form.setTable(table);
-        form.setTableId(table.getTableId());
+        form.setTable(table)
+            .setColumns(columns)
+            .setTableId(table.getTableId());
 
         Integer groupCount = table.getGroupCount();
         Map<String,Object> mainValues;

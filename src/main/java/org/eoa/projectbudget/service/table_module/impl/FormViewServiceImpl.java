@@ -86,6 +86,7 @@ public class FormViewServiceImpl implements FormService {
         FormOutDto formOutDto = new FormOutDto().setTable(table);
         formOutDto.setDataId(dataId)
                 .setTableId(table.getTableId())
+                .setColumns(mainColumns)
                 .setVirtual(true);
 
         Integer groupCount = table.getGroupCount();
