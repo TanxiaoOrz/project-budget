@@ -158,8 +158,17 @@ public class WorkflowBackServiceImpl implements WorkflowBackService {
 
     @Override
     public Long newWorkflowNode(WorkflowNode workflowNode, Long userId) {
+
         Long workflowId = workflowNode.getWorkflowId();
         Workflow workflow = workflowMapper.selectById(workflowId);
+
+        if (Objects.equals(workflowNode.getNodeType(), WorkflowNode.CREATE)) {
+            if (workflowNodeMapper.getCreateNodeElseCounts(workflowNode.getWorkflowId(), workflowNode.getDataId())!=0) {
+                log.error("用户=>{}修改工作流节点出错,workflowNode=>{},创建节点已有", userId, workflowNode.getDataId());
+                throw new ParameterException("nodeType", "0", "创建节点只能添加一个");
+            }
+        }
+
         if (workflow == null) {
             throw new ParameterException("workflowId", workflowId.toString(), "不存在该流程");
         }

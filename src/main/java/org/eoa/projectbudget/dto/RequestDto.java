@@ -1,8 +1,21 @@
 package org.eoa.projectbudget.dto;
 
-import org.eoa.projectbudget.entity.Request;
-import org.eoa.projectbudget.entity.Workflow;
-import org.eoa.projectbudget.entity.WorkflowNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eoa.projectbudget.dto.workflow_json.Action;
+import org.eoa.projectbudget.entity.*;
+import org.eoa.projectbudget.exception.*;
+import org.eoa.projectbudget.extension.WorkflowAction;
+import org.eoa.projectbudget.extension.WorkflowCheck;
+import org.eoa.projectbudget.mapper.FormDMLMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author: 张骏山
@@ -14,26 +27,224 @@ import org.eoa.projectbudget.entity.WorkflowNode;
  **/
 public class RequestDto {
 
-    public static int CREATE = 0;
-    public static int SUBMIT = 1;
-    public static int ADMIT = 2;
-    public static int REFUSE = 3;
+    public final static int CREATE = 0;
+    public final static int SUBMIT = 1;
+    public final static int ADMIT = 2;
+    public final static int REFUSE = 3;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     FormInDto formInDto;
     Long dataId;
     Long requestId;
     Long nodeId;
+    Long workflowId;
     Integer action;
-    String commit;
+    String comment;
 
     Request request;
     Workflow workflow;
     WorkflowNode currentNode;
     FormOutDto formOutDto;
 
-    boolean hasConsistedIn = false;
-    boolean isHasConsistedOut = false;
+    List<WorkflowRoute> nextRoutes;
+    HumanDto creator;
 
+    public void arriveNode(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper) {
+        String beforeAction = currentNode.getBeforeAction();
+        doActions(jdbcTemplate,formDMLMapper,beforeAction);
+    }
+
+    public WorkflowRoute passRoute(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper) {
+        WorkflowRoute nextRoute = null;
+        for (WorkflowRoute route:
+             nextRoutes) {
+            String checkAction = route.getRouteAction();
+            if (doChecks(jdbcTemplate, checkAction)) {
+                nextRoute = route;
+                break;
+            }
+        }
+        if (nextRoute == null) {
+            throw new ServerException("不存在符合条件的流转路径");
+        }
+        String routeAction = nextRoute.getRouteAction();
+        doActions(jdbcTemplate, formDMLMapper, routeAction);
+        return nextRoute;
+    }
+
+
+    public void checkNode(Long userId) throws EoaException {
+        if (nodeId == null) {
+            throw new ServerException("检查节点正确性出错,缺少nodeId");
+        }
+        if (currentNode == null) {
+            throw new ServerException("检查节点正确性出错,缺少currentNode");
+        }
+        if (!nodeId.equals(currentNode.getDataId())) {
+            throw new ParameterException("nodeId", nodeId.toString(), "不等于审批请求的当前节点");
+        }
+
+        if (action == null) {
+            throw new ServerException("检查节点正确性出错,缺少action");
+        }
+        switch (action) {
+            case CREATE -> {
+                if (!Objects.equals(currentNode.getNodeType(), WorkflowNode.CREATE))
+                    throw new AuthorityException(userId,"node", nodeId, "创建请求");
+            }
+            case SUBMIT -> {
+                if (!Objects.equals(currentNode.getNodeType(), WorkflowNode.SUBMIT))
+                    throw new AuthorityException(userId,"node", nodeId, "请求提交");
+            }
+            case ADMIT -> {
+                if (!Objects.equals(currentNode.getNodeType(), WorkflowNode.ADMIT))
+                    throw new AuthorityException(userId,"node", nodeId, "请求同意");
+            }
+            case REFUSE -> {
+                if (!Objects.equals(currentNode.getNodeType(), WorkflowNode.ADMIT))
+                    throw new AuthorityException(userId,"node", nodeId, "请求拒绝");
+            }
+        }
+    }
+
+    public void leaveNode(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper, Long userId) {
+        String checkAction = currentNode.getCheckAction();
+        StringBuilder falseReason = new StringBuilder();
+        if (!doChecks(jdbcTemplate, checkAction, falseReason)) {
+            throw new ServerException(falseReason.toString());
+        }
+        request.pushDoneHistory(nodeId,userId,action, comment);
+        String afterAction = currentNode.getAfterAction();
+        doActions(jdbcTemplate, formDMLMapper, afterAction);
+    }
+
+    private boolean doChecks(JdbcTemplate jdbcTemplate, String checkAction, StringBuilder falseReason) {
+        Action action;
+        AtomicBoolean checkConclusion = new AtomicBoolean(true);
+        if (checkAction != null) {
+            try {
+                action = objectMapper.readValue(checkAction, Action.class);
+            } catch (JsonProcessingException e) {
+                throw new DataException("request",dataId.toString(),"doneHistory", checkAction, "json解析失败");
+            }
+            action.getClassNames().forEach(name->{
+                try {
+                    Class<?> clazz = Class.forName(name);
+                    WorkflowCheck workflowCheck = (WorkflowCheck) clazz.getDeclaredConstructor().newInstance();
+                    boolean check1 = workflowCheck.check(this, jdbcTemplate);
+                    checkConclusion.set(check1);
+                    if (!check1)
+                        falseReason.append(name).append("检测失败;");
+                } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
+                    throw new DataException("request",dataId.toString(),"doneHistory", checkAction, name+"不存在或未继承WorkflowCheck");
+                }
+            });
+            action.getTasks().forEach(task -> {
+                Long columnId = task.getColumnId();
+                Object mainValue = formOutDto.getMainValue(columnId);
+                if (mainValue == null) {
+                    throw new DataException("request",dataId.toString(),"doneHistory", checkAction,formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
+                }
+                String admit;
+                switch (task.getType()) {
+                    case Action.INPUT -> admit = task.getInput();
+                    case Action.SQL -> admit = jdbcTemplate.queryForObject(task.getInput(), String.class);
+                    case default ->
+                            throw new DataException("request", dataId.toString(), "doneHistory", checkAction, "task type 设置错误");
+                }
+                if (admit != null && !admit.equals(mainValue.toString())) {
+                    checkConclusion.set(false);
+                    falseReason.append("字段").append(columnId).append("值为").append(mainValue).append("不等于").append(task.getInput()).append(";");
+                }
+            });
+
+        }
+        return checkConclusion.get();
+    }
+
+    private boolean doChecks(JdbcTemplate jdbcTemplate, String checkAction) {
+        Action action;
+        AtomicBoolean checkConclusion = new AtomicBoolean(true);
+        if (checkAction != null) {
+            try {
+                action = objectMapper.readValue(checkAction, Action.class);
+            } catch (JsonProcessingException e) {
+                throw new DataException("request",dataId.toString(),"doneHistory", checkAction, "json解析失败");
+            }
+            action.getClassNames().forEach(name->{
+                try {
+                    Class<?> clazz = Class.forName(name);
+                    WorkflowCheck workflowCheck = (WorkflowCheck) clazz.getDeclaredConstructor().newInstance();
+                    boolean check = workflowCheck.check(this, jdbcTemplate);
+                    checkConclusion.set(check);
+
+                } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
+                    throw new DataException("request",dataId.toString(),"doneHistory", checkAction, name+"不存在或未继承WorkflowCheck");
+                }
+            });
+            action.getTasks().forEach(task -> {
+                Long columnId = task.getColumnId();
+                Object mainValue = formOutDto.getMainValue(columnId);
+                if (mainValue == null) {
+                    throw new DataException("request",dataId.toString(),"doneHistory", checkAction,formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
+                }
+                String admit;
+                switch (task.getType()) {
+                    case Action.INPUT -> admit = task.getInput();
+                    case Action.SQL -> admit = jdbcTemplate.queryForObject(task.getInput(), String.class);
+                    case default ->
+                            throw new DataException("request", dataId.toString(), "doneHistory", checkAction, "task type 设置错误");
+                }
+                if (admit != null && !admit.equals(mainValue.toString())) {
+                    checkConclusion.set(false);
+                }
+            });
+
+        }
+        return checkConclusion.get();
+    }
+
+    private void doActions(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper, String afterAction) {
+        if (afterAction != null) {
+            Action action;
+            try {
+                action = objectMapper.readValue(afterAction, Action.class);
+            } catch (JsonProcessingException e) {
+                throw new DataException("request",dataId.toString(),"doneHistory", afterAction, "json解析失败");
+            }
+            action.getClassNames().forEach(name->{
+                try {
+                    Class<?> clazz = Class.forName(name);
+                    WorkflowAction workflowAction = (WorkflowAction) clazz.getDeclaredConstructor().newInstance();
+                    workflowAction.action(this, jdbcTemplate);
+                } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
+                    throw new DataException("request",dataId.toString(),"doneHistory", afterAction, name+"不存在或未继承WorkflowAction");
+                }
+            });
+            Map<String,Object> updates = new HashMap<>();
+            action.getTasks().forEach(task -> {
+                String admit;
+                switch (task.getType()) {
+                    case Action.INPUT -> admit = task.getInput();
+                    case Action.SQL -> admit = jdbcTemplate.queryForObject(task.getInput(), String.class);
+                    case default ->
+                            throw new DataException("request", dataId.toString(), "doneHistory", afterAction, "task type 设置错误");
+                }
+                Long columnId = task.getColumnId();
+                Column column = formOutDto.getColumn(columnId);
+                if (column == null) {
+                    throw new DataException("request", dataId.toString(), "doneHistory", afterAction, formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
+                }
+                updates.put(column.getColumnDataName(),admit);
+            });
+            formDMLMapper.updateMainForm(updates, dataId, formOutDto.getTable().getTableDataName());
+        }
+    }
+
+    public FormInDto getFormInDto() {
+        return formInDto;
+    }
 
     public RequestDto setFormInDto(FormInDto formInDto) {
         this.formInDto = formInDto;
@@ -64,6 +275,16 @@ public class RequestDto {
 
     public RequestDto setNodeId(Long nodeId) {
         this.nodeId = nodeId;
+        request.setCurrentNode(nodeId);
+        return this;
+    }
+
+    public Long getWorkflowId() {
+        return workflowId;
+    }
+
+    public RequestDto setWorkflowId(Long workflowId) {
+        this.workflowId = workflowId;
         return this;
     }
 
@@ -76,12 +297,12 @@ public class RequestDto {
         return this;
     }
 
-    public String getCommit() {
-        return commit;
+    public String getComment() {
+        return comment;
     }
 
-    public RequestDto setCommit(String commit) {
-        this.commit = commit;
+    public RequestDto setComment(String comment) {
+        this.comment = comment;
         return this;
     }
 
@@ -118,6 +339,24 @@ public class RequestDto {
 
     public RequestDto setFormOutDto(FormOutDto formOutDto) {
         this.formOutDto = formOutDto;
+        return this;
+    }
+
+    public List<WorkflowRoute> getNextRoutes() {
+        return nextRoutes;
+    }
+
+    public RequestDto setNextRoutes(List<WorkflowRoute> nextRoutes) {
+        this.nextRoutes = nextRoutes;
+        return this;
+    }
+
+    public HumanDto getCreator() {
+        return creator;
+    }
+
+    public RequestDto setCreator(HumanDto creator) {
+        this.creator = creator;
         return this;
     }
 }

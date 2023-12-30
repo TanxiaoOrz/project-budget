@@ -7,6 +7,7 @@ import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.RequestBacklogView;
 import org.eoa.projectbudget.entity.RequestDoneView;
 import org.eoa.projectbudget.entity.Workflow;
+import org.eoa.projectbudget.exception.EoaException;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service.workflow
  * @ClassName: WorkflowFrontService
  * @Description: 流程模块前端操作接口
- * @Version: 1.0
+ * @Version: 1.2
  **/
 public interface WorkflowFrontService {
 
@@ -74,41 +75,39 @@ public interface WorkflowFrontService {
      * 退回请求
      * @param request 请求传入结构体
      * @param user 操作人
-     * @return 修改数字
+     * @return 剩余未操作人员
      */
-    Integer refuseRequest(RequestDto request, HumanDto user);
+    List<Long> refuseRequest(RequestDto request, HumanDto user);
 
     /**
      * 提交流程
      * @param request 请求传入结构体
      * @param user 操作人
-     * @return 修改数字
+     * @return 剩余未操作人员
      */
-    Integer submitRequest(RequestDto request, HumanDto user);
+    List<Long>  submitRequest(RequestDto request, HumanDto user);
 
     /**
      * 批准流程
      * @param request 请求传入结构体
      * @param user 操作人
-     * @return 修改数字
+     * @return 剩余未操作人员
      */
-    Integer admitRequest(RequestDto request, HumanDto user);
+    List<Long>  admitRequest(RequestDto request, HumanDto user);
 
-    /**
-     * 检查操作权限
-     * @param request 请求传入结构体
-     * @param method 操作类型(节点类型数字)
-     * @param user 操作人
-     * @return 结果
-     */
-    Boolean checkAuthority(RequestDto request, Integer method, HumanDto user);
 
     /**
      * 检查查看权限
      * @param requestId 请求
      * @param user 操作人
-     * @return 结果
+     * @return 展示对应的nodeId布局,空代表没有权限
      */
-    Boolean checkViewAuthority(Request requestId, HumanDto user);
+    Long getViewNode(Long requestId, HumanDto user);
 
+    /**
+     * 检查并组装requestDto
+     * @param requestDto 待检查的流程请求
+     * @param user 操作人
+     */
+    void checkRequest(RequestDto requestDto, HumanDto user, HumanDto creator) throws EoaException;
 }
