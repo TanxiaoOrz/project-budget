@@ -4,6 +4,8 @@ import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.exception.EoaException;
 
+import java.util.List;
+
 /**
  * @Author: 张骏山
  * @Date: 2023/10/31 11:29
@@ -21,5 +23,15 @@ public class MatrixConstraint implements AuthoritySolve, FormSolve {
     @Override
     public boolean solve(HumanDto user, FormOutDto formOutDto) throws EoaException {
         return false;
+    }
+
+    @Override
+    public List<Long> get(HumanDto creator) {
+        return null;
+    }
+
+    @Override
+    public List<Long> get(FormOutDto formOutDto) {
+        return null;
     }
 }

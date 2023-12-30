@@ -1,9 +1,15 @@
 package org.eoa.projectbudget.dto.constraint;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.entity.HumanResource;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
+import org.eoa.projectbudget.mapper.HumanMapper;
+import org.eoa.projectbudget.utils.ContextUtils;
+
+import java.util.List;
 
 /**
  * @Author: 张骏山
@@ -24,18 +30,37 @@ public class AllConstraint implements FormSolve, AuthoritySolve {
     }
 
     @Override
+    public List<Long> get(HumanDto creator) {
+        HumanMapper humanMapper = ContextUtils.getInstance().getHumanMapper();
+        return humanMapper.selectList(new QueryWrapper<HumanResource>().between("safety",start,end)).stream().map(HumanResource::getDataId).toList();
+    }
+
+    @Override
     public boolean solve(HumanDto user, FormOutDto formOutDto) throws EoaException {
-        Float start =(Float) formOutDto.getMainValue(this.start);
-        Float end = (Float) formOutDto.getMainValue(this.end);
-        if (start == null) {
-            throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority",this.start.toString(),
-                    String.format("%d不在该表单的字段中",this.start));
-        }
-        if (end == null) {
-            throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority",this.end.toString(),
-                    String.format("%d不在该表单的字段中",this.end));
-        }
+        Float start =getaFloat(formOutDto,this.start);
+        Float end = getaFloat(formOutDto, this.end);
+
         return (user.getSafety()>=start && user.getSafety() <= end);
+    }
+
+    @Override
+    public List<Long> get(FormOutDto formOutDto) {
+        HumanMapper humanMapper = ContextUtils.getInstance().getHumanMapper();
+        Float start = getaFloat(formOutDto, this.start);
+        Float end = getaFloat(formOutDto, this.end);
+        return humanMapper.selectList(new QueryWrapper<HumanResource>().between("safety",start,end)).stream().map(HumanResource::getDataId).toList();
+    }
+
+    private Float getaFloat(FormOutDto formOutDto, Long id) {
+        Float value = (Float) formOutDto.getMainValue(id);
+        if (value == null) {
+            value = 0.0F;
+        }
+        if (formOutDto.getColumn(id) == null) {
+            throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(), "authority", id.toString(),
+                    String.format("%d不在该表单的字段中", id));
+        }
+        return value;
     }
 
     public Long getStart() {

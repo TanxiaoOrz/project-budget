@@ -1,10 +1,15 @@
 package org.eoa.projectbudget.dto.constraint;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.entity.HumanResource;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
+import org.eoa.projectbudget.mapper.HumanMapper;
+import org.eoa.projectbudget.utils.ContextUtils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +39,16 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
     }
 
     @Override
+    public List<Long> get(HumanDto creator) {
+        HumanMapper humanMapper = ContextUtils.getInstance().getHumanMapper();
+        ArrayList<Long> longs = new ArrayList<>();
+        longs.addAll(humans);
+        longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("depart",departs)).stream().map(HumanResource::getDataId).toList());
+        longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("section",sections)).stream().map(HumanResource::getDataId).toList());
+        return longs;
+    }
+
+    @Override
     public boolean solve(HumanDto user, FormOutDto formOutDto) throws EoaException {
         for (Long humanColumn:
              humans) {
@@ -57,9 +72,35 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
         return false;
     }
 
+    @Override
+    public List<Long> get(FormOutDto formOutDto) {
+        HumanMapper humanMapper = ContextUtils.getInstance().getHumanMapper();
+
+        Set<Long> humans = new HashSet<>();
+        this.humans.forEach(human->humans.addAll(getAsked(formOutDto,human)));
+
+        Set<Long> departs = new HashSet<>();
+        this.departs.forEach(depart->departs.addAll(getAsked(formOutDto,depart)));
+
+        Set<Long> sections = new HashSet<>();
+        this.sections.forEach(section->sections.addAll(getAsked(formOutDto,section)));
+
+        ArrayList<Long> longs = new ArrayList<>();
+        longs.addAll(humans);
+        longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("depart",departs)).stream().map(HumanResource::getDataId).toList());
+        longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("section",sections)).stream().map(HumanResource::getDataId).toList());
+
+        return longs;
+    }
+
     private Set<Long> getAsked(FormOutDto formOutDto, Long columnId) throws DataException {
+        if (formOutDto.getColumn(columnId) == null) {
+            throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority", columnId.toString(),
+                    String.format("%d不在该表单的字段中", columnId));
+        }
         Set<Long> asked = new HashSet<>();
         boolean isFound = false;
+
         Object mainValue = formOutDto.getMainValue(columnId);
 
         if (mainValue != null) {
@@ -75,10 +116,7 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
             }
         }
 
-        if (!isFound) {
-            throw new DataException(formOutDto.getTable().getTableDataName(), formOutDto.getDataId().toString(),"authority", columnId.toString(),
-                    String.format("%d不在该表单的字段中", columnId));
-        }
+
         return asked;
     }
 

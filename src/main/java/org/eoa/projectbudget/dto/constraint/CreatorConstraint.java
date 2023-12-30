@@ -1,8 +1,15 @@
 package org.eoa.projectbudget.dto.constraint;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.entity.HumanResource;
 import org.eoa.projectbudget.exception.EoaException;
+import org.eoa.projectbudget.mapper.HumanMapper;
+import org.eoa.projectbudget.utils.ContextUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: 张骏山
@@ -41,8 +48,35 @@ public class CreatorConstraint implements AuthoritySolve, FormSolve {
     }
 
     @Override
+    public List<Long> get(HumanDto creator) {
+        ArrayList<Long> longs = new ArrayList<>();
+        if (creator == null) {
+            return longs;
+        }
+        HumanMapper humanMapper = ContextUtils.getInstance().getHumanMapper();
+        if (self)
+            longs.add(creator.getDataId());
+        if (leader)
+            longs.add(creator.getDirectorLeader());
+        if (leaderRecursion)
+            longs.addAll(creator.getLeaderRecursion());
+        if (depart)
+            longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().eq("depart",creator.getDepart())).stream().map(HumanResource::getDataId).toList());
+        if (section)
+            longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().eq("section",creator.getSection())).stream().map(HumanResource::getDataId).toList());
+        if (sectionRecursive)
+            longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("section",creator.getSectionRecursion())).stream().map(HumanResource::getDataId).toList());
+        return longs;
+    }
+
+    @Override
     public boolean solve(HumanDto user, FormOutDto formOutDto) throws EoaException {
         return false;
+    }
+
+    @Override
+    public List<Long> get(FormOutDto formOutDto) {
+        return new ArrayList<>();
     }
 
     public Boolean getSelf() {
