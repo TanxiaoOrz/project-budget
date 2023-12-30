@@ -28,7 +28,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service.organization_module.impl
  * @ClassName: OrganizationServiceImpl
  * @Description: 组织结构业务是实现类
- * @Version: 1.3
+ * @Version: 1.4
  **/
 
 @Service
@@ -120,12 +120,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         Long humanId = humanResourceView.getDataId();
         HashMap<Long, Integer> characters = new HashMap<>();
         List<CharacterMapper.Grade> characterIdFromHuman = characterMapper.getCharacterIdFromHuman(humanId);
-        characterIdFromHuman.forEach(grade -> {
-            characters.put(grade.getCharacterId(), grade.getGrade());
-        });
+        characterIdFromHuman.forEach(grade -> characters.put(grade.getCharacterId(), grade.getGrade()));
 
-        HashSet<Integer> authorities = new HashSet<>(authorityMapper.getIdsFormHuman(humanId));
-        characterIdFromHuman.forEach(grade -> authorities.addAll(authorityMapper.getIdsFormCharacter(grade.getCharacterId())));
+        HashSet<Integer> authorities = new HashSet<>(humanMapper.getHumansAuthority(humanId));
         HashSet<Long> leaderRecursion = new HashSet<>();
         Long nextLeader = humanResourceView.getDirectorLeader();
         while (nextLeader!=0) {

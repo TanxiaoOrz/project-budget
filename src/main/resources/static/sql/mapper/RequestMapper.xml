@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace为映射的地址，也就是只有在这个接口中才能使用下边的内容-->
+<mapper namespace="org.eoa.projectbudget.mapper.RequestMapper">
+    <!-- id 外部为调用的名字 resultType 为和数据库表中映射的类名，parameterType就是传递进来的参数id的类型-->
+    <insert id="newBacklogs" >
+        insert into request_backlog (humanId, requestId, nodeId, workflowId) values
+        <foreach collection="humans" index="index" item="humanId"  separator="," >
+            (#{humanId}, #{requestId}, #{nodeId}, #{workflowId})
+        </foreach>
+    </insert>
+</mapper>
