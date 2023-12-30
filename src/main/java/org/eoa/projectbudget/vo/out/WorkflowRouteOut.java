@@ -23,7 +23,7 @@ public class WorkflowRouteOut implements VoOut{
     Integer viewNo;
 
     String enterCondition;
-    String routeCondition;
+    String routeAction;
 
     Long creator;
     Date createTime;
@@ -39,7 +39,7 @@ public class WorkflowRouteOut implements VoOut{
         this.endNodeId = workflowRoute.getEndNodeId();
         this.viewNo = workflowRoute.getViewNo();
         this.enterCondition = workflowRoute.getEnterCondition();
-        this.routeCondition = workflowRoute.getRouteCondition();
+        this.routeAction = workflowRoute.getRouteAction();
         this.creator = workflowRoute.getCreator();
         this.createTime = workflowRoute.getCreateTime();
     }
@@ -107,12 +107,12 @@ public class WorkflowRouteOut implements VoOut{
         return this;
     }
 
-    public String getRouteCondition() {
-        return routeCondition;
+    public String getRouteAction() {
+        return routeAction;
     }
 
-    public WorkflowRouteOut setRouteCondition(String routeCondition) {
-        this.routeCondition = routeCondition;
+    public WorkflowRouteOut setRouteAction(String routeAction) {
+        this.routeAction = routeAction;
         return this;
     }
 
@@ -161,7 +161,7 @@ public class WorkflowRouteOut implements VoOut{
         this.endNodeId = null;
         this.viewNo = null;
         this.enterCondition = null;
-        this.routeCondition = null;
+        this.routeAction = null;
         this.creator = null;
         this.createTime = null;
         this.creatorName = null;

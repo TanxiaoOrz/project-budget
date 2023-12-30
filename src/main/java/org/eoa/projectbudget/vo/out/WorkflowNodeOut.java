@@ -24,7 +24,7 @@ public class WorkflowNodeOut implements VoOut{
 
 
     String userAuthorityLimit;
-    String beforeSubmit;
+    String beforeAction;
     String checkAction;
     String afterAction;
 
@@ -42,7 +42,7 @@ public class WorkflowNodeOut implements VoOut{
         this.workflowId = workflowNode.getWorkflowId();
         this.viewNo = workflowNode.getViewNo();
         this.userAuthorityLimit = workflowNode.getUserAuthorityLimit();
-        this.beforeSubmit = workflowNode.getBeforeSubmit();
+        this.beforeAction = workflowNode.getBeforeAction();
         this.checkAction = workflowNode.getCheckAction();
         this.afterAction = workflowNode.getAfterAction();
         this.creator = workflowNode.getCreator();
@@ -112,12 +112,12 @@ public class WorkflowNodeOut implements VoOut{
         return this;
     }
 
-    public String getBeforeSubmit() {
-        return beforeSubmit;
+    public String getBeforeAction() {
+        return beforeAction;
     }
 
-    public WorkflowNodeOut setBeforeSubmit(String beforeSubmit) {
-        this.beforeSubmit = beforeSubmit;
+    public WorkflowNodeOut setBeforeAction(String beforeAction) {
+        this.beforeAction = beforeAction;
         return this;
     }
 
@@ -183,7 +183,7 @@ public class WorkflowNodeOut implements VoOut{
         this.workflowId = null;
         this.viewNo = null;
         this.userAuthorityLimit = null;
-        this.beforeSubmit = null;
+        this.beforeAction = null;
         this.checkAction = null;
         this.afterAction = null;
         this.creator = null;

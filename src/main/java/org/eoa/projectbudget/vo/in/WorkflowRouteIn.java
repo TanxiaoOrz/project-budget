@@ -3,7 +3,6 @@ package org.eoa.projectbudget.vo.in;
 import org.eoa.projectbudget.entity.WorkflowRoute;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.utils.DataProcessUtils;
-import org.eoa.projectbudget.vo.out.Vo;
 
 /**
  * @Author: 张骏山
@@ -21,7 +20,7 @@ public class WorkflowRouteIn implements CheckParameter<WorkflowRoute> {
     Integer viewNo;
 
     String enterCondition;
-    String routeCondition;
+    String routeAction;
 
     @Override
     public void checkSelf() throws ParameterException {
@@ -50,7 +49,7 @@ public class WorkflowRouteIn implements CheckParameter<WorkflowRoute> {
                 .setEndNodeId(endNodeId)
                 .setViewNo(viewNo)
                 .setEnterCondition(enterCondition)
-                .setRouteCondition(routeCondition);
+                .setRouteAction(routeAction);
     }
 
     public String getRouteName() {
@@ -107,12 +106,12 @@ public class WorkflowRouteIn implements CheckParameter<WorkflowRoute> {
         return this;
     }
 
-    public String getRouteCondition() {
-        return routeCondition;
+    public String getRouteAction() {
+        return routeAction;
     }
 
-    public WorkflowRouteIn setRouteCondition(String routeCondition) {
-        this.routeCondition = routeCondition;
+    public WorkflowRouteIn setRouteAction(String routeAction) {
+        this.routeAction = routeAction;
         return this;
     }
 }

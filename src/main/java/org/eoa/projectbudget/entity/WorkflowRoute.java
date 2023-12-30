@@ -28,7 +28,7 @@ public class WorkflowRoute {
     Integer viewNo;
 
     String enterCondition;
-    String routeCondition;
+    String routeAction;
 
     Long creator;
     Date createTime;
@@ -96,12 +96,12 @@ public class WorkflowRoute {
         return this;
     }
 
-    public String getRouteCondition() {
-        return routeCondition;
+    public String getRouteAction() {
+        return routeAction;
     }
 
-    public WorkflowRoute setRouteCondition(String routeCondition) {
-        this.routeCondition = routeCondition;
+    public WorkflowRoute setRouteAction(String routeAction) {
+        this.routeAction = routeAction;
         return this;
     }
 

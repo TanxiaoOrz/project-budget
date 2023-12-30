@@ -35,7 +35,7 @@ public class WorkflowNode {
 
 
     String userAuthorityLimit;
-    String beforeSubmit;
+    String beforeAction;
     String checkAction;
     String afterAction;
 
@@ -105,12 +105,12 @@ public class WorkflowNode {
         return this;
     }
 
-    public String getBeforeSubmit() {
-        return beforeSubmit;
+    public String getBeforeAction() {
+        return beforeAction;
     }
 
-    public WorkflowNode setBeforeSubmit(String beforeSubmit) {
-        this.beforeSubmit = beforeSubmit;
+    public WorkflowNode setBeforeAction(String beforeAction) {
+        this.beforeAction = beforeAction;
         return this;
     }
 

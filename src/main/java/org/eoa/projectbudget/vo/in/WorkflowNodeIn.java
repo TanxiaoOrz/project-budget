@@ -21,7 +21,7 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
     Integer viewNo;
 
     String userAuthorityLimit;
-    String beforeSubmit;
+    String beforeAction;
     String checkAction;
     String afterAction;
 
@@ -54,7 +54,7 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
                 .setUserAuthorityLimit(userAuthorityLimit)
                 .setCheckAction(checkAction)
                 .setAfterAction(afterAction)
-                .setBeforeSubmit(beforeSubmit);
+                .setBeforeAction(beforeAction);
     }
 
     public WorkflowNodeIn() {
@@ -114,12 +114,12 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
         return this;
     }
 
-    public String getBeforeSubmit() {
-        return beforeSubmit;
+    public String getBeforeAction() {
+        return beforeAction;
     }
 
-    public WorkflowNodeIn setBeforeSubmit(String beforeSubmit) {
-        this.beforeSubmit = beforeSubmit;
+    public WorkflowNodeIn setBeforeAction(String beforeAction) {
+        this.beforeAction = beforeAction;
         return this;
     }
 
