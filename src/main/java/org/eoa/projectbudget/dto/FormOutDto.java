@@ -38,6 +38,7 @@ public class FormOutDto {
     List<Group> groups;
     List<Detail> details;
     Table table;
+    List<? extends Column> columns;
 
     public boolean checkView(HumanDto creator,HumanDto user) throws EoaException {
         if (virtual)
@@ -70,6 +71,21 @@ public class FormOutDto {
                 return;
             if (column.getColumnId().equals(columnId)) {
                 value.set(object);
+                isFound.set(true);
+            }
+        }));
+
+        return isFound.get()?value.get():null;
+    }
+
+    public Column getColumn(Long columnId) {
+        AtomicBoolean isFound = new AtomicBoolean(false);
+        AtomicReference<Column> value = new AtomicReference<>();
+        groups.forEach(group -> group.getColumns().forEach((column, object) -> {
+            if (isFound.get())
+                return;
+            if (column.getColumnId().equals(columnId)) {
+                value.set(column);
                 isFound.set(true);
             }
         }));
@@ -186,5 +202,7 @@ public class FormOutDto {
             return this;
         }
     }
+
+
 
 }
