@@ -8,6 +8,7 @@ import org.eoa.projectbudget.dto.constraint.*;
 import org.eoa.projectbudget.exception.AuthoritySolveException;
 import org.eoa.projectbudget.exception.EoaException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,8 +62,21 @@ public class AuthorityUtils {
         }
         for (String type:
                 bodyType.split(",")) {
-            if (typeList.contains(type) && inTypeAuthority(user, creator, authorityConstraint, typeList.indexOf(type)))
-                return true;
+            if (typeList.contains(type)) {
+                boolean result = false;
+                int index = typeList.indexOf(type);
+                String constraint = authorityConstraint.getBody().get(types[index]);
+                AuthoritySolve solve;
+                try {
+                    solve = (AuthoritySolve) new ObjectMapper().readValue(constraint,clazz[index]);
+                } catch (JsonProcessingException e) {
+                    throw new AuthoritySolveException(constraint, "无法解析");
+                }
+                if (solve != null) {
+                    result = solve.solve(user, creator);
+                }
+                if (result) return true;
+            }
         }
         return false;
     }
@@ -79,10 +93,79 @@ public class AuthorityUtils {
              tableType.split(",")) {
             if (!typeList.contains(type))
                 throw new AuthoritySolveException(authorityConstraint.getBodyType(), "类型设置错误");
-            else if (inTypeTable(user, formOutDto, authorityConstraint, typeList.indexOf(type)))
-                return true;
+            else {
+                boolean result = false;
+                int index = typeList.indexOf(type);
+                String constraint = authorityConstraint.getBody().get(types[index]);
+                FormSolve solve;
+                try {
+                    solve = (FormSolve) new ObjectMapper().readValue(constraint, clazz[index]);
+                } catch (JsonProcessingException e) {
+                    throw new AuthoritySolveException(constraint, "无法解析");
+                }
+                if (solve != null) {
+                    result = solve.solve(user, formOutDto);
+                }
+                if (result)
+                    return true;
+            }
         }
         return false;
+    }
+
+    /**
+     * 获取权限对象在当前情况下所有范围内的人力资源id
+     * @param creator 创建者
+     * @param form 表单对象
+     * @param authorityConstraint 权限对象
+     * @return 人力资源id数组
+     * @throws EoaException 权限解析错误情况
+     */
+    public static List<Long> getInHumansForm(HumanDto creator, FormOutDto form, Constraint authorityConstraint) throws EoaException {
+        ArrayList<Long> longs = new ArrayList<>();
+        if (authorityConstraint == null) {
+            return longs;
+        }
+        String bodyType = authorityConstraint.getBodyType();
+        if (!DataProcessUtils.isEmpty(bodyType)) {
+            for (String type:
+                    bodyType.split(",")) {
+                if (typeList.contains(type)) {
+                    int index = typeList.indexOf(type);
+                    String constraint = authorityConstraint.getBody().get(types[index]);
+                    AuthoritySolve solve;
+                    try {
+                        solve = (AuthoritySolve) new ObjectMapper().readValue(constraint,clazz[index]);
+                    } catch (JsonProcessingException e) {
+                        throw new AuthoritySolveException(constraint, "无法解析");
+                    }
+                    if (solve != null) {
+                        longs.addAll(solve.get(creator));
+                    }
+                }
+            }
+        }
+        String tableType = authorityConstraint.getBodyType();
+        if (form!= null && !DataProcessUtils.isEmpty(tableType)) {
+            for (String type:
+                    tableType.split(",")) {
+                if (typeList.contains(type)) {
+                    int index = typeList.indexOf(type);
+                    String constraint = authorityConstraint.getBody().get(types[index]);
+                    FormSolve solve;
+                    try {
+                        solve = (FormSolve) new ObjectMapper().readValue(constraint, clazz[index]);
+                    } catch (JsonProcessingException e) {
+                        throw new AuthoritySolveException(constraint, "无法解析");
+                    }
+                    if (solve != null) {
+                        longs.addAll(solve.get(form));
+                    }
+                }
+            }
+        }
+
+        return longs;
     }
 
     /**
@@ -101,34 +184,6 @@ public class AuthorityUtils {
             throw new AuthoritySolveException(authorityString, "无法解析");
         }
         return authorityConstraint;
-    }
-
-    private static boolean inTypeAuthority(HumanDto user, HumanDto creator, Constraint authorityConstraint, int index) throws AuthoritySolveException {
-        String constraint = authorityConstraint.getBody().get(types[index]);
-        AuthoritySolve solve;
-        try {
-            solve = (AuthoritySolve) new ObjectMapper().readValue(constraint,clazz[index]);
-        } catch (JsonProcessingException e) {
-            throw new AuthoritySolveException(constraint, "无法解析");
-        }
-        if (solve == null) {
-            return false;
-        }
-        return solve.solve(user, creator);
-    }
-
-    private static boolean inTypeTable(HumanDto user, FormOutDto formOutDto, Constraint authorityConstraint, int index) throws EoaException {
-        String constraint = authorityConstraint.getBody().get(types[index]);
-        FormSolve solve;
-        try {
-            solve = (FormSolve) new ObjectMapper().readValue(constraint, clazz[index]);
-        } catch (JsonProcessingException e) {
-            throw new AuthoritySolveException(constraint, "无法解析");
-        }
-        if (solve == null) {
-            return false;
-        }
-        return solve.solve(user, formOutDto);
     }
 
 
