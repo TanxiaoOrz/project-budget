@@ -92,8 +92,8 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
                             default:
                                 return false;
                         }
-                } else
-                    return false;
+                }
+                return false;
             }).map(CharacterMapper.Grade::getHumanId).toList());
         }
         return longs.stream().distinct().toList();
@@ -103,7 +103,7 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
     public boolean solve(HumanDto user, FormOutDto formOutDto) throws EoaException {
         for (Group character:
              characters) {
-            Set<Long> asked = translateValue(formOutDto, character);;
+            Set<Long> asked = translateValue(formOutDto, character);
             for (Long characterId:
                  asked) {
                 Integer userGrade = user.getCharacters().get(characterId);
@@ -132,7 +132,6 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
             List<Object> detailsValues = formOutDto.getDetailsValues(character.getCharacterId());
             if (detailsValues != null) {
                 asked.addAll(detailsValues.stream().map(o -> (Long) o).toList());
-                isFound = true;
             }
         }
         return asked;
