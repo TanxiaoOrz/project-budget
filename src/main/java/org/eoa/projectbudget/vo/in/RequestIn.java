@@ -51,4 +51,49 @@ public class RequestIn implements CheckParameter<RequestDto> {
                 .setWorkflowId(workflowId)
                 .setNodeId(nodeId);
     }
+
+    public Long getRequestId() {
+        return requestId;
+    }
+
+    public RequestIn setRequestId(Long requestId) {
+        this.requestId = requestId;
+        return this;
+    }
+
+    public Long getNodeId() {
+        return nodeId;
+    }
+
+    public RequestIn setNodeId(Long nodeId) {
+        this.nodeId = nodeId;
+        return this;
+    }
+
+    public Long getWorkflowId() {
+        return workflowId;
+    }
+
+    public RequestIn setWorkflowId(Long workflowId) {
+        this.workflowId = workflowId;
+        return this;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public RequestIn setComment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    public FormIn getForm() {
+        return form;
+    }
+
+    public RequestIn setForm(FormIn form) {
+        this.form = form;
+        return this;
+    }
 }

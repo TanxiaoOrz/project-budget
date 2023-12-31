@@ -17,7 +17,7 @@ import java.util.List;
  * @PackageName: org.eoa.projectbudget.service.workflow
  * @ClassName: WorkflowFrontService
  * @Description: 流程模块前端操作接口
- * @Version: 1.2
+ * @Version: 1.3
  **/
 public interface WorkflowFrontService {
 
@@ -109,5 +109,5 @@ public interface WorkflowFrontService {
      * @param requestDto 待检查的流程请求
      * @param user 操作人
      */
-    void checkRequest(RequestDto requestDto, HumanDto user, HumanDto creator) throws EoaException;
+    RequestDto checkAndConsist(RequestDto requestDto, HumanDto user) throws EoaException;
 }

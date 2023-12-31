@@ -24,6 +24,9 @@ public interface RequestMapper extends BaseMapper<Request> {
     @Delete("delete from request_backlog where humanId = #{humanId} and requestId = #{requestId}")
     void doRequest(@Param("humanId")Long humanId, @Param("requestId")Long requestId);
 
+    @Delete("delete from request_backlog where requestId = #{requestId}")
+    void doRequestAll(@Param("requestId")Long requestId);
+
     @Insert("insert into request_done (humanId, requestId, nodeId, workflowId) VALUES (#{humanId}, #{requestId}, #{nodeId}, #{workflowId})")
     void addDone(@Param("humanId")Long humanId, @Param("requestId")Long requestId, @Param("nodeId")Long nodeId, @Param("workflowId")Long workflowId);
 
