@@ -36,6 +36,7 @@ public class ChangeFlagUtils {
     public static final int WORKFLOW = 14;
     public static final int WORKFLOW_NODE = 15;
     public static final int WORKFLOW_ROUTE = 16;
+    public static final int REQUEST = 17;
 
     public static final String[] Flags = {
             "HUMAN","MODUlE",
@@ -45,7 +46,8 @@ public class ChangeFlagUtils {
             "CONTENT","FILE",
             "Form","Link",
             "DEPART","SECTION",
-            "WORKFLOW","WORKFLOW_NODE","WORKFLOW_ROUTE"
+            "WORKFLOW","WORKFLOW_NODE","WORKFLOW_ROUTE",
+            "REQUEST"
     };
     private final HashMap<String, Date> flagMap = new HashMap<>();
     private final HashMap<Long, Date> userMap = new HashMap<>();
@@ -108,6 +110,18 @@ public class ChangeFlagUtils {
     }
 
     /**
+     * 获取flag和userID的双重更新时间
+     * @param flag 字符串位置常量
+     * @param userId 人员编号
+     * @return 最新更新时间
+     */
+    public Date getDate(String flag,Long userId) {
+        Date flagDate = getDate(flag);
+        Date userDate = getDate(userId);
+        return userDate.before(flagDate)?flagDate:userDate;
+    }
+
+    /**
      * 更新flag时间
      * @param flag 字符串位置
      * @return this
@@ -115,6 +129,17 @@ public class ChangeFlagUtils {
     public ChangeFlagUtils freshDate(int flag) {
         Date date = new Date();
         flagMap.put(Flags[flag], date);
+        return this;
+    }
+
+    /**
+     * 更新flag时间
+     * @param flag 字符串
+     * @return this
+     */
+    public ChangeFlagUtils freshDate(String flag) {
+        Date date = new Date();
+        flagMap.put(flag, date);
         return this;
     }
 

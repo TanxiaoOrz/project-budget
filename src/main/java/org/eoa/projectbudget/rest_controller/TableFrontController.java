@@ -146,25 +146,41 @@ public class TableFrontController {
         if (isVirtual) {
             return new Vo<>(factory.out(viewService.getFormOne(tableId, dataId, humanDto.getDataId())));
         } else {
-            Boolean viewCache = cacheService.getCache(ChangeFlagUtils.Form, dataId.toString(), humanDto.getDataId(), Boolean.class);
+            String flag = ChangeFlagUtils.Form +"-"+ tableId ;
+            Boolean viewCache = cacheService.getCache(flag, dataId.toString(), humanDto.getDataId(), Boolean.class);
             boolean create = dataId.equals(0L);
+            FormOutDto cache = null;
             FormOut out;
             if (viewCache == null) {
-                FormOutDto cache = cacheService.getCache(ChangeFlagUtils.Form,dataId+"dto", USER_ID_CACHE, FormOutDto.class);
+                cache = cacheService.getCache(flag,dataId+"dto", USER_ID_CACHE, FormOutDto.class);
                 if (cache == null) {
                     cache = entityService.getFormOne(tableId, create?null:dataId, humanDto.getDataId());
+                    cacheService.setCache(flag,dataId+"dto", USER_ID_CACHE, cache);
                 }
                 out = factory.out(cache);
                 viewCache = create?entityService.checkAuthority(tableId, null, FormService.CREATE, humanDto):
                     cache.checkView(organizationService.getHumanDto(cache.getCreator(), null), humanDto);
 
-                cacheService.setCache(ChangeFlagUtils.Form,dataId+"dto", USER_ID_CACHE, cache);
-                cacheService.setCache(ChangeFlagUtils.Form, dataId.toString(), USER_ID_CACHE, out);
-                cacheService.setCache(ChangeFlagUtils.Form, dataId.toString(), humanDto.getDataId(), viewCache);
 
-            } else {
-                out = cacheService.getCache(ChangeFlagUtils.Form,dataId.toString(), USER_ID_CACHE, FormOut.class);
+                cacheService.setCache(flag, dataId.toString(), USER_ID_CACHE, out);
+                cacheService.setCache(flag, dataId.toString(), humanDto.getDataId(), viewCache);
+
             }
+            out = cacheService.getCache(flag,dataId.toString(), USER_ID_CACHE, FormOut.class);
+            if (out == null) {
+                if (cache == null) {
+                    cache = cacheService.getCache(flag,dataId+"dto", USER_ID_CACHE, FormOutDto.class);
+                    if (cache == null) {
+                        cache = entityService.getFormOne(tableId, create?null:dataId, humanDto.getDataId());
+                        cacheService.setCache(flag,dataId+"dto", USER_ID_CACHE, cache);
+                    }
+                }
+                out = factory.out(cache);
+                viewCache = create?entityService.checkAuthority(tableId, null, FormService.CREATE, humanDto):
+                        cache.checkView(organizationService.getHumanDto(cache.getCreator(), null), humanDto);
+                cacheService.setCache(flag, dataId.toString(), USER_ID_CACHE, out);
+            }
+
             if (viewCache) {
                 return new Vo<>(out);
             } else {
@@ -196,11 +212,12 @@ public class TableFrontController {
             return new Vo<>(filter.filt(outs),outs.size());
         } else {
             List<FormOut> outs;
-            FormOut[] cache = cacheService.getCache(ChangeFlagUtils.Form, filter.getDescription(), humanDto.getDataId(), FormOut[].class);
+            String flag = ChangeFlagUtils.Form +"-"+ tableId ;
+            FormOut[] cache = cacheService.getCache(flag, filter.getDescription(), humanDto.getDataId(), FormOut[].class);
             if (cache == null) {
                 outs = factory.outs(entityService.getFormSort(tableId, filter, humanDto.getDataId()).stream().
                         filter(dto -> dto.checkView(organizationService.getHumanDto(dto.getCreator(), null), humanDto)).toList());
-                cacheService.setCache(ChangeFlagUtils.Form, filter.getDescription(), humanDto.getDataId(), outs);
+                cacheService.setCache(flag, filter.getDescription(), humanDto.getDataId(), outs);
             } else {
                 outs = Arrays.asList(cache);
             }
@@ -231,7 +248,7 @@ public class TableFrontController {
             if (dataId == null) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行新建,请联系管理员");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Form);
+                changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
                 return new Vo<>(dataId);
             }
         } else {
@@ -261,7 +278,7 @@ public class TableFrontController {
             if (update == 0) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Form);
+                changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
                 return new Vo<>("修改成功");
             }
         } else {
@@ -288,7 +305,7 @@ public class TableFrontController {
             if (delete == 0) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Form);
+                changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
                 return new Vo<>("删除成功");
             }
         } else {

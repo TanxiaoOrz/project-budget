@@ -100,6 +100,11 @@ public class CacheServiceImpl implements CacheService{
     }
 
     @Override
+    public <T> T getCache(String flag, String method, Long userId, Class<T> clazz) throws EoaException {
+        return getCache(flag,method,userId,changeFlagUtils.getDate(flag,userId),clazz);
+    }
+
+    @Override
     public CacheService setCache(int flag, String method, Long userId, Object object) throws EoaException {
         return setCache(ChangeFlagUtils.Flags[flag],method,userId,object);
     }

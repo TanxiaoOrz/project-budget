@@ -48,6 +48,8 @@ public interface CacheService {
 
     <T> T  getCache(int flag, String method, Long userId, Class<T> clazz) throws EoaException;
 
+    <T> T  getCache(String flag, String method, Long userId, Class<T> clazz) throws EoaException;
+
     /**
      *
      * @param flag hash标志的数组位置
