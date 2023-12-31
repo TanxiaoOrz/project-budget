@@ -373,3 +373,16 @@ from ((select requestId, humanId, nodeId from `request_done_view`)
       (select requestId, humanId, nodeId from request_back_log_view)) as t
     );
 
+CREATE DEFINER = CURRENT_USER TRIGGER `eoa_build`.`request_BEFORE_INSERT` BEFORE INSERT ON `request` FOR EACH ROW
+BEGIN
+    set new.requestStatus = (select nodeType from workflow_node where workflow_node.dataId = new.currentNode);
+END;
+
+CREATE DEFINER = CURRENT_USER TRIGGER `eoa_build`.`request_BEFORE_UPDATE` BEFORE UPDATE ON `request` FOR EACH ROW
+BEGIN
+    if NEW.currentNode != OLD.currentNode then
+        set new.requestStatus = (select nodeType from workflow_node where workflow_node.dataId = new.currentNode);
+    end if;
+END
+
+
