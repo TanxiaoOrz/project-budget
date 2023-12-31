@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eoa.projectbudget.dto.workflow_json.Commit;
+import org.eoa.projectbudget.dto.workflow_json.Flow;
 import org.eoa.projectbudget.exception.DataException;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import java.util.List;
 @TableName("`request`")
 public class Request {
 
+    private final ObjectMapper objectMapper;
     @TableId(type = IdType.AUTO)
     Long requestId;
 
@@ -31,12 +34,20 @@ public class Request {
     Long workflowId;
     Long currentNode;
 
+    Integer requestStatus;
+
     String doneHistory;
+
+    String flowHistory;
     Date submitTime;
     Date finishTime;
 
+    public Request() {
+        objectMapper = new ObjectMapper();
+    }
+
+
     public Request pushDoneHistory(Long nodeId, Long humanId, Integer operation, String comment) {
-        ObjectMapper objectMapper = new ObjectMapper();
         Commit commit = new Commit(nodeId, humanId, operation, comment);
         List<Commit> commits;
         try {
@@ -54,12 +65,39 @@ public class Request {
         return this;
     }
 
+    public Request pushFlowHistory(Long dataId, Class<?> clazz, String action) {
+        Flow flow = new Flow().setAction(action).setDate(new Date()).setId(dataId).setObject(clazz.getSimpleName());
+        List<Flow> flows;
+        try {
+            if (flowHistory == null) {
+                flows = new ArrayList<>();
+            } else {
+                flows = objectMapper.readValue(flowHistory, new TypeReference<List<Flow>>() {});
+            }
+            flows.add(flow);
+            this.doneHistory = objectMapper.writeValueAsString(flows);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new DataException("request",dataId.toString(),"flowHistory", flowHistory, "json解析失败");
+        }
+        return this;
+    }
+
     public Long getRequestId() {
         return requestId;
     }
 
     public Request setRequestId(Long requestId) {
         this.requestId = requestId;
+        return this;
+    }
+
+    public String getFlowHistory() {
+        return flowHistory;
+    }
+
+    public Request setFlowHistory(String flowHistory) {
+        this.flowHistory = flowHistory;
         return this;
     }
 
@@ -90,6 +128,15 @@ public class Request {
         return this;
     }
 
+    public Integer getRequestStatus() {
+        return requestStatus;
+    }
+
+    public Request setRequestStatus(Integer requestStatus) {
+        this.requestStatus = requestStatus;
+        return this;
+    }
+
     public String getDoneHistory() {
         return doneHistory;
     }
@@ -117,69 +164,6 @@ public class Request {
         return this;
     }
 
-    public static class Commit {
-        Long nodeId;
-        Long humanId;
-        Date time;
-        Integer operation;
-        String comment;
-
-        public Commit() {
-        }
-
-        public Commit(Long nodeId, Long humanId, Integer operation, String comment) {
-            this.nodeId = nodeId;
-            this.humanId = humanId;
-            this.operation = operation;
-            this.comment = comment;
-            this.time = new Date();
-        }
-
-        public Long getNodeId() {
-            return nodeId;
-        }
-
-        public Commit setNodeId(Long nodeId) {
-            this.nodeId = nodeId;
-            return this;
-        }
-
-        public Long getHumanId() {
-            return humanId;
-        }
-
-        public Commit setHumanId(Long humanId) {
-            this.humanId = humanId;
-            return this;
-        }
-
-        public Date getTime() {
-            return time;
-        }
-
-        public Commit setTime(Date time) {
-            this.time = time;
-            return this;
-        }
-
-        public Integer getOperation() {
-            return operation;
-        }
-
-        public Commit setOperation(Integer operation) {
-            this.operation = operation;
-            return this;
-        }
-
-        public String getComment() {
-            return comment;
-        }
-
-        public Commit setComment(String comment) {
-            this.comment = comment;
-            return this;
-        }
-    }
 }
 
 
