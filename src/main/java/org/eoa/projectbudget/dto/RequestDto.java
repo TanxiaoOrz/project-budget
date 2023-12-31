@@ -11,10 +11,7 @@ import org.eoa.projectbudget.mapper.FormDMLMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -34,7 +31,6 @@ public class RequestDto {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    FormInDto formInDto;
     Long dataId;
     Long requestId;
     Long nodeId;
@@ -51,8 +47,12 @@ public class RequestDto {
     HumanDto creator;
 
     public void arriveNode(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper) {
+        if (WorkflowNode.FILE.equals(currentNode.getNodeType())) {
+            request.setFinishTime(new Date());
+        }
         String beforeAction = currentNode.getBeforeAction();
         doActions(jdbcTemplate,formDMLMapper,beforeAction);
+        request.pushFlowHistory(nodeId,WorkflowNode.class,"到达节点");
     }
 
     public WorkflowRoute passRoute(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper) {
@@ -70,6 +70,7 @@ public class RequestDto {
         }
         String routeAction = nextRoute.getRouteAction();
         doActions(jdbcTemplate, formDMLMapper, routeAction);
+        request.pushFlowHistory(nextRoute.getDataId(), nextRoute.getClass(),"经过路径");
         return nextRoute;
     }
 
@@ -109,6 +110,9 @@ public class RequestDto {
     }
 
     public void leaveNode(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper, Long userId) {
+        if (WorkflowNode.CREATE.equals(currentNode.getNodeType())) {
+            request.setSubmitTime(new Date());
+        }
         String checkAction = currentNode.getCheckAction();
         StringBuilder falseReason = new StringBuilder();
         if (!doChecks(jdbcTemplate, checkAction, falseReason)) {
@@ -117,6 +121,7 @@ public class RequestDto {
         request.pushDoneHistory(nodeId,userId,action, comment);
         String afterAction = currentNode.getAfterAction();
         doActions(jdbcTemplate, formDMLMapper, afterAction);
+        request.pushFlowHistory(nodeId,WorkflowNode.class,"离开节点");
     }
 
     private boolean doChecks(JdbcTemplate jdbcTemplate, String checkAction, StringBuilder falseReason) {
@@ -242,14 +247,6 @@ public class RequestDto {
         }
     }
 
-    public FormInDto getFormInDto() {
-        return formInDto;
-    }
-
-    public RequestDto setFormInDto(FormInDto formInDto) {
-        this.formInDto = formInDto;
-        return this;
-    }
 
     public Long getDataId() {
         return dataId;
@@ -330,6 +327,10 @@ public class RequestDto {
 
     public RequestDto setCurrentNode(WorkflowNode currentNode) {
         this.currentNode = currentNode;
+        if (currentNode != null) {
+            this.nodeId = currentNode.getDataId();
+            this.request.setCurrentNode(this.nodeId);
+        }
         return this;
     }
 
@@ -339,6 +340,9 @@ public class RequestDto {
 
     public RequestDto setFormOutDto(FormOutDto formOutDto) {
         this.formOutDto = formOutDto;
+        if (formOutDto != null) {
+            dataId = formOutDto.getDataId();
+        }
         return this;
     }
 
