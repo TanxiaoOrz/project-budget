@@ -1,8 +1,6 @@
 package org.eoa.projectbudget.service.workflow;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.dto.RequestDto;
-import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.Workflow;
 import org.eoa.projectbudget.entity.WorkflowNode;
 import org.eoa.projectbudget.entity.WorkflowRoute;
@@ -13,47 +11,14 @@ import java.util.List;
  * @Author: 张骏山
  * @Date: 2023/12/27 11:31
  * @PackageName: org.eoa.projectbudget.service.workflow
- * @ClassName: WorkflowBackService
+ * @ClassName: WorkflowService
  * @Description: 流程模块后端操作接口
- * @Version: 1.1
+ * @Version: 1.2
  **/
-public interface WorkflowBackService {
+public interface WorkflowService {
 
 
 
-    /**
-     * 获取所有请求
-     * @param wrapper 条件构造器
-     * @param userId 操作人
-     * @return 请求数组
-     */
-    List<Request> getRequests(QueryWrapper<Request> wrapper, Long userId);
-
-    /**
-     * 获取请求监控页面
-     * @param requestId 请求编号
-     * @param userId 操作人
-     * @return 请求展示数据
-     */
-    RequestDto getRequest(Long requestId, Long userId);
-
-    /**
-     * 删除请求和相关数据
-     * @param requestId 请求编号
-     * @param userId 操作人
-     * @return 结果数字
-     */
-    Integer dropRequest(Long requestId, Long userId);
-
-    /**
-     * 请求流转
-     * @param requestId 请求编号
-     * @param nodeId 目标节点编号
-     * @param receivers 强制指定接收人,为空数组则为节点默认接收人
-     * @param userId 操作人
-     * @return 结果数字
-     */
-    Integer transferRequest(Long requestId, Long nodeId, List<Long> receivers, Long userId);
 
     /**
      * 批量获取工作流

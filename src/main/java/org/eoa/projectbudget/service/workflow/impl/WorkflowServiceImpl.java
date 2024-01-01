@@ -1,15 +1,14 @@
 package org.eoa.projectbudget.service.workflow.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.dto.RequestDto;
-import org.eoa.projectbudget.entity.*;
+import org.eoa.projectbudget.entity.ColumnEntity;
+import org.eoa.projectbudget.entity.Workflow;
+import org.eoa.projectbudget.entity.WorkflowNode;
+import org.eoa.projectbudget.entity.WorkflowRoute;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.exception.ServerException;
-import org.eoa.projectbudget.mapper.ColumnEntityMapper;
-import org.eoa.projectbudget.mapper.WorkflowMapper;
-import org.eoa.projectbudget.mapper.WorkflowNodeMapper;
-import org.eoa.projectbudget.mapper.WorkflowRouteMapper;
-import org.eoa.projectbudget.service.workflow.WorkflowBackService;
+import org.eoa.projectbudget.mapper.*;
+import org.eoa.projectbudget.service.workflow.WorkflowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,13 @@ import java.util.Objects;
  * @Author: 张骏山
  * @Date: 2023/12/28 9:01
  * @PackageName: org.eoa.projectbudget.service.workflow.impl
- * @ClassName: WorkflowBackServiceImpl
+ * @ClassName: WorkflowServiceImpl
  * @Description: 流程后端业务类实现
- * @Version: 1.0
+ * @Version: 1.5
  **/
 
 @Service
-public class WorkflowBackServiceImpl implements WorkflowBackService {
+public class WorkflowServiceImpl implements WorkflowService {
 
     @Autowired
     WorkflowMapper workflowMapper;
@@ -37,35 +36,15 @@ public class WorkflowBackServiceImpl implements WorkflowBackService {
     WorkflowNodeMapper workflowNodeMapper;
     @Autowired
     WorkflowRouteMapper workflowRouteMapper;
+    @Autowired
+    RequestMapper requestMapper;
 
     @Autowired
     ColumnEntityMapper columnEntityMapper;
 
     private final Logger log = LoggerFactory.getLogger("WorkflowModule");
 
-    @Override
-    public List<Request> getRequests(QueryWrapper<Request> wrapper, Long userId) {
-        // TODO
-        return null;
-    }
 
-    @Override
-    public RequestDto getRequest(Long requestId, Long userId) {
-        // TODO
-        return null;
-    }
-
-    @Override
-    public Integer dropRequest(Long requestId, Long userId) {
-        // TODO
-        return null;
-    }
-
-    @Override
-    public Integer transferRequest(Long requestId, Long nodeId, List<Long> receivers, Long userId) {
-        // TODO
-        return null;
-    }
 
     @Override
     public List<Workflow> getWorkflows(QueryWrapper<Workflow> wrapper, Long userId) {

@@ -1,15 +1,15 @@
 package org.eoa.projectbudget.service.workflow.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.dto.RequestDto;
 import org.eoa.projectbudget.dto.constraint.Constraint;
 import org.eoa.projectbudget.entity.*;
 import org.eoa.projectbudget.exception.AuthorityException;
 import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.EoaException;
+import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.*;
-import org.eoa.projectbudget.service.workflow.WorkflowFrontService;
+import org.eoa.projectbudget.service.workflow.RequestService;
 import org.eoa.projectbudget.utils.AuthorityUtils;
 import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.slf4j.Logger;
@@ -19,20 +19,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author: 张骏山
  * @Date: 2023/12/28 9:09
  * @PackageName: org.eoa.projectbudget.service.workflow.impl
- * @ClassName: WorkflowFrontServiceImpl
+ * @ClassName: RequestServiceImpl
  * @Description: 工作流前端业务类
- * @Version: 1.0
+ * @Version: 1.5
  **/
 
 @Service
-public class WorkflowFrontServiceImpl implements WorkflowFrontService {
+public class RequestServiceImpl implements RequestService {
 
     @Autowired
     RequestMapper requestMapper;
@@ -53,35 +52,100 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
 
     private final Logger log = LoggerFactory.getLogger("WorkflowModule");
 
+//    @Override
+//    public List<Workflow> getCreateAbleList(QueryWrapper<Workflow> wrapper, HumanDto user) {
+//
+//    }
+
     @Override
-    public List<Workflow> getCreateAbleList(QueryWrapper<RequestBacklogView> wrapper, HumanDto user) {
-        return null;
+    public List<Request> getRequests(QueryWrapper<Request> wrapper, Long userId) {
+        List<Request> requests = requestMapper.selectList(wrapper.eq("creator", userId));
+        log.info("用户=>{}获取列表获取数量=>{}", userId, requests.size());
+        return requests;
+    }
+
+//    @Override
+//    public RequestDto getRequestControl(Long requestId, Long userId) {
+//
+//        return null;
+//    }
+
+    @Override
+    public Map<Long,Long> dropRequest(Long requestId, Long userId) {
+        Request request = requestMapper.selectById(requestId);
+        int delete = requestMapper.deleteById(requestId);
+        Integer deleteBacks = requestMapper.doRequestAll(requestId);
+        Integer deleteDones = requestMapper.deleteDones(requestId);
+        log.info("用户=>{}删除流程=>{},删除数量=>{},删除待办数量=>{},删除已办数量=>{}",userId,requestId,delete,deleteBacks,deleteDones);
+        if (delete == 0) {
+            return null;
+        }
+        Long tableId = workflowMapper.selectById(request.getWorkflowId()).getTableId();
+        HashMap<Long,Long> map = new HashMap<>();
+        map.put(tableId, request.getDataId());
+        return map;
     }
 
     @Override
-    public List<RequestBacklogView> getBackLogRequest(QueryWrapper<RequestBacklogView> wrapper, HumanDto user) {
-        return null;
+    public Integer transferRequest(RequestDto requestDto, Long nodeId, List<Long> receivers, Long userId) {
+        log.info("用户=>{}将流程=>{}流转至节点=>{}指定操作人=>{}",userId,requestDto.getRequestId(),nodeId,receivers);
+        leaveNode(requestDto, userId);
+        requestMapper.doRequestAll(requestDto.getRequestId());
+        WorkflowNode node = workflowNodeMapper.selectById(nodeId);
+        if (Objects.equals(requestDto.getWorkflowId(), node.getWorkflowId()))
+            throw new ParameterException("nodeId", nodeId.toString(), "该节点不属于该流程");
+        arriveNode(requestDto, node);
+        if (receivers.size()!=0) {
+            requestMapper.doRequestAll(requestDto.getRequestId());
+            requestMapper.newBacklogs(receivers, requestDto.getRequestId(), nodeId, requestDto.getWorkflowId());
+        }
+        return 1;
     }
 
     @Override
-    public List<RequestDoneView> getHaveDone(QueryWrapper<RequestDoneView> wrapper, HumanDto user) {
-        return null;
+    public List<RequestBacklogView> getBackLogRequest(QueryWrapper<RequestBacklogView> wrapper, Long userId) {
+        List<RequestBacklogView> backlogs = requestBacklogMapper.selectList(wrapper.eq("humanId", userId));
+        log.info("用户=>{}获取待办列表获取数量=>{}", userId, backlogs);
+        return backlogs;
     }
 
     @Override
-    public List<Request> getRequestsSelf(QueryWrapper<Request> wrapper, HumanDto user) {
-        return null;
+    public List<RequestDoneView> getHaveDone(QueryWrapper<RequestDoneView> wrapper, Long userId) {
+        List<RequestDoneView> does = doneMapper.selectList(wrapper.eq("humanId", userId));
+        log.info("用户=>{}获取已办列表获取数量=>{}", userId, does.size());
+        return does;
     }
 
     @Override
-    public RequestDto getRequest(Long requestId, HumanDto user) {
-        return null;
+    public List<Request> getRequestsSelf(QueryWrapper<Request> wrapper, Long userId) {
+        List<Request> requests = requestMapper.selectList(wrapper.eq("creator", userId));
+        log.info("用户=>{}获取我的请求获取数量=>{}", userId, requests.size());
+        return requests;
+    }
+
+    @Override
+    public RequestDto getRequest(Long requestId, Long userId) {
+        log.info("用户=>{}获取流程=>{}", userId, requestId);
+        RequestDto requestDto = new RequestDto();
+        Request request = requestMapper.selectById(requestId);
+        if (request == null) {
+            throw new ParameterException("requestId",requestId.toString(),"不存在该流程");
+        }
+        requestDto.setRequestId(requestId)
+                .setRequest(request)
+                .setDataId(request.getDataId());
+        Long workflowId = request.getWorkflowId();
+        Workflow workflow = workflowMapper.selectById(workflowId);
+        requestDto.setWorkflowId(workflowId)
+                .setWorkflow(workflow);
+
+        return requestDto;
     }
 
     @Override
     @Transactional
-    public Long createRequest(RequestDto requestDto, HumanDto user) {
-        log.info("用户=>{}创建流程=>{}", requestDto.getDataId(), user.getDataId());
+    public Long createRequest(RequestDto requestDto, Long userId) {
+        log.info("用户=>{}创建流程=>{}", requestDto.getDataId(), userId);
         StringBuilder title = new StringBuilder();
         Request request = requestDto.getRequest();
         Workflow workflow = requestDto.getWorkflow();
@@ -95,7 +159,7 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
         }
 
         request.setRequestTitle(title.toString());
-        leaveNode(requestDto, user);
+        leaveNode(requestDto, userId);
         WorkflowNode workflowNode = processRoute(requestDto);
         arriveNode(requestDto, workflowNode);
         return requestDto.getRequestId();
@@ -103,10 +167,10 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
 
     @Override
     @Transactional
-    public List<Long> refuseRequest(RequestDto requestDto, HumanDto user) {
-        log.info("用户=>{}拒绝流程=>{}", requestDto.getDataId(), user.getDataId());
+    public List<Long> refuseRequest(RequestDto requestDto, Long userId) {
+        log.info("用户=>{}拒绝流程=>{}", requestDto.getDataId(), userId);
 
-        leaveNode(requestDto, user);
+        leaveNode(requestDto, userId);
         ArrayList<Long> humans = new ArrayList<>();
 
         WorkflowNode workflowNode = getCreateNode(requestDto.getWorkflowId());
@@ -118,9 +182,9 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
 
     @Override
     @Transactional
-    public List<Long> submitRequest(RequestDto requestDto, HumanDto user) {
-        log.info("用户=>{}提交流程=>{}", requestDto.getDataId(), user.getDataId());
-        leaveNode(requestDto, user);
+    public List<Long> submitRequest(RequestDto requestDto, Long userId) {
+        log.info("用户=>{}提交流程=>{}", requestDto.getDataId(), userId);
+        leaveNode(requestDto, userId);
         ArrayList<Long> humans = new ArrayList<>();
         if (checkAllCommit(requestDto, humans)) {
             WorkflowNode workflowNode = processRoute(requestDto);
@@ -131,11 +195,10 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
 
     @Override
     @Transactional
-    public List<Long> admitRequest(RequestDto requestDto, HumanDto user) {
-        log.info("用户=>{}批准流程=>{}", requestDto.getDataId(), user.getDataId());
+    public List<Long> admitRequest(RequestDto requestDto, Long userId) {
+        log.info("用户=>{}批准流程=>{}", requestDto.getDataId(), userId);
 
-
-        leaveNode(requestDto, user);
+        leaveNode(requestDto, userId);
         ArrayList<Long> humans = new ArrayList<>();
         if (checkAllCommit(requestDto, humans)) {
             WorkflowNode workflowNode = processRoute(requestDto);
@@ -145,18 +208,19 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
     }
 
     @Override
-    public Long getViewNode(Long requestId, HumanDto user) {
-        Long viewNode = requestMapper.getViewNode(requestId, user.getDataId());
+    public Long getViewNode(Long requestId, Long userId) {
+        Long viewNode = requestMapper.getViewNode(requestId, userId);
         if (viewNode == null) {
-            log.warn("用户=>{}查看请求=>{},无权限", user.getDataId(), requestId);
-            throw new AuthorityException(user.getDataId(), "request", requestId, "查看");
+            log.warn("用户=>{}查看请求=>{},无权限", userId, requestId);
+            throw new AuthorityException(userId, "request", requestId, "查看");
         }
-        log.info("用户=>{}查看请求=>{},对应节点=>{}", user.getDataId(), requestId, viewNode);
+        log.info("用户=>{}查看请求=>{},对应节点=>{}", userId, requestId, viewNode);
         return viewNode;
     }
 
     @Override
-    public RequestDto checkAndConsist(RequestDto requestDto, HumanDto user) throws EoaException {
+    public RequestDto checkAndConsist(RequestDto requestDto, Long userId) throws EoaException {
+
         Long workflowId = requestDto.getWorkflowId();
         Workflow workflow = workflowMapper.selectById(workflowId);
         requestDto.setWorkflow(workflow);
@@ -164,14 +228,14 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
         Long requestId = requestDto.getRequestId();
         Request request = requestBacklogMapper.selectOne(new QueryWrapper<RequestBacklogView>()
                 .eq("requestId", requestId)
-                .eq("humanId", user.getDataId()));
+                .eq("humanId", userId));
         if (request == null) {
             if (requestDto.getAction() == RequestDto.CREATE)
-                throw new AuthorityException(user.getDataId(), "request", requestId, "流程流转");
+                throw new AuthorityException(userId, "request", requestId, "流程流转");
             else {
                 request = new Request()
                         .setWorkflowId(workflowId)
-                        .setCreator(user.getDataId());
+                        .setCreator(userId);
                 requestDto.setRequest(request);
                 requestDto.setCurrentNode(getCreateNode(workflowId));
                 requestMapper.insert(request);
@@ -182,7 +246,7 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
             requestDto.setCurrentNode(workflowNodeMapper.selectById(request.getCurrentNode()));
         }
 
-        requestDto.checkNode(user.getDataId());
+        requestDto.checkNode(userId);
 
         requestDto.setNextRoutes(workflowRouteMapper.selectList(new QueryWrapper<WorkflowRoute>()
                 .eq("startNodeId", requestDto.getNodeId())
@@ -190,20 +254,23 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
         return requestDto;
     }
 
-    private WorkflowNode getCreateNode(Long workflowId) {
+    @Override
+    public WorkflowNode getCreateNode(Long workflowId) {
         return workflowNodeMapper.selectOne(new QueryWrapper<WorkflowNode>()
                 .eq("workflowId", workflowId)
                 .eq("nodeType", WorkflowNode.CREATE));
     }
 
-    private void leaveNode(RequestDto requestDto, HumanDto user) {
+    private void leaveNode(RequestDto requestDto, Long userId) {
         try {
-            requestDto.leaveNode(jdbcTemplate, formDMLMapper, user.getDataId());
-            requestMapper.doRequest(user.getDataId(), requestDto.getRequestId());
-            try {
-                requestMapper.addDone(user.getDataId(), requestDto.getRequestId(), requestDto.getNodeId(), requestDto.getWorkflowId());
-            } catch (Exception e) {
-                requestMapper.updateDone(user.getDataId(), requestDto.getRequestId(), requestDto.getNodeId());
+            requestDto.leaveNode(jdbcTemplate, formDMLMapper, userId);
+            Integer deletes = requestMapper.doRequest(userId, requestDto.getRequestId());
+            if (deletes != 0) {
+                try {
+                    requestMapper.addDone(userId, requestDto.getRequestId(), requestDto.getNodeId(), requestDto.getWorkflowId());
+                } catch (Exception e) {
+                    requestMapper.updateDone(userId, requestDto.getRequestId(), requestDto.getNodeId());
+                }
             }
         } catch (EoaException e) {
             log.warn("request=>{}离开节点=>{},失败原因{}", requestDto.getRequestId(), requestDto.getNodeId(), e.description);
