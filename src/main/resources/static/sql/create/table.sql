@@ -217,7 +217,9 @@ create table `authority_human`
 create view `human_authority_list` as
 (
 select distinct humanId, authorityId
-from ((select hc.humanId,ac.authorityId  from `character_human` as hc left join authority_character ac on hc.characterId = ac.characterId)
+from ((select hc.humanId, ac.authorityId
+       from `character_human` as hc
+                left join authority_character ac on hc.characterId = ac.characterId)
       union
       (select humanId, authorityId from `authority_human`)) as t
     );
@@ -368,17 +370,26 @@ from `request_backlog`
 create view `request_view_authority` as
 (
 select *
-from ((select requestId, humanId, nodeId from `request_done_view`)
+from ((select requestId, humanId, nodeId, finishTime as time from `request_done_view`)
       union
-      (select requestId, humanId, nodeId from request_back_log_view)) as t
-    );
+      (select requestId, humanId, nodeId, date_add(arriveTime, interval 1 second) as time
+       from request_back_log_view)) as t
+order by time desc
+    )
+;
 
-CREATE DEFINER = CURRENT_USER TRIGGER `eoa_build`.`request_BEFORE_INSERT` BEFORE INSERT ON `request` FOR EACH ROW
+CREATE DEFINER = CURRENT_USER TRIGGER `eoa_build`.`request_BEFORE_INSERT`
+    BEFORE INSERT
+    ON `request`
+    FOR EACH ROW
 BEGIN
     set new.requestStatus = (select nodeType from workflow_node where workflow_node.dataId = new.currentNode);
 END;
 
-CREATE DEFINER = CURRENT_USER TRIGGER `eoa_build`.`request_BEFORE_UPDATE` BEFORE UPDATE ON `request` FOR EACH ROW
+CREATE DEFINER = CURRENT_USER TRIGGER `eoa_build`.`request_BEFORE_UPDATE`
+    BEFORE UPDATE
+    ON `request`
+    FOR EACH ROW
 BEGIN
     if NEW.currentNode != OLD.currentNode then
         set new.requestStatus = (select nodeType from workflow_node where workflow_node.dataId = new.currentNode);
