@@ -1,7 +1,10 @@
 package org.eoa.projectbudget.vo.in;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.eoa.projectbudget.dto.RequestDto;
 import org.eoa.projectbudget.exception.ParameterException;
+
+import java.util.List;
 
 /**
  * @Author: 张骏山
@@ -17,6 +20,8 @@ public class RequestIn implements CheckParameter<RequestDto> {
     Long workflowId;
     String comment;
     FormIn form;
+    @Schema(description = "流程流转指定专用")
+    List<Long> receivers;
 
     @Override
     public void checkSelf() throws ParameterException {
@@ -50,6 +55,15 @@ public class RequestIn implements CheckParameter<RequestDto> {
                 .setAction(Math.toIntExact(action))
                 .setWorkflowId(workflowId)
                 .setNodeId(nodeId);
+    }
+
+    public List<Long> getReceivers() {
+        return receivers;
+    }
+
+    public RequestIn setReceivers(List<Long> receivers) {
+        this.receivers = receivers;
+        return this;
     }
 
     public Long getRequestId() {
