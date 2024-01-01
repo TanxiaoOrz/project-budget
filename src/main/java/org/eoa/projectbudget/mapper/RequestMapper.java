@@ -22,10 +22,10 @@ public interface RequestMapper extends BaseMapper<Request> {
     Long getViewNode(@Param("requestId")Long requestId, @Param("humanId")Long humanId);
 
     @Delete("delete from request_backlog where humanId = #{humanId} and requestId = #{requestId}")
-    void doRequest(@Param("humanId")Long humanId, @Param("requestId")Long requestId);
+    Integer doRequest(@Param("humanId")Long humanId, @Param("requestId")Long requestId);
 
     @Delete("delete from request_backlog where requestId = #{requestId}")
-    void doRequestAll(@Param("requestId")Long requestId);
+    Integer doRequestAll(@Param("requestId")Long requestId);
 
     @Insert("insert into request_done (humanId, requestId, nodeId, workflowId) VALUES (#{humanId}, #{requestId}, #{nodeId}, #{workflowId})")
     void addDone(@Param("humanId")Long humanId, @Param("requestId")Long requestId, @Param("nodeId")Long nodeId, @Param("workflowId")Long workflowId);
@@ -34,4 +34,7 @@ public interface RequestMapper extends BaseMapper<Request> {
     void updateDone(@Param("humanId")Long humanId, @Param("requestId")Long requestId, @Param("nodeId")Long nodeId);
 
     void newBacklogs(@Param("humans")List<Long> humans, @Param("requestId")Long requestId, @Param("nodeId")Long nodeId, @Param("workflowId")Long workflowId);
+
+    @Delete("delete from request_backlog where requestId = #{requestId}")
+    Integer deleteDones(@Param("requestId")Long requestId);
 }
