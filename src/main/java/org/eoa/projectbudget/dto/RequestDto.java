@@ -28,6 +28,7 @@ public class RequestDto {
     public final static int SUBMIT = 1;
     public final static int ADMIT = 2;
     public final static int REFUSE = 3;
+    public final static int FLOW = 4;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,6 +46,7 @@ public class RequestDto {
 
     List<WorkflowRoute> nextRoutes;
     HumanDto creator;
+
 
     public void arriveNode(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper) {
         if (WorkflowNode.FILE.equals(currentNode.getNodeType())) {
@@ -106,6 +108,8 @@ public class RequestDto {
                 if (!Objects.equals(currentNode.getNodeType(), WorkflowNode.ADMIT))
                     throw new AuthorityException(userId,"node", nodeId, "请求拒绝");
             }
+            case FLOW -> {}
+            default ->  throw new ParameterException("action",action.toString(),"错误的流程操作编号");
         }
     }
 
