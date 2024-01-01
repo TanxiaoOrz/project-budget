@@ -145,24 +145,28 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
 
     @Override
     public RequestDto checkAndConsist(RequestDto requestDto, HumanDto user) throws EoaException {
-        Long requestId = requestDto.getRequestId();
-        Request request = requestBacklogMapper.selectOne(new QueryWrapper<RequestBacklogView>()
-                .eq("requestId", requestId)
-                .eq("humanId", user.getDataId()));
-        if (request == null && requestDto.getAction() != RequestDto.CREATE) {
-            throw new AuthorityException(user.getDataId(), "request", requestId, "流程流转");
-        } else {
-            requestDto.setRequest(request);
-        }
-
-
         Long workflowId = requestDto.getWorkflowId();
         Workflow workflow = workflowMapper.selectById(workflowId);
         requestDto.setWorkflow(workflow);
 
+        Long requestId = requestDto.getRequestId();
+        Request request = requestBacklogMapper.selectOne(new QueryWrapper<RequestBacklogView>()
+                .eq("requestId", requestId)
+                .eq("humanId", user.getDataId()));
         if (request == null) {
-            requestDto.setCurrentNode(getCreateNode(workflowId));
+            if (requestDto.getAction() == RequestDto.CREATE)
+                throw new AuthorityException(user.getDataId(), "request", requestId, "流程流转");
+            else {
+                request = new Request()
+                        .setWorkflowId(workflowId)
+                        .setCreator(user.getDataId());
+                requestDto.setRequest(request);
+                requestDto.setCurrentNode(getCreateNode(workflowId));
+                requestMapper.insert(request);
+                requestDto.setRequestId(request.getRequestId());
+            }
         } else {
+            requestDto.setRequest(request);
             requestDto.setCurrentNode(workflowNodeMapper.selectById(request.getCurrentNode()));
         }
 
