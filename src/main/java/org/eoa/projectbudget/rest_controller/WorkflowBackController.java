@@ -2,32 +2,36 @@ package org.eoa.projectbudget.rest_controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.dto.RequestDto;
+import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.Workflow;
 import org.eoa.projectbudget.entity.WorkflowNode;
 import org.eoa.projectbudget.entity.WorkflowRoute;
 import org.eoa.projectbudget.service.cache.CacheService;
-import org.eoa.projectbudget.service.workflow.WorkflowBackService;
+import org.eoa.projectbudget.service.organization_module.OrganizationService;
+import org.eoa.projectbudget.service.table_module.impl.FromEntityServiceImpl;
+import org.eoa.projectbudget.service.workflow.RequestService;
+import org.eoa.projectbudget.service.workflow.WorkflowService;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterUtils;
-import org.eoa.projectbudget.utils.factory.WorkflowNodeOutFactory;
-import org.eoa.projectbudget.utils.factory.WorkflowOutFactory;
-import org.eoa.projectbudget.utils.factory.WorkflowRouteOutFactory;
+import org.eoa.projectbudget.utils.factory.*;
+import org.eoa.projectbudget.vo.in.RequestIn;
 import org.eoa.projectbudget.vo.in.WorkflowIn;
 import org.eoa.projectbudget.vo.in.WorkflowNodeIn;
 import org.eoa.projectbudget.vo.in.WorkflowRouteIn;
-import org.eoa.projectbudget.vo.out.Vo;
-import org.eoa.projectbudget.vo.out.WorkflowNodeOut;
-import org.eoa.projectbudget.vo.out.WorkflowOut;
-import org.eoa.projectbudget.vo.out.WorkflowRouteOut;
+import org.eoa.projectbudget.vo.out.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: 张骏山
@@ -49,7 +53,13 @@ public class WorkflowBackController {
     @Autowired
     CacheService cacheService;
     @Autowired
-    WorkflowBackService workflowBackService;
+    WorkflowService workflowService;
+    @Autowired
+    RequestService requestService;
+    @Autowired
+    FromEntityServiceImpl entityService;
+    @Autowired
+    OrganizationService organizationService;
 
     @Autowired
     WorkflowOutFactory workflowOutFactory;
@@ -57,9 +67,110 @@ public class WorkflowBackController {
     WorkflowNodeOutFactory workflowNodeOutFactory;
     @Autowired
     WorkflowRouteOutFactory workflowRouteOutFactory;
+    @Autowired
+    RequestDtoOutFactory requestDtoOutFactory;
+    @Autowired
+    RequestOutFactory requestOutFactory;
 
 
     public static final Long USER_ID_CACHE = 0L;
+
+    @GetMapping("/request")
+    @Operation(summary = "批量获取流程数据")
+    public Vo<List<RequestOut>> getRequests(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                            HttpServletRequest request) {
+        FilterUtils<Request> filter = new FilterUtils<>(request.getParameterMap(), Request.class);
+        int flag = ChangeFlagUtils.REQUEST;
+        String method =  filter.getDescription();
+
+        List<RequestOut> outs;
+        RequestOut[] cache = cacheService.getCache(flag, method, humanDto.getDataId(), RequestOut[].class);
+        if (cache == null) {
+            outs = requestOutFactory.outs(requestService.getRequests(filter.getWrapper(), humanDto.getDataId()));
+        } else {
+            outs = Arrays.asList(cache);
+        }
+
+        return new Vo<>(filter.filt(outs), outs.size());
+    }
+
+    @PutMapping("/request")
+    @Operation(summary = "流程强制流转")
+    public Vo<String> flowRequest(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                  @RequestBody RequestIn requestIn) {
+        int action = RequestDto.FLOW;
+        RequestDto requestDto = requestService.checkAndConsist(requestIn.toEntity((long) action), humanDto.getDataId());
+        Long dataId = requestDto.getDataId();
+
+
+        Long tableId = requestIn.getForm().getTableId();
+
+
+        FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form+"-"+ tableId, dataId+"dto", USER_ID_CACHE, FormOutDto.class);
+        if (formOutDto == null) {
+            formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
+            cacheService.setCache(ChangeFlagUtils.Form+"-"+ tableId, dataId+"dto", USER_ID_CACHE, formOutDto);
+        }
+
+        requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))
+                .setFormOutDto(formOutDto);
+
+        requestService.transferRequest(requestDto, requestDto.getNodeId(), requestIn.getReceivers(), humanDto.getDataId());
+
+        changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
+        return new Vo<>("流转成功");
+    }
+
+    @DeleteMapping("/request/{requestId}")
+    @Operation(summary = "删除流程")
+    @Parameters({
+            @Parameter(name = "requestId", description = "对象编号", required = true, in = ParameterIn.PATH),
+            @Parameter(name = "deleteForm", description = "是否删除表单", required = true, in = ParameterIn.PATH)
+    })
+    public Vo<String> deleteRequest(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                    @PathVariable("requestId") Long requestId,
+                                    @RequestParam Boolean deleteForm) {
+        Map<Long, Long> map = requestService.dropRequest(requestId, humanDto.getDataId());
+        if (map != null) {
+            if (deleteForm) {
+                changeFlagUtils.freshDate(ChangeFlagUtils.REQUEST);
+                map.keySet().forEach((key) -> {
+                    entityService.deleteForm(key, map.get(key), humanDto.getDataId());
+                    changeFlagUtils.freshDate(ChangeFlagUtils.Form + "-" + key);
+                });
+            }
+            return new Vo<>("删除成功");
+        } else
+            return new Vo<>(Vo.SERVER_ERROR, "该流程不存在");
+    }
+
+    @GetMapping("/request/{requestId}")
+    @Operation(summary = "获取流程监控数据")
+    @Parameter(name = "requestId", description = "对象编号", required = true, in = ParameterIn.PATH)
+    public Vo<RequestDtoOut> getRequest(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                        @PathVariable("requestId") Long requestId) {
+        Long userId = humanDto.getDataId();
+        RequestDtoOut requestDtoOut = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString(), USER_ID_CACHE, RequestDtoOut.class);
+        if (requestDtoOut == null) {
+            RequestDto requestDto = requestService.getRequest(requestId, userId);
+
+            Long dataId = requestDto.getDataId();
+            FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form, dataId +"dto", USER_ID_CACHE, FormOutDto.class);
+            if (formOutDto == null) {
+                formOutDto = entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId, userId);
+                cacheService.setCache(ChangeFlagUtils.Form,dataId+"dto", USER_ID_CACHE, formOutDto);
+            }
+            requestDto.setFormOutDto(formOutDto);
+            Long nodeId = requestDto.getNodeId();
+            WorkflowNode current = workflowService.getWorkflowNode(nodeId, userId);
+            requestDto.setCurrentNode(current);
+            requestDtoOut = requestDtoOutFactory.out(requestDto);
+            cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString(), USER_ID_CACHE, requestDtoOut);
+        }
+
+        return new Vo<>(requestDtoOut);
+    }
+
 
     @GetMapping("/workflow")
     @Operation(summary = "批量获取工作流")
@@ -71,7 +182,7 @@ public class WorkflowBackController {
         int flag = ChangeFlagUtils.WORKFLOW;
         WorkflowOut[] cache = cacheService.getCache(flag, methods, USER_ID_CACHE, WorkflowOut[].class);
         if (cache == null) {
-            outs = workflowOutFactory.outs(workflowBackService.getWorkflows(filter.getWrapper(), humanDto.getDataId()));
+            outs = workflowOutFactory.outs(workflowService.getWorkflows(filter.getWrapper(), humanDto.getDataId()));
             cacheService.setCache(flag, methods, USER_ID_CACHE, outs);
         } else {
             outs = Arrays.asList(cache);
@@ -87,7 +198,7 @@ public class WorkflowBackController {
         int flag = ChangeFlagUtils.WORKFLOW;
         WorkflowOut out = cacheService.getCache(flag, dataId.toString(), USER_ID_CACHE, WorkflowOut.class);
         if (out == null) {
-            out = workflowOutFactory.out(workflowBackService.getWorkflow(dataId, humanDto.getDataId()));
+            out = workflowOutFactory.out(workflowService.getWorkflow(dataId, humanDto.getDataId()));
             cacheService.setCache(flag, dataId.toString(), USER_ID_CACHE, out);
         }
         return new Vo<>(out);
@@ -97,7 +208,7 @@ public class WorkflowBackController {
     @Operation(summary = "新建工作流")
     public Vo<Long> newWorkflow(@RequestAttribute("HumanDto") HumanDto humanDto,
                                 @RequestBody WorkflowIn workflow) {
-        Long id = workflowBackService.newWorkflow(workflow.toEntity(null), humanDto.getDataId());
+        Long id = workflowService.newWorkflow(workflow.toEntity(null), humanDto.getDataId());
         if (id != null) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW);
             return new Vo<>(id);
@@ -111,7 +222,7 @@ public class WorkflowBackController {
     public Vo<String> updateWorkflow(@RequestAttribute("HumanDto") HumanDto humanDto,
                                      @PathVariable("dataId") Long dataId,
                                      @RequestBody WorkflowIn workflow) {
-        Integer update = workflowBackService.updateWorkflow(workflow.toEntity(dataId), humanDto.getDataId());
+        Integer update = workflowService.updateWorkflow(workflow.toEntity(dataId), humanDto.getDataId());
         if (update == 1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW);
             return new Vo<>("修改成功");
@@ -124,7 +235,7 @@ public class WorkflowBackController {
     @Parameter(name = "dataId", description = "工作流id", in = ParameterIn.PATH)
     public Vo<String> deleteWorkflow(@RequestAttribute("HumanDto") HumanDto humanDto,
                                      @PathVariable("dataId") Long dataId) {
-        Integer deletes = workflowBackService.dropWorkflow(dataId, humanDto.getDataId());
+        Integer deletes = workflowService.dropWorkflow(dataId, humanDto.getDataId());
         if (deletes == 1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW);
             return new Vo<>("删除成功");
@@ -143,7 +254,7 @@ public class WorkflowBackController {
         int flag = ChangeFlagUtils.WORKFLOW_NODE;
         WorkflowNodeOut[] cache = cacheService.getCache(flag, methods, USER_ID_CACHE, WorkflowNodeOut[].class);
         if (cache == null) {
-            outs = workflowNodeOutFactory.outs(workflowBackService.getWorkflowNodes(filter.getWrapper(), humanDto.getDataId()));
+            outs = workflowNodeOutFactory.outs(workflowService.getWorkflowNodes(filter.getWrapper(), humanDto.getDataId()));
             cacheService.setCache(flag, methods, USER_ID_CACHE, outs);
         } else {
             outs = Arrays.asList(cache);
@@ -159,7 +270,7 @@ public class WorkflowBackController {
         int flag = ChangeFlagUtils.WORKFLOW_NODE;
         WorkflowNodeOut out = cacheService.getCache(flag, dataId.toString(), USER_ID_CACHE, WorkflowNodeOut.class);
         if (out == null) {
-            out = workflowNodeOutFactory.out(workflowBackService.getWorkflowNode(dataId, humanDto.getDataId()));
+            out = workflowNodeOutFactory.out(workflowService.getWorkflowNode(dataId, humanDto.getDataId()));
             cacheService.setCache(flag, dataId.toString(), USER_ID_CACHE, out);
         }
         return new Vo<>(out);
@@ -169,7 +280,7 @@ public class WorkflowBackController {
     @Operation(summary = "新建工作流节点")
     public Vo<Long> newWorkFlow(@RequestAttribute("HumanDto") HumanDto humanDto,
                                 @RequestBody WorkflowNodeIn workflowNode) {
-        Long id = workflowBackService.newWorkflowNode(workflowNode.toEntity(null), humanDto.getDataId());
+        Long id = workflowService.newWorkflowNode(workflowNode.toEntity(null), humanDto.getDataId());
         if (id != null) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_NODE);
             return new Vo<>(id);
@@ -183,7 +294,7 @@ public class WorkflowBackController {
     public Vo<String> updateWorkflowNode(@RequestAttribute("HumanDto") HumanDto humanDto,
                                      @PathVariable("dataId") Long dataId,
                                      @RequestBody WorkflowNodeIn workflowNode) {
-        Integer update = workflowBackService.updateWorkflowNode(workflowNode.toEntity(dataId), humanDto.getDataId());
+        Integer update = workflowService.updateWorkflowNode(workflowNode.toEntity(dataId), humanDto.getDataId());
         if (update == 1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_NODE);
             return new Vo<>("修改成功");
@@ -196,7 +307,7 @@ public class WorkflowBackController {
     @Parameter(name = "dataId", description = "工作流节点id", in = ParameterIn.PATH)
     public Vo<String> deleteWorkflowNode(@RequestAttribute("HumanDto") HumanDto humanDto,
                                      @PathVariable("dataId") Long dataId) {
-        Integer deletes = workflowBackService.dropWorkflowNode(dataId, humanDto.getDataId());
+        Integer deletes = workflowService.dropWorkflowNode(dataId, humanDto.getDataId());
         if (deletes == 1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_NODE);
             return new Vo<>("删除成功");
@@ -214,7 +325,7 @@ public class WorkflowBackController {
         int flag = ChangeFlagUtils.WORKFLOW_ROUTE;
         WorkflowRouteOut[] cache = cacheService.getCache(flag, methods, USER_ID_CACHE, WorkflowRouteOut[].class);
         if (cache == null) {
-            outs = workflowRouteOutFactory.outs(workflowBackService.getWorkflowRoutes(filter.getWrapper(), humanDto.getDataId()));
+            outs = workflowRouteOutFactory.outs(workflowService.getWorkflowRoutes(filter.getWrapper(), humanDto.getDataId()));
             cacheService.setCache(flag, methods, USER_ID_CACHE, outs);
         } else {
             outs = Arrays.asList(cache);
@@ -230,7 +341,7 @@ public class WorkflowBackController {
         int flag = ChangeFlagUtils.WORKFLOW_ROUTE;
         WorkflowRouteOut out = cacheService.getCache(flag, dataId.toString(), USER_ID_CACHE, WorkflowRouteOut.class);
         if (out == null) {
-            out = workflowRouteOutFactory.out(workflowBackService.getWorkflowRoute(dataId, humanDto.getDataId()));
+            out = workflowRouteOutFactory.out(workflowService.getWorkflowRoute(dataId, humanDto.getDataId()));
             cacheService.setCache(flag, dataId.toString(), USER_ID_CACHE, out);
         }
         return new Vo<>(out);
@@ -240,7 +351,7 @@ public class WorkflowBackController {
     @Operation(summary = "新建工作流路径")
     public Vo<Long> newWorkFlow(@RequestAttribute("HumanDto") HumanDto humanDto,
                                 @RequestBody WorkflowRouteIn workflowRoute) {
-        Long id = workflowBackService.newWorkflowRoute(workflowRoute.toEntity(null), humanDto.getDataId());
+        Long id = workflowService.newWorkflowRoute(workflowRoute.toEntity(null), humanDto.getDataId());
         if (id != null) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_ROUTE);
             return new Vo<>(id);
@@ -254,7 +365,7 @@ public class WorkflowBackController {
     public Vo<String> updateWorkflowRoute(@RequestAttribute("HumanDto") HumanDto humanDto,
                                           @PathVariable("dataId") Long dataId,
                                           @RequestBody WorkflowRouteIn workflowRoute) {
-        Integer update = workflowBackService.updateWorkflowRoute(workflowRoute.toEntity(dataId), humanDto.getDataId());
+        Integer update = workflowService.updateWorkflowRoute(workflowRoute.toEntity(dataId), humanDto.getDataId());
         if (update == 1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_ROUTE);
             return new Vo<>("修改成功");
@@ -267,7 +378,7 @@ public class WorkflowBackController {
     @Parameter(name = "dataId", description = "工作流路径id", in = ParameterIn.PATH)
     public Vo<String> deleteWorkflowRoute(@RequestAttribute("HumanDto") HumanDto humanDto,
                                           @PathVariable("dataId") Long dataId) {
-        Integer deletes = workflowBackService.dropWorkflowRoute(dataId, humanDto.getDataId());
+        Integer deletes = workflowService.dropWorkflowRoute(dataId, humanDto.getDataId());
         if (deletes == 1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_ROUTE);
             return new Vo<>("删除成功");
