@@ -82,7 +82,19 @@ public class WorkflowFrontServiceImpl implements WorkflowFrontService {
     @Transactional
     public Long createRequest(RequestDto requestDto, HumanDto user) {
         log.info("用户=>{}创建流程=>{}", requestDto.getDataId(), user.getDataId());
+        StringBuilder title = new StringBuilder();
+        Request request = requestDto.getRequest();
+        Workflow workflow = requestDto.getWorkflow();
 
+        String baseTitle = workflow.getWorkflowBaseTitle() == null ?workflow.getWorkFlowName():workflow.getWorkflowBaseTitle();
+        title.append(baseTitle);
+
+        Object mainValue = requestDto.getFormOutDto().getMainValue(workflow.getTitleColumnId());
+        if (mainValue != null) {
+            title.append(mainValue);
+        }
+
+        request.setRequestTitle(title.toString());
         leaveNode(requestDto, user);
         WorkflowNode workflowNode = processRoute(requestDto);
         arriveNode(requestDto, workflowNode);
