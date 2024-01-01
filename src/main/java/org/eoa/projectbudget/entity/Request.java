@@ -1,6 +1,7 @@
 package org.eoa.projectbudget.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,6 +27,7 @@ import java.util.List;
 @TableName("`request`")
 public class Request {
 
+    @TableField(select = false)
     private final ObjectMapper objectMapper;
     @TableId(type = IdType.AUTO)
     Long requestId;
@@ -33,6 +35,10 @@ public class Request {
     Long dataId;
     Long workflowId;
     Long currentNode;
+
+    Long creator;
+
+    String requestTitle;
 
     Integer requestStatus;
 
@@ -137,6 +143,15 @@ public class Request {
         return this;
     }
 
+    public Long getCreator() {
+        return creator;
+    }
+
+    public Request setCreator(Long creator) {
+        this.creator = creator;
+        return this;
+    }
+
     public String getDoneHistory() {
         return doneHistory;
     }
@@ -164,6 +179,14 @@ public class Request {
         return this;
     }
 
+    public String getRequestTitle() {
+        return requestTitle;
+    }
+
+    public Request setRequestTitle(String requestTitle) {
+        this.requestTitle = requestTitle;
+        return this;
+    }
 }
 
 
