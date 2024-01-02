@@ -10,10 +10,8 @@ import org.eoa.projectbudget.dto.FormInDto;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.dto.RequestDto;
-import org.eoa.projectbudget.entity.Request;
-import org.eoa.projectbudget.entity.RequestBacklogView;
-import org.eoa.projectbudget.entity.RequestDoneView;
-import org.eoa.projectbudget.entity.WorkflowNode;
+import org.eoa.projectbudget.dto.constraint.Constraint;
+import org.eoa.projectbudget.entity.*;
 import org.eoa.projectbudget.exception.AuthorityException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ParameterException;
@@ -26,15 +24,18 @@ import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.service.table_module.impl.FromEntityServiceImpl;
 import org.eoa.projectbudget.service.workflow.RequestService;
 import org.eoa.projectbudget.service.workflow.WorkflowService;
+import org.eoa.projectbudget.utils.AuthorityUtils;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterUtils;
 import org.eoa.projectbudget.utils.factory.RequestDtoOutFactory;
 import org.eoa.projectbudget.utils.factory.RequestOutFactory;
+import org.eoa.projectbudget.utils.factory.WorkflowOutFactory;
 import org.eoa.projectbudget.vo.in.FormIn;
 import org.eoa.projectbudget.vo.in.RequestIn;
 import org.eoa.projectbudget.vo.out.RequestDtoOut;
 import org.eoa.projectbudget.vo.out.RequestOut;
 import org.eoa.projectbudget.vo.out.Vo;
+import org.eoa.projectbudget.vo.out.WorkflowOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +79,8 @@ public class WorkflowFrontController {
     WorkflowService workflowService;
     @Autowired
     RequestDtoOutFactory requestDtoOutFactory;
+    @Autowired
+    WorkflowOutFactory workflowOutFactory;
 
     public final Long USER_ID_CACHE = 0L;
 
@@ -115,29 +118,58 @@ public class WorkflowFrontController {
         return new Vo<>(filter.filt(outs), outs.size());
     }
 
-    @GetMapping("/requestCreate/{nodeId}")
-    @Operation(summary = "获取流程具体数据")
-    @Parameter(name = "nodeId", description = "节点编号", required = true, in = ParameterIn.PATH)
-    public Vo<RequestDtoOut> getCreateView(@RequestAttribute("HumanDto") HumanDto humanDto,
-                                        @PathVariable("nodeId") Long nodeId) {
-        //TODO
-        return null;
-    }
 
     @GetMapping("/workflow")
     @Operation(summary = "获取可创建流程")
-    public Vo<RequestDtoOut> getCreateWorkflow(@RequestAttribute("HumanDto") HumanDto humanDto,
-                                               HttpServletRequest request) {
-        //TODO
-        return null;
+    public Vo<List<WorkflowOut>> getCreateWorkflow(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                                   HttpServletRequest request) {
+        int flag = ChangeFlagUtils.WORKFLOW;
+        FilterUtils<Workflow> filter = new FilterUtils<>(request.getParameterMap(), Workflow.class);
+        String method = "createMethod-" + filter.getDescription();
+        List<WorkflowOut> out;
+        WorkflowOut[] cache = cacheService.getCache(flag, method, humanDto.getDataId(), WorkflowOut[].class);
+        if (cache == null) {
+            List<RequestDto> createsAll;
+            RequestDto[] cacheCreate = cacheService.getCache(flag, method, humanDto.getDataId(), RequestDto[].class);
+            if (cacheCreate == null) {
+                createsAll = requestService.getCreateAbleList(filter.getWrapper(), humanDto.getDataId());
+                cacheService.setCache(flag, method, USER_ID_CACHE, createsAll);
+            } else {
+                createsAll = Arrays.asList(cacheCreate);
+            }
+            cacheService.setCache(flag, method, humanDto.getDataId(), Workflow[].class);
+            out = createsAll.stream().filter(requestDto -> {
+                String userAuthorityLimit = requestDto.getCurrentNode().getUserAuthorityLimit();
+                Constraint constraint = AuthorityUtils.getConstraint(userAuthorityLimit);
+                return AuthorityUtils.checkAuthority(humanDto,humanDto,constraint);
+            }).map(requestDto -> workflowOutFactory.out(requestDto.getWorkflow())).toList();
+        } else {
+            out = Arrays.asList(cache);
+        }
+        return new Vo<>(filter.filt(out), out.size());
     }
 
     @GetMapping("/request/{requestId}")
     @Operation(summary = "获取流程具体数据")
     @Parameter(name = "requestId", description = "对象编号", required = true, in = ParameterIn.PATH)
     public Vo<RequestDtoOut> getRequest(@RequestAttribute("HumanDto") HumanDto humanDto,
-                                        @PathVariable("requestId") Long requestId) {
+                                        @PathVariable("requestId") Long requestId,
+                                        @RequestParam(required = false) Long workflowId) {
         Long userId = humanDto.getDataId();
+        if (requestId == 0) {
+            Boolean couldCreate = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+workflowId, userId, Boolean.class);
+            if (couldCreate == null) {
+                RequestDtoOut requestDtoOut = getRequestCreate(requestId, workflowId, userId);
+                String userAuthorityLimit = requestDtoOut.getCurrentNode().getUserAuthorityLimit();
+                Constraint constraint = AuthorityUtils.getConstraint(userAuthorityLimit);
+                couldCreate = AuthorityUtils.checkAuthority(humanDto, humanDto, constraint);
+                cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+workflowId, userId, couldCreate);
+            }
+            if (couldCreate)
+                return new Vo<>(getRequestCreate(requestId, workflowId, userId));
+            else
+                throw new AuthorityException(userId,"workflow",workflowId,"创建流程");
+        }
         Long nodeId = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"node", userId, Long.class);
         if (nodeId == null) {
             try {
@@ -170,6 +202,15 @@ public class WorkflowFrontController {
         if (WorkflowNode.FILE.equals(requestDtoOut.getCurrentNode().getNodeType()))
             requestMapper.doRequest(requestId, userId);
         return new Vo<>(requestDtoOut);
+    }
+
+    private RequestDtoOut getRequestCreate(Long requestId, Long nodeId, Long userId) {
+        RequestDtoOut requestDtoOut = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, userId, RequestDtoOut.class);
+        if (requestDtoOut == null) {
+            requestDtoOut = requestDtoOutFactory.out(requestService.getRequestCreate(nodeId, userId));
+            cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE,requestDtoOut);
+        }
+        return requestDtoOut;
     }
 
     @PutMapping("/action")
