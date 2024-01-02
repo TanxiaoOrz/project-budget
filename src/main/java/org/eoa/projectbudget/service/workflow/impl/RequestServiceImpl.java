@@ -45,6 +45,7 @@ public class RequestServiceImpl implements RequestService {
     WorkflowRouteMapper workflowRouteMapper;
     @Autowired
     WorkflowMapper workflowMapper;
+    @SuppressWarnings("all")
     @Autowired
     JdbcTemplate jdbcTemplate;
     @Autowired
@@ -52,10 +53,17 @@ public class RequestServiceImpl implements RequestService {
 
     private final Logger log = LoggerFactory.getLogger("WorkflowModule");
 
-//    @Override
-//    public List<Workflow> getCreateAbleList(QueryWrapper<Workflow> wrapper, HumanDto user) {
-//
-//    }
+    @Override
+    public List<RequestDto> getCreateAbleList(QueryWrapper<Workflow> wrapper, Long userId) {
+        List<Workflow> workflowsOnUsed = workflowMapper.selectList(wrapper.eq("isDeprecated", DataProcessUtils.translateBooleanToInteger(false)));
+        List<RequestDto> workflowsWithCreateNode = workflowsOnUsed.stream().map(
+                workflow -> new RequestDto()
+                        .setWorkflow(workflow)
+                        .setCurrentNode(getCreateNode(workflow.getDataId()))
+        ).filter(requestDto -> requestDto.getCurrentNode() != null).toList();
+        log.info("用户=>{}获取可创建流程列表,共计流程个数=>{}",userId,workflowsWithCreateNode.size());
+        return workflowsWithCreateNode;
+    }
 
     @Override
     public List<Request> getRequests(QueryWrapper<Request> wrapper, Long userId) {
@@ -140,6 +148,24 @@ public class RequestServiceImpl implements RequestService {
                 .setWorkflow(workflow);
 
         return requestDto;
+    }
+
+    @Override
+    public RequestDto getRequestCreate(Long workflowId, Long userId) {
+        Workflow workflow = workflowMapper.selectById(workflowId);
+        if (workflow == null) {
+            throw new ParameterException("workflowId",workflowId.toString(),"不存在该流程");
+        }
+        if (DataProcessUtils.translateIntegerToBoolean(workflow.getIsDeprecated()))
+            throw new ParameterException("workflowId",workflowId.toString(),"该流程已废弃");
+        WorkflowNode workflowNode = getCreateNode(workflowId);
+
+        log.info("用户=>{}创建工作流=>{}流程", userId, workflowId);
+        RequestDto requestDto = new RequestDto();
+
+        return requestDto.setDataId(0L)
+                .setWorkflow(workflow)
+                .setCurrentNode(workflowNode);
     }
 
     @Override
@@ -230,9 +256,11 @@ public class RequestServiceImpl implements RequestService {
                 .eq("requestId", requestId)
                 .eq("humanId", userId));
         if (request == null) {
-            if (requestDto.getAction() == RequestDto.CREATE)
+            if (requestDto.getAction() != RequestDto.CREATE)
                 throw new AuthorityException(userId, "request", requestId, "流程流转");
             else {
+                if (DataProcessUtils.translateIntegerToBoolean(workflow.getIsDeprecated()))
+                    throw new ParameterException("workflowId",workflowId.toString(),"该流程已废弃");
                 request = new Request()
                         .setWorkflowId(workflowId)
                         .setCreator(userId);

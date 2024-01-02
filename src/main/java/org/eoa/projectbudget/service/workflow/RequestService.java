@@ -2,10 +2,7 @@ package org.eoa.projectbudget.service.workflow;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.RequestDto;
-import org.eoa.projectbudget.entity.Request;
-import org.eoa.projectbudget.entity.RequestBacklogView;
-import org.eoa.projectbudget.entity.RequestDoneView;
-import org.eoa.projectbudget.entity.WorkflowNode;
+import org.eoa.projectbudget.entity.*;
 import org.eoa.projectbudget.exception.EoaException;
 
 import java.util.List;
@@ -20,6 +17,10 @@ import java.util.Map;
  * @Version: 1.3
  **/
 public interface RequestService {
+
+
+
+
 
     /**
      * 获取所有请求
@@ -56,13 +57,13 @@ public interface RequestService {
     Integer transferRequest(RequestDto requestDto, Long nodeId, List<Long> receivers, Long userId);
 
 
-//    /**
-//     * 获取可创建工作流清单列表
-//     * @param wrapper 条件构造器
-//     * @param user 操作人
-//     * @return 工作流数组
-//     */
-//    List<Workflow> getCreateAbleList(QueryWrapper<Workflow> wrapper, Long user);
+    /**
+     * 获取可创建工作流清单列表
+     * @param wrapper 条件构造器
+     * @param userId 操作人
+     * @return 工作流数组
+     */
+    List<RequestDto> getCreateAbleList(QueryWrapper<Workflow> wrapper, Long userId);
 
     /**
      * 获取待办请求
@@ -96,6 +97,8 @@ public interface RequestService {
      * @return 流程数据
      */
     RequestDto getRequest(Long requestId, Long user);
+
+    RequestDto getRequestCreate(Long nodeId, Long userId);
 
     /**
      * 创建请求
