@@ -195,10 +195,10 @@ public class WorkflowServiceImpl implements WorkflowService {
     }
 
     @Override
-    public Integer dropWorkflowNode(Long dataId, Long userId) {
+    public WorkflowNode dropWorkflowNode(Long dataId, Long userId) {
         int update = workflowNodeMapper.deleteById(dataId);
         log.info("用户=>{}修改工作流节点=>{},修改数量=>{}", userId, dataId, update);
-        return update;
+        return workflowNodeMapper.selectById(dataId);
     }
 
     @Override

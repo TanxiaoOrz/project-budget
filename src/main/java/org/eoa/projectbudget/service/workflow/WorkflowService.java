@@ -97,9 +97,9 @@ public interface WorkflowService {
      * 废弃节点
      * @param dataId 节点编号
      * @param userId 操作人
-     * @return 结果数字
+     * @return 被删除对象
      */
-    Integer dropWorkflowNode(Long dataId, Long userId);
+    WorkflowNode dropWorkflowNode(Long dataId, Long userId);
 
     /**
      * 批量获取工作流路径
