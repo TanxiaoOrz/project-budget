@@ -283,6 +283,8 @@ public class WorkflowBackController {
         Long id = workflowService.newWorkflowNode(workflowNode.toEntity(null), humanDto.getDataId());
         if (id != null) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_NODE);
+            if (workflowNode.getNodeType().equals(WorkflowNode.CREATE))
+                changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW);
             return new Vo<>(id);
         } else
             return new Vo<>(Vo.SERVER_ERROR, "未进行新建,请联系管理员");
@@ -297,6 +299,8 @@ public class WorkflowBackController {
         Integer update = workflowService.updateWorkflowNode(workflowNode.toEntity(dataId), humanDto.getDataId());
         if (update == 1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_NODE);
+            if (workflowNode.getNodeType().equals(WorkflowNode.CREATE))
+                changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW);
             return new Vo<>("修改成功");
         } else
             return new Vo<>(Vo.SERVER_ERROR, "未进行修改,没有变动项");
@@ -307,9 +311,11 @@ public class WorkflowBackController {
     @Parameter(name = "dataId", description = "工作流节点id", in = ParameterIn.PATH)
     public Vo<String> deleteWorkflowNode(@RequestAttribute("HumanDto") HumanDto humanDto,
                                      @PathVariable("dataId") Long dataId) {
-        Integer deletes = workflowService.dropWorkflowNode(dataId, humanDto.getDataId());
-        if (deletes == 1) {
+        WorkflowNode workflowNode = workflowService.dropWorkflowNode(dataId, humanDto.getDataId());
+        if (workflowNode != null) {
             changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW_NODE);
+            if (workflowNode.getNodeType().equals(WorkflowNode.CREATE))
+                changeFlagUtils.freshDate(ChangeFlagUtils.WORKFLOW);
             return new Vo<>("删除成功");
         } else
             return new Vo<>(Vo.SERVER_ERROR, "未进行删除,该数据不存在");
