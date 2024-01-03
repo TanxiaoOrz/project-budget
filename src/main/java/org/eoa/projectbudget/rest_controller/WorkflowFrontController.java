@@ -213,7 +213,7 @@ public class WorkflowFrontController {
         return requestDtoOut;
     }
 
-    @PutMapping("/action")
+    @PutMapping("/request")
     @Operation(summary = "流程操作")
     @Parameter(name = "action", description = "操作编码", required = true, in = ParameterIn.QUERY)
     public Vo<List<Long>> requestAction(@RequestAttribute("HumanDto") HumanDto humanDto,
