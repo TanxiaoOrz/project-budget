@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.eoa.projectbudget.dto.FormInDto;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
+import org.eoa.projectbudget.entity.ModuleView;
 import org.eoa.projectbudget.exception.AuthorityException;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
@@ -18,15 +19,19 @@ import org.eoa.projectbudget.service.cache.CacheService;
 import org.eoa.projectbudget.service.content.ContentService;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.service.table_module.FormService;
+import org.eoa.projectbudget.service.table_module.ModuleService;
 import org.eoa.projectbudget.service.table_module.impl.FormViewServiceImpl;
 import org.eoa.projectbudget.service.table_module.impl.FromEntityServiceImpl;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterFormUtils;
+import org.eoa.projectbudget.utils.FilterUtils;
 import org.eoa.projectbudget.utils.factory.FileOutFactory;
 import org.eoa.projectbudget.utils.factory.FormOutFactory;
+import org.eoa.projectbudget.utils.factory.ModuleOutFactory;
 import org.eoa.projectbudget.vo.in.FormIn;
 import org.eoa.projectbudget.vo.out.FileOut;
 import org.eoa.projectbudget.vo.out.FormOut;
+import org.eoa.projectbudget.vo.out.ModuleOut;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -69,8 +74,29 @@ public class TableFrontController {
     ContentService contentService;
     @Autowired
     FileOutFactory fileOutFactory;
+    @Autowired
+    ModuleOutFactory moduleOutFactory;
+    @Autowired
+    ModuleService moduleService;
 
     public final Long USER_ID_CACHE = 0L;
+
+    @Operation(summary = "获取所有模块信息")
+    @GetMapping("/module")
+    public Vo<List<ModuleOut>> getAllModule(@RequestAttribute("HumanDto") HumanDto humanDto,
+                                            HttpServletRequest request) throws EoaException {
+        FilterUtils<ModuleView> filter = new FilterUtils<>(request.getParameterMap(), ModuleView.class);
+        List<ModuleOut> outs;
+        String method = filter.getDescription();
+        ModuleOut[] cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, USER_ID_CACHE, ModuleOut[].class);
+        if (cache == null) {
+            outs = moduleOutFactory.outs(moduleService.getAll(humanDto.getDataId(),filter.getWrapper()));
+            cacheService.setCache(ChangeFlagUtils.Flags[ChangeFlagUtils.MODULE], method, USER_ID_CACHE,outs);
+        }else {
+            outs = Arrays.asList(cache);
+        }
+        return new Vo<>(filter.filt(outs),outs.size());
+    }
 
 
     @GetMapping("/file/{dataId}")
