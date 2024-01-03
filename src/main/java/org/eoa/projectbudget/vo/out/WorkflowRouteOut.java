@@ -31,6 +31,9 @@ public class WorkflowRouteOut implements VoOut{
     String creatorName;
     String workflowName;
 
+    public WorkflowRouteOut() {
+    }
+
     public WorkflowRouteOut(WorkflowRoute workflowRoute) {
         this.dataId = workflowRoute.getDataId();
         this.routeName = workflowRoute.getRouteName();

@@ -34,6 +34,9 @@ public class WorkflowNodeOut implements VoOut{
     String creatorName;
     String workflowName;
 
+    public WorkflowNodeOut() {
+    }
+
     public WorkflowNodeOut(WorkflowNode workflowNode) {
         this.dataId = workflowNode.getDataId();
         this.nodeName = workflowNode.getNodeName();
