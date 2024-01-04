@@ -33,6 +33,7 @@ public class WorkflowNodeOut implements VoOut{
 
     String creatorName;
     String workflowName;
+    Long tableId;
 
     public WorkflowNodeOut() {
     }
@@ -178,6 +179,15 @@ public class WorkflowNodeOut implements VoOut{
         return this;
     }
 
+    public Long getTableId() {
+        return tableId;
+    }
+
+    public WorkflowNodeOut setTableId(Long tableId) {
+        this.tableId = tableId;
+        return this;
+    }
+
     @Override
     public void toBrowser(Long browserId) {
         this.nodeName = browserId != 0L?null:nodeName;
@@ -193,5 +203,6 @@ public class WorkflowNodeOut implements VoOut{
         this.createTime = null;
         this.creatorName = null;
         this.workflowName = null;
+        this.tableId = null;
     }
 }

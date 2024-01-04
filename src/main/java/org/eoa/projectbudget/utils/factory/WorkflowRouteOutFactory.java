@@ -2,9 +2,11 @@ package org.eoa.projectbudget.utils.factory;
 
 import org.eoa.projectbudget.entity.HumanResource;
 import org.eoa.projectbudget.entity.Workflow;
+import org.eoa.projectbudget.entity.WorkflowNode;
 import org.eoa.projectbudget.entity.WorkflowRoute;
 import org.eoa.projectbudget.mapper.HumanMapper;
 import org.eoa.projectbudget.mapper.WorkflowMapper;
+import org.eoa.projectbudget.mapper.WorkflowNodeMapper;
 import org.eoa.projectbudget.vo.out.WorkflowRouteOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,8 @@ public class WorkflowRouteOutFactory implements OutFactory<WorkflowRoute, Workfl
     HumanMapper humanMapper;
     @Autowired
     WorkflowMapper workflowMapper;
+    @Autowired
+    WorkflowNodeMapper workflowNodeMapper;
 
     @Override
     public WorkflowRouteOut out(WorkflowRoute workflowRoute) {
@@ -36,8 +40,13 @@ public class WorkflowRouteOutFactory implements OutFactory<WorkflowRoute, Workfl
         WorkflowRouteOut workflowRouteOut = new WorkflowRouteOut(workflowRoute);
         HumanResource creator = humanMapper.selectById(workflowRoute.getCreator());
         Workflow workflow = workflowMapper.selectById(workflowRouteOut.getWorkflowId());
+        WorkflowNode startNode = workflowNodeMapper.selectById(workflowRoute.getStartNodeId());
+        WorkflowNode endNode = workflowNodeMapper.selectById(workflowRoute.getEndNodeId());
         return workflowRouteOut.setCreatorName(creator == null ? "" : creator.getName())
-                .setWorkflowName(workflow == null ? "" : workflowRouteOut.getWorkflowName());
+                .setWorkflowName(workflow == null ? "" : workflow.getWorkFlowName())
+                .setTableId(workflow == null ? null : workflow.getTableId())
+                .setStartNodeName(startNode == null ? "" : startNode.getNodeName())
+                .setEndNodeName(endNode == null ? "" : endNode.getNodeName());
     }
 
     @Override

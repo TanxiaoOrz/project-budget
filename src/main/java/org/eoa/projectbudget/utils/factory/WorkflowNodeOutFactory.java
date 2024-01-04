@@ -38,7 +38,8 @@ public class WorkflowNodeOutFactory implements OutFactory<WorkflowNode, Workflow
         HumanResource creator = humanMapper.selectById(workflowNode.getCreator());
         Workflow workflow = workflowMapper.selectById(WorkflowNodeOut.getWorkflowId());
         return WorkflowNodeOut.setCreatorName(creator == null ? "" : creator.getName())
-                .setWorkflowName(workflow == null ? "" : WorkflowNodeOut.getWorkflowName());
+                .setWorkflowName(workflow == null ? "" : workflow.getWorkFlowName())
+                .setTableId(workflow == null ? null : workflow.getTableId());
     }
 
     @Override

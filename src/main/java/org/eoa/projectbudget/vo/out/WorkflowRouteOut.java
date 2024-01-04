@@ -30,6 +30,9 @@ public class WorkflowRouteOut implements VoOut{
 
     String creatorName;
     String workflowName;
+    String startNodeName;
+    String endNodeName;
+    Long tableId;
 
     public WorkflowRouteOut() {
     }
@@ -155,6 +158,32 @@ public class WorkflowRouteOut implements VoOut{
         return this;
     }
 
+    public String getStartNodeName() {
+        return startNodeName;
+    }
+
+    public WorkflowRouteOut setStartNodeName(String startNodeName) {
+        this.startNodeName = startNodeName;
+        return this;
+    }
+
+    public String getEndNodeName() {
+        return endNodeName;
+    }
+
+    public WorkflowRouteOut setEndNodeName(String endNodeName) {
+        this.endNodeName = endNodeName;
+        return this;
+    }
+
+    public Long getTableId() {
+        return tableId;
+    }
+
+    public WorkflowRouteOut setTableId(Long tableId) {
+        this.tableId = tableId;
+        return this;
+    }
 
     @Override
     public void toBrowser(Long browserId) {
@@ -169,5 +198,9 @@ public class WorkflowRouteOut implements VoOut{
         this.createTime = null;
         this.creatorName = null;
         this.workflowName = null;
+        this.startNodeName = null;
+        this.endNodeName = null;
+        this.tableId = null;
     }
+
 }
