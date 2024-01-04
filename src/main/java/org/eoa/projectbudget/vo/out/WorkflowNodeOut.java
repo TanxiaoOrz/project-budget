@@ -16,7 +16,7 @@ public class WorkflowNodeOut implements VoOut{
 
     Long dataId;
 
-    String nodeName;
+    String workflowNodeName;
     Integer isCounterSign;
     Integer nodeType;
     Long workflowId;
@@ -40,7 +40,7 @@ public class WorkflowNodeOut implements VoOut{
 
     public WorkflowNodeOut(WorkflowNode workflowNode) {
         this.dataId = workflowNode.getDataId();
-        this.nodeName = workflowNode.getName();
+        this.workflowNodeName = workflowNode.getWorkflowNodeName();
         this.isCounterSign = workflowNode.getIsCounterSign();
         this.nodeType = workflowNode.getNodeType();
         this.workflowId = workflowNode.getWorkflowId();
@@ -62,12 +62,12 @@ public class WorkflowNodeOut implements VoOut{
         return this;
     }
 
-    public String getNodeName() {
-        return nodeName;
+    public String getWorkflowNodeName() {
+        return workflowNodeName;
     }
 
-    public WorkflowNodeOut setNodeName(String nodeName) {
-        this.nodeName = nodeName;
+    public WorkflowNodeOut setWorkflowNodeName(String workflowNodeName) {
+        this.workflowNodeName = workflowNodeName;
         return this;
     }
 
@@ -190,7 +190,7 @@ public class WorkflowNodeOut implements VoOut{
 
     @Override
     public void toBrowser(Long browserId) {
-        this.nodeName = browserId != 0L?null:nodeName;
+        this.workflowNodeName = browserId != 0L?null: workflowNodeName;
         this.isCounterSign = null;
         this.nodeType = null;
         this.workflowId = null;

@@ -14,7 +14,7 @@ import org.eoa.projectbudget.utils.DataProcessUtils;
  **/
 public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
 
-    String nodeName;
+    String workflowNodeName;
     Integer isCounterSign;
     Integer nodeType;
     Long workflowId;
@@ -27,7 +27,7 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
 
     @Override
     public void checkSelf() throws ParameterException {
-        if (DataProcessUtils.isEmpty(nodeName)) {
+        if (DataProcessUtils.isEmpty(workflowNodeName)) {
             throw new ParameterException("nodeName","","缺少节点名称");
         }
         if (nodeType == null) {
@@ -46,7 +46,7 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
         checkSelf();
         WorkflowNode workflowNode = new WorkflowNode();
         return workflowNode.setDataId(dataId)
-                .setName(nodeName)
+                .setWorkflowNodeName(workflowNodeName)
                 .setIsCounterSign(isCounterSign)
                 .setNodeType(nodeType)
                 .setWorkflowId(workflowId)
@@ -60,12 +60,12 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
     public WorkflowNodeIn() {
     }
 
-    public String getNodeName() {
-        return nodeName;
+    public String getWorkflowNodeName() {
+        return workflowNodeName;
     }
 
-    public WorkflowNodeIn setNodeName(String nodeName) {
-        this.nodeName = nodeName;
+    public WorkflowNodeIn setWorkflowNodeName(String workflowNodeName) {
+        this.workflowNodeName = workflowNodeName;
         return this;
     }
 

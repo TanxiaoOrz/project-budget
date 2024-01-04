@@ -27,7 +27,7 @@ public class WorkflowNode {
     @TableId(type = IdType.AUTO)
     Long dataId;
 
-    String nodeName;
+    String workflowNodeName;
     Integer isCounterSign;
     Integer nodeType;
     Long workflowId;
@@ -51,12 +51,12 @@ public class WorkflowNode {
         return this;
     }
 
-    public String getNodeName() {
-        return nodeName;
+    public String getWorkflowNodeName() {
+        return workflowNodeName;
     }
 
-    public WorkflowNode setNodeName(String nodeName) {
-        this.nodeName = nodeName;
+    public WorkflowNode setWorkflowNodeName(String workflowNodeName) {
+        this.workflowNodeName = workflowNodeName;
         return this;
     }
 

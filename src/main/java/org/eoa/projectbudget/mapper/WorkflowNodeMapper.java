@@ -18,7 +18,7 @@ import org.eoa.projectbudget.entity.WorkflowNode;
 @Mapper
 public interface WorkflowNodeMapper extends BaseMapper<WorkflowNode> {
     
-    @Select("select max(viewNo) + 1 from workflow_node where workflowId = #{workflowId};")
+    @Select("select ifnull(max(viewNo),0) + 1 from workflow_node where workflowId = #{workflowId};")
     Integer getViewNo(@Param("workflowId")Long workflowId);
 
     @Select("select count(dataId) from workflow_node where dataId != #{dataId} and workflowId = #{workflowId} and nodeType = 0")

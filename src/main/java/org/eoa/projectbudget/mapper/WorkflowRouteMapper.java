@@ -18,7 +18,7 @@ import org.eoa.projectbudget.entity.WorkflowRoute;
 @Mapper
 public interface WorkflowRouteMapper extends BaseMapper<WorkflowRoute> {
 
-    @Select("select max(viewNo) + 1 from workflow_route where workflowId = #{workflowId};")
+    @Select("select ifnull(max(viewNo),0) + 1 from workflow_route where workflowId = #{workflowId};")
     Integer getViewNo(@Param("workflowId")Long workflowId);
 
 }

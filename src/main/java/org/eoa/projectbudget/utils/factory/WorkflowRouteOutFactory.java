@@ -45,8 +45,8 @@ public class WorkflowRouteOutFactory implements OutFactory<WorkflowRoute, Workfl
         return workflowRouteOut.setCreatorName(creator == null ? "" : creator.getName())
                 .setWorkflowName(workflow == null ? "" : workflow.getWorkFlowName())
                 .setTableId(workflow == null ? null : workflow.getTableId())
-                .setStartNodeName(startNode == null ? "" : startNode.getName())
-                .setEndNodeName(endNode == null ? "" : endNode.getName());
+                .setStartNodeName(startNode == null ? "" : startNode.getWorkflowNodeName())
+                .setEndNodeName(endNode == null ? "" : endNode.getWorkflowNodeName());
     }
 
     @Override
