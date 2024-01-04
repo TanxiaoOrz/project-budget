@@ -120,7 +120,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     public List<WorkflowNode> getWorkflowNodes(QueryWrapper<WorkflowNode> wrapper, Long userId) {
-        List<WorkflowNode> workflowNodes = workflowNodeMapper.selectList(wrapper);
+        List<WorkflowNode> workflowNodes = workflowNodeMapper.selectList(wrapper.orderByAsc("workflowId").orderByAsc("viewNo"));
         log.info("用户=>{}获取工作流节点数组=>{}", userId, workflowNodes.stream().map(WorkflowNode::getDataId).toList());
         return workflowNodes;
     }
@@ -203,7 +203,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     public List<WorkflowRoute> getWorkflowRoutes(QueryWrapper<WorkflowRoute> wrapper, Long userId) {
-        List<WorkflowRoute> workflowRoutes = workflowRouteMapper.selectList(wrapper);
+        List<WorkflowRoute> workflowRoutes = workflowRouteMapper.selectList(wrapper.orderByAsc("workflowId").orderByAsc("viewNo"));
         log.info("用户=>{}获取工作流路径数组=>{}", userId, workflowRoutes.stream().map(WorkflowRoute::getDataId).toList());
         return workflowRoutes;
     }
