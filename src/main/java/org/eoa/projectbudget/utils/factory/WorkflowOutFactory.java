@@ -46,7 +46,7 @@ public class WorkflowOutFactory implements OutFactory<Workflow, WorkflowOut> {
         HumanResource humanResource = humanMapper.selectById(workflow.getCreator());
         return out.setModuleTypeName(moduleType==null?"": moduleType.getModuleTypeName())
                 .setCreateNode(workflowNode==null?null:workflowNode.getDataId())
-                .setCreateNodeName(workflowNode==null?"": workflowNode.getNodeName())
+                .setCreateNodeName(workflowNode==null?"": workflowNode.getName())
                 .setTableName(table==null?"":table.getTableViewName())
                 .setCreatorName(humanResource==null?"":humanResource.getName());
     }

@@ -40,7 +40,7 @@ public class WorkflowNodeOut implements VoOut{
 
     public WorkflowNodeOut(WorkflowNode workflowNode) {
         this.dataId = workflowNode.getDataId();
-        this.nodeName = workflowNode.getNodeName();
+        this.nodeName = workflowNode.getName();
         this.isCounterSign = workflowNode.getIsCounterSign();
         this.nodeType = workflowNode.getNodeType();
         this.workflowId = workflowNode.getWorkflowId();

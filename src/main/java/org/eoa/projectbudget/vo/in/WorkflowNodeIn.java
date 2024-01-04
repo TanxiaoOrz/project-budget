@@ -46,7 +46,7 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
         checkSelf();
         WorkflowNode workflowNode = new WorkflowNode();
         return workflowNode.setDataId(dataId)
-                .setNodeName(nodeName)
+                .setName(nodeName)
                 .setIsCounterSign(isCounterSign)
                 .setNodeType(nodeType)
                 .setWorkflowId(workflowId)

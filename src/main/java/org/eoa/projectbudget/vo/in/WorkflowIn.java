@@ -57,4 +57,58 @@ public class WorkflowIn implements CheckParameter<Workflow> {
                 .setWorkFlowDescription(workFlowDescription)
                 .setWorkflowBaseTitle(workflowBaseTitle == null ? workFlowName : workflowBaseTitle);
     }
+
+    public Long getModuleTypeId() {
+        return moduleTypeId;
+    }
+
+    public WorkflowIn setModuleTypeId(Long moduleTypeId) {
+        this.moduleTypeId = moduleTypeId;
+        return this;
+    }
+
+    public Long getTableId() {
+        return tableId;
+    }
+
+    public WorkflowIn setTableId(Long tableId) {
+        this.tableId = tableId;
+        return this;
+    }
+
+    public Long getTitleColumnId() {
+        return titleColumnId;
+    }
+
+    public WorkflowIn setTitleColumnId(Long titleColumnId) {
+        this.titleColumnId = titleColumnId;
+        return this;
+    }
+
+    public String getWorkFlowName() {
+        return workFlowName;
+    }
+
+    public WorkflowIn setWorkFlowName(String workFlowName) {
+        this.workFlowName = workFlowName;
+        return this;
+    }
+
+    public String getWorkFlowDescription() {
+        return workFlowDescription;
+    }
+
+    public WorkflowIn setWorkFlowDescription(String workFlowDescription) {
+        this.workFlowDescription = workFlowDescription;
+        return this;
+    }
+
+    public String getWorkflowBaseTitle() {
+        return workflowBaseTitle;
+    }
+
+    public WorkflowIn setWorkflowBaseTitle(String workflowBaseTitle) {
+        this.workflowBaseTitle = workflowBaseTitle;
+        return this;
+    }
 }

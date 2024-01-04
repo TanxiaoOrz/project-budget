@@ -15,7 +15,7 @@ import java.util.Date;
  * @Version: 1.0
  */
 
-@TableName("`request`")
+@TableName("`workflow`")
 public class Workflow {
     @TableId(type = IdType.AUTO)
     Long dataId;

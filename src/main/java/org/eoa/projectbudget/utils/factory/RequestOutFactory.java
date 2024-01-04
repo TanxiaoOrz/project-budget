@@ -41,7 +41,7 @@ public class RequestOutFactory implements OutFactory<Request, RequestOut> {
         HumanResource humanResource = humanMapper.selectById(request.getCreator());
         return new RequestOut(request)
                 .setCreatorName(humanResource == null?"":humanResource.getName())
-                .setCurrentNodeName(currentNode == null?"": currentNode.getNodeName())
+                .setCurrentNodeName(currentNode == null?"": currentNode.getName())
                 .setWorkflowName(workflow == null?"":workflow.getWorkFlowName());
     }
 

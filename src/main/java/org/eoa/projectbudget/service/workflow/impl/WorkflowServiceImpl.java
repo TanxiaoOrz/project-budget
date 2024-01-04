@@ -90,7 +90,8 @@ public class WorkflowServiceImpl implements WorkflowService {
             log.error("用户=>{}修改工作流出错,workflow=>{}不存在", userId, workflow.getDataId());
             throw new ParameterException("dataId", workflow.getDataId().toString(), "数据不存在");
         }
-        workflow.setCreateTime(old.getCreateTime())
+        workflow.setIsDeprecated(0)
+                .setCreateTime(old.getCreateTime())
                 .setCreator(old.getCreator());
 
         if (workflow.getTitleColumnId() != null) {
