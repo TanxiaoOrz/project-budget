@@ -199,7 +199,7 @@ public class WorkflowFrontController {
             requestDtoOut = requestDtoOutFactory.out(requestDto);
             cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString(), userId, requestDtoOut);
         }
-        if (WorkflowNode.FILE.equals(requestDtoOut.getCurrentNode().getNodeType()))
+        if (WorkflowNode.FILE == (requestDtoOut.getCurrentNode().getNodeType()))
             requestMapper.doRequest(requestId, userId);
         return new Vo<>(requestDtoOut);
     }

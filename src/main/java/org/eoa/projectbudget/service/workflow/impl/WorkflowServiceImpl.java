@@ -1,6 +1,8 @@
 package org.eoa.projectbudget.service.workflow.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eoa.projectbudget.entity.ColumnEntity;
 import org.eoa.projectbudget.entity.Workflow;
 import org.eoa.projectbudget.entity.WorkflowNode;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 张骏山
@@ -154,6 +157,25 @@ public class WorkflowServiceImpl implements WorkflowService {
         }
         if (workflowNode.getViewNo() == null) {
             workflowNode.setViewNo(workflowNodeMapper.getViewNo(workflowId));
+        }
+        if (workflowNode.getTableModifyAuthority() == null) {
+            List<ColumnEntity> columnEntities = columnEntityMapper.selectList(new QueryWrapper<ColumnEntity>()
+                    .eq("tableNo", workflow.getTableId())
+                    .orderByAsc("viewNo"));
+            boolean defaultAuthority;
+            switch (workflowNode.getNodeType()) {
+                case WorkflowNode.ADMIT, WorkflowNode.CREATE -> {
+                    defaultAuthority = true;
+                }
+                default -> defaultAuthority = false;
+            }
+            try {
+                workflowNode.setTableModifyAuthority(
+                        new ObjectMapper().writeValueAsString(columnEntities.stream().collect(Collectors.toMap(ColumnEntity::getColumnId,c->defaultAuthority)))
+                );
+            } catch (JsonProcessingException e) {
+                throw new ServerException("Json转换错误",e);
+            }
         }
         workflowNode.setCreator(userId)
                 .setCreateTime(new Date());

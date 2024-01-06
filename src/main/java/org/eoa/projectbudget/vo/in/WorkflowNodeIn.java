@@ -21,6 +21,7 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
     Integer viewNo;
 
     String userAuthorityLimit;
+    String tableModifyAuthority;
     String beforeAction;
     String checkAction;
     String afterAction;
@@ -52,6 +53,7 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
                 .setWorkflowId(workflowId)
                 .setViewNo(viewNo)
                 .setUserAuthorityLimit(userAuthorityLimit)
+                .setTableModifyAuthority(tableModifyAuthority)
                 .setCheckAction(checkAction)
                 .setAfterAction(afterAction)
                 .setBeforeAction(beforeAction);
@@ -111,6 +113,15 @@ public class WorkflowNodeIn implements CheckParameter<WorkflowNode>{
 
     public WorkflowNodeIn setUserAuthorityLimit(String userAuthorityLimit) {
         this.userAuthorityLimit = userAuthorityLimit;
+        return this;
+    }
+
+    public String getTableModifyAuthority() {
+        return tableModifyAuthority;
+    }
+
+    public WorkflowNodeIn setTableModifyAuthority(String tableModifyAuthority) {
+        this.tableModifyAuthority = tableModifyAuthority;
         return this;
     }
 

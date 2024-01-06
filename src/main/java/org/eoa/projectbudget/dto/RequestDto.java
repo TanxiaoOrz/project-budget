@@ -49,7 +49,7 @@ public class RequestDto {
 
 
     public void arriveNode(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper) {
-        if (WorkflowNode.FILE.equals(currentNode.getNodeType())) {
+        if (WorkflowNode.FILE == (currentNode.getNodeType())) {
             request.setFinishTime(new Date());
         }
         String beforeAction = currentNode.getBeforeAction();
@@ -114,7 +114,7 @@ public class RequestDto {
     }
 
     public void leaveNode(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper, Long userId) {
-        if (WorkflowNode.CREATE.equals(currentNode.getNodeType())) {
+        if (WorkflowNode.CREATE == (currentNode.getNodeType())) {
             request.setSubmitTime(new Date());
         }
         String checkAction = currentNode.getCheckAction();

@@ -24,6 +24,7 @@ public class WorkflowNodeOut implements VoOut{
 
 
     String userAuthorityLimit;
+    String tableModifyAuthority;
     String beforeAction;
     String checkAction;
     String afterAction;
@@ -46,6 +47,7 @@ public class WorkflowNodeOut implements VoOut{
         this.workflowId = workflowNode.getWorkflowId();
         this.viewNo = workflowNode.getViewNo();
         this.userAuthorityLimit = workflowNode.getUserAuthorityLimit();
+        this.tableModifyAuthority = workflowNode.getTableModifyAuthority();
         this.beforeAction = workflowNode.getBeforeAction();
         this.checkAction = workflowNode.getCheckAction();
         this.afterAction = workflowNode.getAfterAction();
@@ -113,6 +115,15 @@ public class WorkflowNodeOut implements VoOut{
 
     public WorkflowNodeOut setUserAuthorityLimit(String userAuthorityLimit) {
         this.userAuthorityLimit = userAuthorityLimit;
+        return this;
+    }
+
+    public String getTableModifyAuthority() {
+        return tableModifyAuthority;
+    }
+
+    public WorkflowNodeOut setTableModifyAuthority(String tableModifyAuthority) {
+        this.tableModifyAuthority = tableModifyAuthority;
         return this;
     }
 

@@ -18,10 +18,10 @@ import java.util.Date;
 @TableName("`workflow_node`")
 public class WorkflowNode {
 
-    public static Integer CREATE = 0;
-    public static Integer ADMIT = 1;
-    public static Integer SUBMIT = 2;
-    public static Integer FILE = 3;
+    public final static int CREATE = 0;
+    public final static int ADMIT = 1;
+    public final static int SUBMIT = 2;
+    public final static int FILE = 3;
 
 
     @TableId(type = IdType.AUTO)
@@ -35,6 +35,7 @@ public class WorkflowNode {
 
 
     String userAuthorityLimit;
+    String tableModifyAuthority;
     String beforeAction;
     String checkAction;
     String afterAction;
@@ -102,6 +103,15 @@ public class WorkflowNode {
 
     public WorkflowNode setUserAuthorityLimit(String userAuthorityLimit) {
         this.userAuthorityLimit = userAuthorityLimit;
+        return this;
+    }
+
+    public String getTableModifyAuthority() {
+        return tableModifyAuthority;
+    }
+
+    public WorkflowNode setTableModifyAuthority(String tableModifyAuthority) {
+        this.tableModifyAuthority = tableModifyAuthority;
         return this;
     }
 
