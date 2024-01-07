@@ -333,7 +333,8 @@ public class RequestDto {
         this.currentNode = currentNode;
         if (currentNode != null) {
             this.nodeId = currentNode.getDataId();
-            this.request.setCurrentNode(this.nodeId);
+            if (request != null)
+                this.request.setCurrentNode(this.nodeId);
         }
         return this;
     }

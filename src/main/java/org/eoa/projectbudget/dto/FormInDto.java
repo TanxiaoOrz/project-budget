@@ -21,6 +21,7 @@ public class FormInDto {
 
     Long dataId;
     Long tableId;
+    Long requestId;
     Map<String,Object> mains;
     List<List<Map<String,Object>>> detailValueMapLists;
 
@@ -54,6 +55,9 @@ public class FormInDto {
             collect.put(column.getColumnDataName(), value);
         });
         collect.put("lastEditTime",new Date());
+        if (requestId != null) {
+            collect.put("requestId", requestId);
+        }
         return collect;
     }
 
@@ -144,6 +148,15 @@ public class FormInDto {
 
     public FormInDto setDetailColumns(List<List<ColumnEntity>> detailColumns) {
         this.detailColumns = detailColumns;
+        return this;
+    }
+
+    public Long getRequestId() {
+        return requestId;
+    }
+
+    public FormInDto setRequestId(Long requestId) {
+        this.requestId = requestId;
         return this;
     }
 }

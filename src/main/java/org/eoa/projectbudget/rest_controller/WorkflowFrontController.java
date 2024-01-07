@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -137,12 +138,13 @@ public class WorkflowFrontController {
             } else {
                 createsAll = Arrays.asList(cacheCreate);
             }
-            cacheService.setCache(flag, method, humanDto.getDataId(), Workflow[].class);
+
             out = createsAll.stream().filter(requestDto -> {
                 String userAuthorityLimit = requestDto.getCurrentNode().getUserAuthorityLimit();
                 Constraint constraint = AuthorityUtils.getConstraint(userAuthorityLimit);
                 return AuthorityUtils.checkAuthority(humanDto,humanDto,constraint);
             }).map(requestDto -> workflowOutFactory.out(requestDto.getWorkflow())).toList();
+            cacheService.setCache(flag, method, humanDto.getDataId(), out);
         } else {
             out = Arrays.asList(cache);
         }
@@ -218,6 +220,7 @@ public class WorkflowFrontController {
     @Parameter(name = "action", description = "操作编码", required = true, in = ParameterIn.QUERY)
     public Vo<List<Long>> requestAction(@RequestAttribute("HumanDto") HumanDto humanDto,
                                         @RequestParam Integer action,
+                                        @RequestParam Boolean onlySave,
                                         @RequestBody RequestIn requestIn) {
         if (action == RequestDto.FLOW)
             throw new ParameterException("action",action.toString(),"本接口禁止进行流转操作");
@@ -225,7 +228,7 @@ public class WorkflowFrontController {
         FormIn formIn = requestIn.getForm();
 
         if (action == RequestDto.CREATE) {
-            FormInDto formInDto = formIn.toEntity(null).consist(tableEntityMapper,columnEntityMapper);
+            FormInDto formInDto = formIn.toEntity(null).consist(tableEntityMapper,columnEntityMapper).setRequestId(requestDto.getRequestId());
             Long dataId = entityService.createForm(formInDto, humanDto.getDataId());
             if (dataId == null) {
                 throw new ServerException("未进行新建,请联系管理员");
@@ -257,6 +260,8 @@ public class WorkflowFrontController {
                     .setFormOutDto(formOutDto);
         }
         List<Long> lefts;
+        if (onlySave)
+            return new Vo<>(Collections.singletonList(requestDto.getRequestId()));
         switch (action) {
             case RequestDto.CREATE -> {
                 lefts = new ArrayList<>();
