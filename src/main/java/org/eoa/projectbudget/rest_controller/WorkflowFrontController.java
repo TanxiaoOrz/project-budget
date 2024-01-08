@@ -172,6 +172,8 @@ public class WorkflowFrontController {
             else
                 throw new AuthorityException(userId,"workflow",workflowId,"创建流程");
         }
+
+
         Long nodeId = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"node", userId, Long.class);
         if (nodeId == null) {
             try {
@@ -190,11 +192,7 @@ public class WorkflowFrontController {
             RequestDto requestDto = requestService.getRequest(requestId, userId);
 
             Long dataId = requestDto.getDataId();
-            FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form, dataId +"dto", USER_ID_CACHE, FormOutDto.class);
-            if (formOutDto == null) {
-                formOutDto = entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId, userId);
-                cacheService.setCache(ChangeFlagUtils.Form,dataId+"dto", USER_ID_CACHE, formOutDto);
-            }
+            FormOutDto formOutDto = getFormOutDto(userId, requestDto, dataId);
             requestDto.setFormOutDto(formOutDto);
             WorkflowNode current = workflowService.getWorkflowNode(nodeId, userId);
             requestDto.setCurrentNode(current);
@@ -206,11 +204,22 @@ public class WorkflowFrontController {
         return new Vo<>(requestDtoOut);
     }
 
+    private FormOutDto getFormOutDto(Long userId, RequestDto requestDto, Long dataId) {
+        FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form, dataId +"dto", USER_ID_CACHE, FormOutDto.class);
+        if (formOutDto == null) {
+            formOutDto = entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId, userId);
+            cacheService.setCache(ChangeFlagUtils.Form, dataId +"dto", USER_ID_CACHE, formOutDto);
+        }
+        return formOutDto;
+    }
+
     private RequestDtoOut getRequestCreate(Long requestId, Long nodeId, Long userId) {
-        RequestDtoOut requestDtoOut = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, userId, RequestDtoOut.class);
+        RequestDtoOut requestDtoOut = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE, RequestDtoOut.class);
         if (requestDtoOut == null) {
-            requestDtoOut = requestDtoOutFactory.out(requestService.getRequestCreate(nodeId, userId));
-            cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE,requestDtoOut);
+            RequestDto requestDto = requestService.getRequestCreate(nodeId, userId);
+            requestDto.setFormOutDto(getFormOutDto(userId, requestDto, null));
+            requestDtoOut = requestDtoOutFactory.out(requestDto);
+            cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE, requestDtoOut);
         }
         return requestDtoOut;
     }
