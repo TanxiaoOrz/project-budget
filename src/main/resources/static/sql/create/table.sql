@@ -280,7 +280,7 @@ create table `workflow`
 create table `request`
 (
     `requestId`     BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '流程数据编号',
-    `dataId`        BIGINT(64) UNSIGNED                NOT NULL COMMENT '表单数据编号',
+    `dataId`        BIGINT(64) UNSIGNED                NULL     COMMENT '表单数据编号',
     `workflowId`    BIGINT(64) UNSIGNED                NOT NULL COMMENT '所属流程编号',
     `currentNode`   BIGINT(64) UNSIGNED                NOT NULL COMMENT '当前节点编号',
     `doneHistory`   json                               null comment '操作历史',
@@ -289,6 +289,7 @@ create table `request`
     `flowHistory`   json                               null comment '流转历史',
     `submitTime`    datetime                           null comment '发起事件',
     `finishTime`    datetime                           null comment '归档事件',
+    `creator`       BIGINT(64) UNSIGNED                NOT NULL COMMENT '创建者编号',
     primary key (`requestId`),
     index `request_workflowId_index` (`workflowId` asc),
     index `requestStatus` (`requestStatus` asc)
