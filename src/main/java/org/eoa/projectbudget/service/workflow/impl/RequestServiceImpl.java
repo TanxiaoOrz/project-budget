@@ -245,6 +245,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public RequestDto checkAndConsist(RequestDto requestDto, Long userId) throws EoaException {
 
         Long workflowId = requestDto.getWorkflowId();
