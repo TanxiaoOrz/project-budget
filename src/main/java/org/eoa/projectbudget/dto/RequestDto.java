@@ -122,7 +122,7 @@ public class RequestDto {
         if (!doChecks(jdbcTemplate, checkAction, falseReason)) {
             throw new ServerException(falseReason.toString());
         }
-        request.pushDoneHistory(nodeId,userId,action, comment);
+        request.pushDoneHistory(nodeId,currentNode.getWorkflowNodeName(),userId,action, comment);
         String afterAction = currentNode.getAfterAction();
         doActions(jdbcTemplate, formDMLMapper, afterAction);
         request.pushFlowHistory(nodeId,WorkflowNode.class,"离开节点");

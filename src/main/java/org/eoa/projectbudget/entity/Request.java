@@ -53,8 +53,8 @@ public class Request {
     }
 
 
-    public Request pushDoneHistory(Long nodeId, Long humanId, Integer operation, String comment) {
-        Commit commit = new Commit(nodeId, humanId, operation, comment);
+    public Request pushDoneHistory(Long nodeId, String nodeName, Long humanId, Integer operation, String comment) {
+        Commit commit = new Commit(nodeId,nodeName, humanId, operation, comment);
         List<Commit> commits;
         try {
             if (doneHistory == null) {

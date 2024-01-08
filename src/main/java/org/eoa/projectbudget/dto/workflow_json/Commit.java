@@ -12,6 +12,7 @@ import java.util.Date;
  */
 public class Commit {
     Long nodeId;
+    String workflowNodeName;
     Long humanId;
     Date time;
     Integer operation;
@@ -20,8 +21,9 @@ public class Commit {
     public Commit() {
     }
 
-    public Commit(Long nodeId, Long humanId, Integer operation, String comment) {
+    public Commit(Long nodeId, String workflowNodeName, Long humanId, Integer operation, String comment) {
         this.nodeId = nodeId;
+        this.workflowNodeName = workflowNodeName;
         this.humanId = humanId;
         this.operation = operation;
         this.comment = comment;
@@ -34,6 +36,15 @@ public class Commit {
 
     public Commit setNodeId(Long nodeId) {
         this.nodeId = nodeId;
+        return this;
+    }
+
+    public String getWorkflowNodeName() {
+        return workflowNodeName;
+    }
+
+    public Commit setWorkflowNodeName(String workflowNodeName) {
+        this.workflowNodeName = workflowNodeName;
         return this;
     }
 
