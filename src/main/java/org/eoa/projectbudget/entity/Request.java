@@ -27,7 +27,7 @@ import java.util.List;
 @TableName("`request`")
 public class Request {
 
-    @TableField(select = false)
+    @TableField(exist = false)
     private final ObjectMapper objectMapper;
     @TableId(type = IdType.AUTO)
     Long requestId;
