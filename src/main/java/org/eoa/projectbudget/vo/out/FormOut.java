@@ -57,7 +57,8 @@ public class FormOut implements VoOut{
              groups) {
             Optional<Map.Entry<String, ColumnSimple>> entry = group.columns.entrySet().stream().filter(set -> set.getValue().columnId.equals(columnId)).findFirst();
             if (entry.isPresent()) {
-                title = group.values.get(entry.get().getKey()).toString();
+                Object o = group.values.get(entry.get().getKey());
+                title = o==null?dataId.toString():o.toString();
                 break;
             }
         }
