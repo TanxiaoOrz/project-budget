@@ -135,7 +135,7 @@ public class RequestDto {
             try {
                 action = objectMapper.readValue(checkAction, Action.class);
             } catch (JsonProcessingException e) {
-                throw new DataException("request",dataId.toString(),"doneHistory", checkAction, "json解析失败");
+                throw new DataException("request",dataId.toString(),"checkAction", checkAction, "json解析失败");
             }
             action.getClassNames().forEach(name->{
                 try {
@@ -146,21 +146,21 @@ public class RequestDto {
                     if (!check1)
                         falseReason.append(name).append("检测失败;");
                 } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
-                    throw new DataException("request",dataId.toString(),"doneHistory", checkAction, name+"不存在或未继承WorkflowCheck");
+                    throw new DataException("request",dataId.toString(),"checkAction", checkAction, name+"不存在或未继承WorkflowCheck");
                 }
             });
             action.getTasks().forEach(task -> {
                 Long columnId = task.getColumnId();
                 Object mainValue = formOutDto.getMainValue(columnId);
-                if (mainValue == null) {
-                    throw new DataException("request",dataId.toString(),"doneHistory", checkAction,formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
+                if (mainValue == null && formOutDto.getColumn(columnId) == null) {
+                    throw new DataException("request",dataId.toString(),"checkAction", checkAction,formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
                 }
                 String admit;
                 switch (task.getType()) {
                     case Action.INPUT -> admit = task.getInput();
                     case Action.SQL -> admit = jdbcTemplate.queryForObject(task.getInput(), String.class);
                     case default ->
-                            throw new DataException("request", dataId.toString(), "doneHistory", checkAction, "task type 设置错误");
+                            throw new DataException("request", dataId.toString(), "checkAction", checkAction, "task type 设置错误");
                 }
                 if (admit != null && !admit.equals(mainValue.toString())) {
                     checkConclusion.set(false);
@@ -179,7 +179,7 @@ public class RequestDto {
             try {
                 action = objectMapper.readValue(checkAction, Action.class);
             } catch (JsonProcessingException e) {
-                throw new DataException("request",dataId.toString(),"doneHistory", checkAction, "json解析失败");
+                throw new DataException("request",dataId.toString(),"checkAction", checkAction, "json解析失败");
             }
             action.getClassNames().forEach(name->{
                 try {
@@ -189,21 +189,21 @@ public class RequestDto {
                     checkConclusion.set(check);
 
                 } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
-                    throw new DataException("request",dataId.toString(),"doneHistory", checkAction, name+"不存在或未继承WorkflowCheck");
+                    throw new DataException("request",dataId.toString(),"checkAction", checkAction, name+"不存在或未继承WorkflowCheck");
                 }
             });
             action.getTasks().forEach(task -> {
                 Long columnId = task.getColumnId();
                 Object mainValue = formOutDto.getMainValue(columnId);
-                if (mainValue == null) {
-                    throw new DataException("request",dataId.toString(),"doneHistory", checkAction,formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
+                if (mainValue == null && formOutDto.getColumn(columnId) == null) {
+                    throw new DataException("request",dataId.toString(),"checkAction", checkAction,formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
                 }
                 String admit;
                 switch (task.getType()) {
                     case Action.INPUT -> admit = task.getInput();
                     case Action.SQL -> admit = jdbcTemplate.queryForObject(task.getInput(), String.class);
                     case default ->
-                            throw new DataException("request", dataId.toString(), "doneHistory", checkAction, "task type 设置错误");
+                            throw new DataException("request", dataId.toString(), "checkAction", checkAction, "task type 设置错误");
                 }
                 if (admit != null && !admit.equals(mainValue.toString())) {
                     checkConclusion.set(false);
@@ -214,13 +214,13 @@ public class RequestDto {
         return checkConclusion.get();
     }
 
-    private void doActions(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper, String afterAction) {
-        if (afterAction != null) {
+    private void doActions(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper, String actionString) {
+        if (actionString != null) {
             Action action;
             try {
-                action = objectMapper.readValue(afterAction, Action.class);
+                action = objectMapper.readValue(actionString, Action.class);
             } catch (JsonProcessingException e) {
-                throw new DataException("request",dataId.toString(),"doneHistory", afterAction, "json解析失败");
+                throw new DataException("request",dataId.toString(),"action", actionString, "json解析失败");
             }
             action.getClassNames().forEach(name->{
                 try {
@@ -228,7 +228,7 @@ public class RequestDto {
                     WorkflowAction workflowAction = (WorkflowAction) clazz.getDeclaredConstructor().newInstance();
                     workflowAction.action(this, jdbcTemplate);
                 } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
-                    throw new DataException("request",dataId.toString(),"doneHistory", afterAction, name+"不存在或未继承WorkflowAction");
+                    throw new DataException("request",dataId.toString(),"action", actionString, name+"不存在或未继承WorkflowAction");
                 }
             });
             Map<String,Object> updates = new HashMap<>();
@@ -238,12 +238,12 @@ public class RequestDto {
                     case Action.INPUT -> admit = task.getInput();
                     case Action.SQL -> admit = jdbcTemplate.queryForObject(task.getInput(), String.class);
                     case default ->
-                            throw new DataException("request", dataId.toString(), "doneHistory", afterAction, "task type 设置错误");
+                            throw new DataException("request", dataId.toString(), "action", actionString, "task type 设置错误");
                 }
                 Long columnId = task.getColumnId();
                 Column column = formOutDto.getColumn(columnId);
                 if (column == null) {
-                    throw new DataException("request", dataId.toString(), "doneHistory", afterAction, formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
+                    throw new DataException("request", dataId.toString(), "action", actionString, formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
                 }
                 updates.put(column.getColumnDataName(),admit);
             });
@@ -276,7 +276,9 @@ public class RequestDto {
 
     public RequestDto setNodeId(Long nodeId) {
         this.nodeId = nodeId;
-        request.setCurrentNode(nodeId);
+        if (request != null) {
+            request.setCurrentNode(nodeId);
+        }
         return this;
     }
 
