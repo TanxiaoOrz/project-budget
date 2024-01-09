@@ -152,6 +152,7 @@ public class FromEntityServiceImpl implements FormService {
     }
 
     @Override
+    @Transactional
     public Integer updateForm(FormInDto form, Long userId) {
         log.info("用户->{}尝试修改实体表单数据form->{}",userId,form);
         TableEntity table = form.getTable();
@@ -184,6 +185,7 @@ public class FromEntityServiceImpl implements FormService {
     }
 
     @Override
+    @Transactional
     public Integer deleteForm(Long tableId,Long dataId, Long userId) {
         log.info("用户->{}尝试修改删除表单数据tableId->{},dataId->{}",userId,tableId,dataId);
         TableEntity tableEntity = tableMapper.selectById(tableId);
