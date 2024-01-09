@@ -70,6 +70,17 @@ public class Vo<Entity> {
         this.entity = entity;
     }
 
+    /**
+     * 批量获取数据的创建方法
+     * @param entity 数据几
+     * @param description 数据的数量
+     */
+    public Vo(Entity entity,String description) {
+        this.code = SERVER_ERROR;
+        this.description = description;
+        this.entity = entity;
+    }
+
     public Integer getCode() {
         return code;
     }
