@@ -18,7 +18,7 @@ import java.util.List;
 @Mapper
 public interface RequestMapper extends BaseMapper<Request> {
 
-    @Select("select nodeId from request_view_authority where requestId = #{requestId} and humanId = #{humanId}")
+    @Select("select nodeId from request_view_authority where requestId = #{requestId} and humanId = #{humanId} limit 1")
     Long getViewNode(@Param("requestId")Long requestId, @Param("humanId")Long humanId);
 
     @Delete("delete from request_backlog where humanId = #{humanId} and requestId = #{requestId}")
@@ -30,7 +30,7 @@ public interface RequestMapper extends BaseMapper<Request> {
     @Insert("insert into request_done (humanId, requestId, nodeId, workflowId) VALUES (#{humanId}, #{requestId}, #{nodeId}, #{workflowId})")
     void addDone(@Param("humanId")Long humanId, @Param("requestId")Long requestId, @Param("nodeId")Long nodeId, @Param("workflowId")Long workflowId);
 
-    @Update("update request_done set nodeId = #{nodeId} and doneTime = now() where requestId = #{requestId} and humanId = #{humanId}")
+    @Update("update request_done set nodeId = #{nodeId} , doneTime = now() where requestId = #{requestId} and humanId = #{humanId}")
     void updateDone(@Param("humanId")Long humanId, @Param("requestId")Long requestId, @Param("nodeId")Long nodeId);
 
     void newBacklogs(@Param("humans")List<Long> humans, @Param("requestId")Long requestId, @Param("nodeId")Long nodeId, @Param("workflowId")Long workflowId);
