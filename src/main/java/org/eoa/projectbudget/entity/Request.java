@@ -81,7 +81,7 @@ public class Request {
                 flows = objectMapper.readValue(flowHistory, new TypeReference<List<Flow>>() {});
             }
             flows.add(flow);
-            this.doneHistory = objectMapper.writeValueAsString(flows);
+            this.flowHistory = objectMapper.writeValueAsString(flows);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new DataException("request",dataId.toString(),"flowHistory", flowHistory, "json解析失败");
