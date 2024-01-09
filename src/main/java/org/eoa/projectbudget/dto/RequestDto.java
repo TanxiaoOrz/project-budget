@@ -162,9 +162,9 @@ public class RequestDto {
                     case default ->
                             throw new DataException("request", dataId.toString(), "checkAction", checkAction, "task type 设置错误");
                 }
-                if (admit != null && !admit.equals(mainValue.toString())) {
+                if (admit != null && !admit.equals(mainValue!=null?mainValue.toString():"")) {
                     checkConclusion.set(false);
-                    falseReason.append("字段").append(columnId).append("值为").append(mainValue).append("不等于").append(task.getInput()).append(";");
+                    falseReason.append("字段").append(formOutDto.getColumn(columnId).getColumnViewName()).append("值为").append(mainValue).append("不等于").append(task.getInput()).append(";");
                 }
             });
 
