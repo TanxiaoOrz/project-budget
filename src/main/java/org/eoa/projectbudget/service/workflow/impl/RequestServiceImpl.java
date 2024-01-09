@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.dto.RequestDto;
 import org.eoa.projectbudget.dto.constraint.Constraint;
 import org.eoa.projectbudget.entity.*;
-import org.eoa.projectbudget.exception.AuthorityException;
-import org.eoa.projectbudget.exception.DataException;
-import org.eoa.projectbudget.exception.EoaException;
-import org.eoa.projectbudget.exception.ParameterException;
+import org.eoa.projectbudget.exception.*;
 import org.eoa.projectbudget.mapper.*;
 import org.eoa.projectbudget.service.workflow.RequestService;
 import org.eoa.projectbudget.utils.AuthorityUtils;
@@ -112,21 +109,21 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<RequestBacklogView> getBackLogRequest(QueryWrapper<RequestBacklogView> wrapper, Long userId) {
-        List<RequestBacklogView> backlogs = requestBacklogMapper.selectList(wrapper.eq("humanId", userId));
+        List<RequestBacklogView> backlogs = requestBacklogMapper.selectList(wrapper.eq("humanId", userId).orderByDesc("arriveTime"));
         log.info("用户=>{}获取待办列表获取数量=>{}", userId, backlogs);
         return backlogs;
     }
 
     @Override
     public List<RequestDoneView> getHaveDone(QueryWrapper<RequestDoneView> wrapper, Long userId) {
-        List<RequestDoneView> does = doneMapper.selectList(wrapper.eq("humanId", userId));
+        List<RequestDoneView> does = doneMapper.selectList(wrapper.eq("humanId", userId).orderByDesc("doneTime"));
         log.info("用户=>{}获取已办列表获取数量=>{}", userId, does.size());
         return does;
     }
 
     @Override
     public List<Request> getRequestsSelf(QueryWrapper<Request> wrapper, Long userId) {
-        List<Request> requests = requestMapper.selectList(wrapper.eq("creator", userId));
+        List<Request> requests = requestMapper.selectList(wrapper.eq("creator", userId).orderByDesc("finishTime").orderByDesc("submitTime"));
         log.info("用户=>{}获取我的请求获取数量=>{}", userId, requests.size());
         return requests;
     }
@@ -269,12 +266,13 @@ public class RequestServiceImpl implements RequestService {
                 requestDto.setCurrentNode(getCreateNode(workflowId));
                 requestMapper.insert(request);
                 requestDto.setRequestId(request.getRequestId());
+                requestMapper.newBacklogs(Collections.singletonList(userId), request.getRequestId(), request.getCurrentNode(), workflowId);
             }
         } else {
             requestDto.setRequest(request);
             requestDto.setCurrentNode(workflowNodeMapper.selectById(request.getCurrentNode()));
         }
-
+        requestDto.setDataId(request.getDataId());
         requestDto.checkNode(userId);
 
         requestDto.setNextRoutes(workflowRouteMapper.selectList(new QueryWrapper<WorkflowRoute>()
@@ -291,19 +289,27 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private void leaveNode(RequestDto requestDto, Long userId) {
+        Long requestId = requestDto.getRequestId();
+        Long nodeId = requestDto.getNodeId();
+        Long workflowId = requestDto.getWorkflowId();
         try {
             requestDto.leaveNode(jdbcTemplate, formDMLMapper, userId);
-            Integer deletes = requestMapper.doRequest(userId, requestDto.getRequestId());
-            if (deletes != 0) {
-                try {
-                    requestMapper.addDone(userId, requestDto.getRequestId(), requestDto.getNodeId(), requestDto.getWorkflowId());
-                } catch (Exception e) {
-                    requestMapper.updateDone(userId, requestDto.getRequestId(), requestDto.getNodeId());
-                }
-            }
+            doneRequest(userId, requestId, nodeId, workflowId);
         } catch (EoaException e) {
-            log.warn("request=>{}离开节点=>{},失败原因{}", requestDto.getRequestId(), requestDto.getNodeId(), e.description);
+            log.warn("request=>{}离开节点=>{},失败原因{}", requestId, nodeId, e.description);
             throw e;
+        }
+    }
+
+    @Override
+    public void doneRequest(Long userId, Long requestId, Long nodeId, Long workflowId) {
+        Integer deletes = requestMapper.doRequest(userId, requestId);
+        if (deletes != 0) {
+            try {
+                requestMapper.addDone(userId, requestId, nodeId, workflowId);
+            } catch (Exception e) {
+                requestMapper.updateDone(userId, requestId, nodeId);
+            }
         }
     }
 
@@ -350,6 +356,8 @@ public class RequestServiceImpl implements RequestService {
             Constraint constraint = AuthorityUtils.getConstraint(node.getUserAuthorityLimit());
             List<Long> backLogHumans = AuthorityUtils.getInHumansForm(requestDto.getCreator(), requestDto.getFormOutDto(), constraint);
             requestMapper.newBacklogs(backLogHumans, requestDto.getRequestId(), node.getDataId(), requestDto.getWorkflowId());
+            if (backLogHumans.size() == 0)
+                throw new ServerException("下一个节点:"+node.getWorkflowNodeName()+"没有操作人");
         } catch (EoaException e) {
             log.warn("request=>{}到达获取节点=>{}操作人失败,失败原因{}", requestDto.getRequestId(), node.getDataId(), e.description);
             throw e;
