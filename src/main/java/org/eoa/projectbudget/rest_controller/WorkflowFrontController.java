@@ -39,9 +39,7 @@ import org.eoa.projectbudget.vo.out.WorkflowOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -192,23 +190,25 @@ public class WorkflowFrontController {
             RequestDto requestDto = requestService.getRequest(requestId, userId);
 
             Long dataId = requestDto.getDataId();
-            FormOutDto formOutDto = getFormOutDto(userId, requestDto, dataId);
+            Long tableId = requestDto.getWorkflow().getTableId();
+            FormOutDto formOutDto = getFormOutDto(userId, requestDto, dataId, tableId);
             requestDto.setFormOutDto(formOutDto);
             WorkflowNode current = workflowService.getWorkflowNode(nodeId, userId);
             requestDto.setCurrentNode(current);
             requestDtoOut = requestDtoOutFactory.out(requestDto);
             cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString(), userId, requestDtoOut);
         }
-        if (WorkflowNode.FILE == (requestDtoOut.getCurrentNode().getNodeType()))
-            requestMapper.doRequest(requestId, userId);
+        if (WorkflowNode.FILE == (requestDtoOut.getCurrentNode().getNodeType())) {
+            requestService.doneRequest(humanDto.getDataId(), requestId, requestDtoOut.getCurrentNode().getDataId(), requestDtoOut.getWorkflow().getDataId());
+        }
         return new Vo<>(requestDtoOut);
     }
 
-    private FormOutDto getFormOutDto(Long userId, RequestDto requestDto, Long dataId) {
-        FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form, dataId +"dto", USER_ID_CACHE, FormOutDto.class);
+    private FormOutDto getFormOutDto(Long userId, RequestDto requestDto, Long dataId, Long tableId) {
+        FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form+"-"+tableId, dataId.toString(), USER_ID_CACHE, FormOutDto.class);
         if (formOutDto == null) {
-            formOutDto = entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId, userId);
-            cacheService.setCache(ChangeFlagUtils.Form, dataId +"dto", USER_ID_CACHE, formOutDto);
+            formOutDto = entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId==0L?null:dataId, userId);
+            cacheService.setCache(ChangeFlagUtils.Form+"-"+tableId, dataId.toString(), USER_ID_CACHE, formOutDto);
         }
         return formOutDto;
     }
@@ -217,7 +217,7 @@ public class WorkflowFrontController {
         RequestDtoOut requestDtoOut = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE, RequestDtoOut.class);
         if (requestDtoOut == null) {
             RequestDto requestDto = requestService.getRequestCreate(nodeId, userId);
-            requestDto.setFormOutDto(getFormOutDto(userId, requestDto, null));
+            requestDto.setFormOutDto(getFormOutDto(userId, requestDto, 0L, requestDto.getWorkflow().getTableId()));
             requestDtoOut = requestDtoOutFactory.out(requestDto);
             cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE, requestDtoOut);
         }
@@ -227,7 +227,7 @@ public class WorkflowFrontController {
     @PutMapping("/request")
     @Operation(summary = "流程操作")
     @Parameter(name = "action", description = "操作编码", required = true, in = ParameterIn.QUERY)
-    public Vo<List<Long>> requestAction(@RequestAttribute("HumanDto") HumanDto humanDto,
+    public Vo<Long> requestAction(@RequestAttribute("HumanDto") HumanDto humanDto,
                                         @RequestParam Integer action,
                                         @RequestParam Boolean onlySave,
                                         @RequestBody RequestIn requestIn) {
@@ -236,7 +236,7 @@ public class WorkflowFrontController {
         RequestDto requestDto = requestService.checkAndConsist(requestIn.toEntity(Long.valueOf(action)), humanDto.getDataId());
         FormIn formIn = requestIn.getForm();
 
-        if (action == RequestDto.CREATE) {
+        if (requestIn.getRequestId() == null) {
             FormInDto formInDto = formIn.toEntity(null).consist(tableEntityMapper,columnEntityMapper).setRequestId(requestDto.getRequestId());
             Long dataId = entityService.createForm(formInDto, humanDto.getDataId());
             if (dataId == null) {
@@ -268,22 +268,24 @@ public class WorkflowFrontController {
             requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))
                     .setFormOutDto(formOutDto);
         }
-        List<Long> lefts;
         if (onlySave)
-            return new Vo<>(Collections.singletonList(requestDto.getRequestId()));
-        switch (action) {
-            case RequestDto.CREATE -> {
-                lefts = new ArrayList<>();
-                requestService.createRequest(requestDto, humanDto.getDataId());
+            return new Vo<>(requestDto.getRequestId());
+        try {
+            switch (action) {
+                case RequestDto.CREATE -> requestService.createRequest(requestDto, humanDto.getDataId());
+                case RequestDto.ADMIT -> requestService.admitRequest(requestDto, humanDto.getDataId());
+                case RequestDto.SUBMIT -> requestService.submitRequest(requestDto, humanDto.getDataId());
+                case RequestDto.REFUSE -> requestService.refuseRequest(requestDto, humanDto.getDataId());
+                default -> throw new ParameterException("action", action.toString(), "错误的操作数值");
             }
-            case RequestDto.ADMIT -> lefts = requestService.admitRequest(requestDto, humanDto.getDataId());
-            case RequestDto.SUBMIT -> lefts = requestService.submitRequest(requestDto, humanDto.getDataId());
-            case RequestDto.REFUSE -> lefts = requestService.refuseRequest(requestDto, humanDto.getDataId());
-            default -> throw new ParameterException("action", action.toString(), "错误的操作数值");
+            changeFlagUtils.freshDate(ChangeFlagUtils.Form + "-" + formIn.getTableId());
+            changeFlagUtils.freshDate(ChangeFlagUtils.REQUEST);
+            return new Vo<>(requestDto.getRequestId());
+        }catch (EoaException e) {
+            return new Vo<>(requestDto.getRequestId(), e.description);
+        }catch (Exception e) {
+            return new Vo<>(requestDto.getRequestId(), e.getMessage());
         }
-        changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+formIn.getTableId());
-        changeFlagUtils.freshDate(ChangeFlagUtils.REQUEST);
-        return new Vo<>(lefts);
 
     }
 
