@@ -38,7 +38,9 @@ public class ExceptionController {
                 .toArray();
         String attribute =((String) strings[1]).split("_")[0].replace('\'',' ');
         String value =(String) strings[0];
-        return new Vo<>(new ParameterException(attribute,value,"违反唯一键约束"));
+        ParameterException e1 = new ParameterException(attribute, value, "违反唯一键约束");
+        log.error(e1.description);
+        return new Vo<>(e1);
     }
 
     @ExceptionHandler(EoaException.class)
@@ -46,6 +48,7 @@ public class ExceptionController {
         if (!isRelease) {
             e.printStackTrace();
         }
+        log.error(e.description);
         return new Vo<>(e);
     }
 
