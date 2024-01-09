@@ -371,7 +371,7 @@ from `request_backlog`
 create view `request_view_authority` as
 (
 select *
-from ((select requestId, humanId, nodeId, finishTime as time from `request_done_view`)
+from ((select requestId, humanId, nodeId, doneTime as time from `request_done_view`)
       union
       (select requestId, humanId, nodeId, date_add(arriveTime, interval 1 second) as time
        from request_back_log_view)) as t
