@@ -14,7 +14,7 @@ import java.util.Map;
  * @PackageName: org.eoa.projectbudget.service.workflow
  * @ClassName: RequestService
  * @Description: 流程模块前端操作接口
- * @Version: 1.3
+ * @Version: 1.4
  **/
 public interface RequestService {
 
@@ -149,4 +149,6 @@ public interface RequestService {
     RequestDto checkAndConsist(RequestDto requestDto, Long user) throws EoaException;
 
     WorkflowNode getCreateNode(Long workflowId);
+
+    void doneRequest(Long userId, Long requestId, Long nodeId, Long workflowId);
 }
