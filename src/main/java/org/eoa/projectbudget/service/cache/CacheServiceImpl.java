@@ -71,7 +71,7 @@ public class CacheServiceImpl implements CacheService{
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             log.error("获取:Flag=>{}更新时间=>{}的缓存:=>{}success=>false",hashKey,changeFlag,key);
-            throw new DataException("redis",flag,key,s,"json转换出错");
+            throw new DataException("redis",hashKey,key,s,"json转换出错");
         }
     }
 
