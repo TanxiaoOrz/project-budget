@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.eoa.projectbudget.dto.FormInDto;
 import org.eoa.projectbudget.dto.FormOutDto;
 import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.dto.RequestDto;
@@ -13,6 +14,8 @@ import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.Workflow;
 import org.eoa.projectbudget.entity.WorkflowNode;
 import org.eoa.projectbudget.entity.WorkflowRoute;
+import org.eoa.projectbudget.mapper.ColumnEntityMapper;
+import org.eoa.projectbudget.mapper.TableEntityMapper;
 import org.eoa.projectbudget.service.cache.CacheService;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.service.table_module.impl.FromEntityServiceImpl;
@@ -21,10 +24,7 @@ import org.eoa.projectbudget.service.workflow.WorkflowService;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.FilterUtils;
 import org.eoa.projectbudget.utils.factory.*;
-import org.eoa.projectbudget.vo.in.RequestIn;
-import org.eoa.projectbudget.vo.in.WorkflowIn;
-import org.eoa.projectbudget.vo.in.WorkflowNodeIn;
-import org.eoa.projectbudget.vo.in.WorkflowRouteIn;
+import org.eoa.projectbudget.vo.in.*;
 import org.eoa.projectbudget.vo.out.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -73,6 +73,12 @@ public class WorkflowBackController {
     RequestOutFactory requestOutFactory;
 
 
+    @Autowired
+    ColumnEntityMapper columnEntityMapper;
+    @Autowired
+    TableEntityMapper tableEntityMapper;
+
+
     public static final Long USER_ID_CACHE = 0L;
 
     @GetMapping("/request")
@@ -103,14 +109,12 @@ public class WorkflowBackController {
         Long dataId = requestDto.getDataId();
 
 
-        Long tableId = requestIn.getForm().getTableId();
+        FormIn formIn = requestIn.getForm();
+        Long tableId = formIn.getTableId();
 
-
-        FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form+"-"+ tableId, dataId+"dto", USER_ID_CACHE, FormOutDto.class);
-        if (formOutDto == null) {
-            formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
-            cacheService.setCache(ChangeFlagUtils.Form+"-"+ tableId, dataId+"dto", USER_ID_CACHE, formOutDto);
-        }
+        FormInDto formInDto = formIn.toEntity(dataId).consist(tableEntityMapper,columnEntityMapper);
+        entityService.updateForm(formInDto, humanDto.getDataId());
+        FormOutDto formOutDto =  entityService.getFormOne(tableId, dataId, humanDto.getDataId());
 
         requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))
                 .setFormOutDto(formOutDto);
