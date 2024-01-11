@@ -155,13 +155,10 @@ public class WorkflowBackController {
             RequestDto requestDto = requestService.getRequest(requestId, userId);
 
             Long dataId = requestDto.getDataId();
-            FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form, dataId +"dto", USER_ID_CACHE, FormOutDto.class);
-            if (formOutDto == null) {
-                formOutDto = entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId, userId);
-                cacheService.setCache(ChangeFlagUtils.Form,dataId+"dto", USER_ID_CACHE, formOutDto);
-            }
+            FormOutDto formOutDto = entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId, userId);
+
             requestDto.setFormOutDto(formOutDto);
-            Long nodeId = requestDto.getNodeId();
+            Long nodeId = requestDto.getRequest().getCurrentNode();
             WorkflowNode current = workflowService.getWorkflowNode(nodeId, userId);
             requestDto.setCurrentNode(current);
             requestDtoOut = requestDtoOutFactory.out(requestDto);

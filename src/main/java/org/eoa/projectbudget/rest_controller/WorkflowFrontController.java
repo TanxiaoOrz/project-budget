@@ -191,7 +191,7 @@ public class WorkflowFrontController {
 
             Long dataId = requestDto.getDataId();
             Long tableId = requestDto.getWorkflow().getTableId();
-            FormOutDto formOutDto = getFormOutDto(userId, requestDto, dataId, tableId);
+            FormOutDto formOutDto = getFormOutDto(userId, requestDto, dataId);
             requestDto.setFormOutDto(formOutDto);
             WorkflowNode current = workflowService.getWorkflowNode(nodeId, userId);
             requestDto.setCurrentNode(current);
@@ -204,20 +204,15 @@ public class WorkflowFrontController {
         return new Vo<>(requestDtoOut);
     }
 
-    private FormOutDto getFormOutDto(Long userId, RequestDto requestDto, Long dataId, Long tableId) {
-        FormOutDto formOutDto = cacheService.getCache(ChangeFlagUtils.Form+"-"+tableId, dataId.toString(), USER_ID_CACHE, FormOutDto.class);
-        if (formOutDto == null) {
-            formOutDto = entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId==0L?null:dataId, userId);
-            cacheService.setCache(ChangeFlagUtils.Form+"-"+tableId, dataId.toString(), USER_ID_CACHE, formOutDto);
-        }
-        return formOutDto;
+    private FormOutDto getFormOutDto(Long userId, RequestDto requestDto, Long dataId) {
+        return entityService.getFormOne(requestDto.getWorkflow().getTableId(), dataId==0L?null:dataId, userId);
     }
 
     private RequestDtoOut getRequestCreate(Long requestId, Long nodeId, Long userId) {
         RequestDtoOut requestDtoOut = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE, RequestDtoOut.class);
         if (requestDtoOut == null) {
             RequestDto requestDto = requestService.getRequestCreate(nodeId, userId);
-            requestDto.setFormOutDto(getFormOutDto(userId, requestDto, 0L, requestDto.getWorkflow().getTableId()));
+            requestDto.setFormOutDto(getFormOutDto(userId, requestDto, 0L));
             requestDtoOut = requestDtoOutFactory.out(requestDto);
             cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE, requestDtoOut);
         }
@@ -247,7 +242,6 @@ public class WorkflowFrontController {
             changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
-            cacheService.setCache(ChangeFlagUtils.Form+"-"+ tableId, dataId+"dto", USER_ID_CACHE, formOutDto);
             requestDto.setCreator(humanDto)
                     .setFormOutDto(formOutDto);
             Request request = requestDto.getRequest();
@@ -264,7 +258,6 @@ public class WorkflowFrontController {
             changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
-            cacheService.setCache(ChangeFlagUtils.Form+"-"+ tableId, dataId+"dto", USER_ID_CACHE, formOutDto);
             requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))
                     .setFormOutDto(formOutDto);
         }
