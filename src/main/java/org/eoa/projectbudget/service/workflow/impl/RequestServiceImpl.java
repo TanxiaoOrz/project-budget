@@ -97,7 +97,7 @@ public class RequestServiceImpl implements RequestService {
         leaveNode(requestDto, userId);
         requestMapper.doRequestAll(requestDto.getRequestId());
         WorkflowNode node = workflowNodeMapper.selectById(nodeId);
-        if (Objects.equals(requestDto.getWorkflowId(), node.getWorkflowId()))
+        if (!Objects.equals(requestDto.getWorkflowId(), node.getWorkflowId()))
             throw new ParameterException("nodeId", nodeId.toString(), "该节点不属于该流程");
         arriveNode(requestDto, node);
         if (receivers.size()!=0) {
@@ -254,19 +254,25 @@ public class RequestServiceImpl implements RequestService {
                 .eq("requestId", requestId)
                 .eq("humanId", userId));
         if (request == null) {
-            if (requestDto.getAction() != RequestDto.CREATE)
-                throw new AuthorityException(userId, "request", requestId, "流程流转");
-            else {
-                if (DataProcessUtils.translateIntegerToBoolean(workflow.getIsDeprecated()))
-                    throw new ParameterException("workflowId",workflowId.toString(),"该流程已废弃");
-                request = new Request()
-                        .setWorkflowId(workflowId)
-                        .setCreator(userId);
-                requestDto.setRequest(request);
-                requestDto.setCurrentNode(getCreateNode(workflowId));
-                requestMapper.insert(request);
-                requestDto.setRequestId(request.getRequestId());
-                requestMapper.newBacklogs(Collections.singletonList(userId), request.getRequestId(), request.getCurrentNode(), workflowId);
+            switch (requestDto.getAction()) {
+                case RequestDto.CREATE -> {
+                        if (DataProcessUtils.translateIntegerToBoolean(workflow.getIsDeprecated()))
+                            throw new ParameterException("workflowId", workflowId.toString(), "该流程已废弃");
+                        request = new Request()
+                                .setWorkflowId(workflowId)
+                                .setCreator(userId);
+                        requestDto.setRequest(request);
+                        requestDto.setCurrentNode(getCreateNode(workflowId));
+                        requestMapper.insert(request);
+                        requestDto.setRequestId(request.getRequestId());
+                        requestMapper.newBacklogs(Collections.singletonList(userId), request.getRequestId(), request.getCurrentNode(), workflowId);
+                }
+                case RequestDto.FLOW -> {
+                    request = requestMapper.selectById(requestId);
+                    requestDto.setRequest(request);
+                    requestDto.setCurrentNode(getCreateNode(request.getCurrentNode()));
+                }
+                default -> throw new AuthorityException(userId, "request", requestId, "流程流转");
             }
         } else {
             requestDto.setRequest(request);

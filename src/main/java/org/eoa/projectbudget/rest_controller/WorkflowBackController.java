@@ -119,7 +119,7 @@ public class WorkflowBackController {
         requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))
                 .setFormOutDto(formOutDto);
 
-        requestService.transferRequest(requestDto, requestDto.getNodeId(), requestIn.getReceivers(), humanDto.getDataId());
+        requestService.transferRequest(requestDto, requestIn.getNodeId(), requestIn.getReceivers(), humanDto.getDataId());
 
         changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
         return new Vo<>("流转成功");
