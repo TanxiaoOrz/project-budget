@@ -280,7 +280,7 @@ create table `workflow`
 create table `request`
 (
     `requestId`     BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '流程数据编号',
-    `dataId`        BIGINT(64) UNSIGNED                NULL     COMMENT '表单数据编号',
+    `dataId`        BIGINT(64) UNSIGNED                NULL COMMENT '表单数据编号',
     `workflowId`    BIGINT(64) UNSIGNED                NOT NULL COMMENT '所属流程编号',
     `currentNode`   BIGINT(64) UNSIGNED                NOT NULL COMMENT '当前节点编号',
     `doneHistory`   json                               null comment '操作历史',
@@ -298,7 +298,7 @@ create table `request`
 create table `workflow_node`
 (
     `dataId`               BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '节点编号',
-    `name`             varchar(100) comment '节点名称',
+    `name`                 varchar(100) comment '节点名称',
     `userAuthorityLimit`   json                               null comment '操作对象权限组',
     `isCounterSign`        int                                not null default 0 comment '是否需要会签',
     `nodeType`             int                                not null comment '节点类型 0、创建，1、提交，2、审批，3、抄送，4、归档',
@@ -317,7 +317,7 @@ create table `workflow_node`
 create table `workflow_route`
 (
     `dataId`         BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '路径编号',
-    `routeName`      VARBINARY(100)                     not null comment '路径名称',
+    `routeName`      VARCHAR(100)                       not null comment '路径名称',
     `workflowId`     BIGINT(64) UNSIGNED                NOT NULL COMMENT '所属流程编号',
     `startNodeId`    BIGINT(64) UNSIGNED                NOT NULL COMMENT '起点节点编号',
     `endNodeId`      BIGINT(64) UNSIGNED                NOT NULL COMMENT '终点节点编号',
@@ -404,3 +404,44 @@ $$
 DELIMITER ;
 
 
+-- 展示数据模块
+create table `search_list_base`
+(
+    `dataId`           BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '路径编号',
+    `moduleTypeId`     BIGINT(64) UNSIGNED                NOT NULL COMMENT '所属模块',
+    `searchListName`   VARCHAR(100)                       not null comment '列表名称',
+    `defaultCondition` json                               null comment '默认查询条件',
+    `tableId`          BIGINT(64) UNSIGNED                NOT NULL COMMENT '表单编号',
+    `shareAuthority`   json                               null comment '查看权限',
+    `order`            json                      not null comment '排序字段',
+    `isVirtual`        tinyInt                            null default 0 comment '0否1是虚拟',
+    primary key (`dataId`),
+    INDEX `search_list_base_moduleTypeId_index` (`moduleTypeId` asc)
+) comment = '展示列表基础';
+
+create table `search_list_column`
+(
+    `searchListId`BIGINT(64) UNSIGNED                NOT NULL COMMENT '列表编号',
+    `columnId`BIGINT(64) UNSIGNED                NOT NULL COMMENT '字段编号',
+    `isVirtual`        tinyInt                            null default 0 comment '0否1是虚拟',
+    `viewNo` Int                            null default 0 comment '显示顺序',
+    `title` VARCHAR(100)                       not null comment '字段标题',
+    primary key (`searchListId`, `columnId`),
+    INDEX `search_list_base_moduleTypeId_index` (`viewNo` asc)
+) comment = '列表字段配置';
+
+create table `charts_base`
+(
+    `dataId`           BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '路径编号',
+    `moduleTypeId`     BIGINT(64) UNSIGNED                NOT NULL COMMENT '所属模块',
+    `searchListName`   VARCHAR(100)                       not null comment '列表名称',
+    `defaultCondition` json                               null comment '默认查询条件',
+    `tableId`          BIGINT(64) UNSIGNED                NOT NULL COMMENT '表单编号',
+    `shareAuthority`   json                               null comment '查看权限',
+    `isVirtual`        tinyInt                            null default 0 comment '0否1是虚拟',
+    `rows` json null comment '数据对应',
+    `order`            json                      not null comment '排序字段',
+    `config` json null comment '图表配置',
+    primary key (`dataId`),
+    INDEX `charts_base_moduleTypeId_index` (`moduleTypeId` asc)
+) comment = '展示图表基础';
