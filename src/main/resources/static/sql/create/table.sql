@@ -413,7 +413,7 @@ create table `search_list_base`
     `defaultCondition` json                               null comment '默认查询条件',
     `tableId`          BIGINT(64) UNSIGNED                NOT NULL COMMENT '表单编号',
     `shareAuthority`   json                               null comment '查看权限',
-    `order`            json                      not null comment '排序字段',
+    `order`            json                               not null comment '排序字段',
     `isVirtual`        tinyInt                            null default 0 comment '0否1是虚拟',
     primary key (`dataId`),
     INDEX `search_list_base_moduleTypeId_index` (`moduleTypeId` asc)
@@ -421,11 +421,11 @@ create table `search_list_base`
 
 create table `search_list_column`
 (
-    `searchListId`BIGINT(64) UNSIGNED                NOT NULL COMMENT '列表编号',
-    `columnId`BIGINT(64) UNSIGNED                NOT NULL COMMENT '字段编号',
-    `isVirtual`        tinyInt                            null default 0 comment '0否1是虚拟',
-    `viewNo` Int                            null default 0 comment '显示顺序',
-    `title` VARCHAR(100)                       not null comment '字段标题',
+    `searchListId` BIGINT(64) UNSIGNED NOT NULL COMMENT '列表编号',
+    `columnId`     BIGINT(64) UNSIGNED NOT NULL COMMENT '字段编号',
+    `isVirtual`    tinyInt             null default 0 comment '0否1是虚拟',
+    `viewNo`       Int                 null default 0 comment '显示顺序',
+    `title`        VARCHAR(100)        not null comment '字段标题',
     primary key (`searchListId`, `columnId`),
     INDEX `search_list_base_moduleTypeId_index` (`viewNo` asc)
 ) comment = '列表字段配置';
@@ -434,14 +434,14 @@ create table `charts_base`
 (
     `dataId`           BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '路径编号',
     `moduleTypeId`     BIGINT(64) UNSIGNED                NOT NULL COMMENT '所属模块',
-    `searchListName`   VARCHAR(100)                       not null comment '列表名称',
+    `chartName`        VARCHAR(100)                       not null comment '列表名称',
     `defaultCondition` json                               null comment '默认查询条件',
     `tableId`          BIGINT(64) UNSIGNED                NOT NULL COMMENT '表单编号',
     `shareAuthority`   json                               null comment '查看权限',
     `isVirtual`        tinyInt                            null default 0 comment '0否1是虚拟',
-    `rows` json null comment '数据对应',
-    `order`            json                      not null comment '排序字段',
-    `config` json null comment '图表配置',
+    `rows`             json                               null comment '数据对应',
+    `order`            json                               not null comment '排序字段',
+    `config`           json                               null comment '图表配置',
     primary key (`dataId`),
     INDEX `charts_base_moduleTypeId_index` (`moduleTypeId` asc)
 ) comment = '展示图表基础';
