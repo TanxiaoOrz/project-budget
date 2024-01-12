@@ -69,10 +69,8 @@
     <appender name="Table_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/table/table.log</File>
         <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
@@ -95,10 +93,8 @@
     <appender name="Authority_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/authority/Authority.log</File>
         <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
@@ -120,10 +116,8 @@
     <appender name="Cache_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/cache/Cache.log</File>
         <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
@@ -145,10 +139,8 @@
     <appender name="Organization_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/organization/Organization.log</File>
         <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
@@ -169,10 +161,8 @@
     <appender name="Content_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/content/Content.log</File>
         <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
@@ -194,14 +184,35 @@
     <appender name="Workflow_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/workflow/Workflow.log</File>
         <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
             <fileNamePattern>${LOG_PATH}/workflow/workflow-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>1</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>10 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="Display_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/display/display.log</File>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
+            <fileNamePattern>${LOG_PATH}/display/display-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
             <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
             <maxHistory>1</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
@@ -234,6 +245,9 @@
     </logger>
     <logger name="WorkflowModule" additivity="false" level="INFO">
         <appender-ref ref="Workflow_Appender"/>
+    </logger>
+    <logger name="DisplayModule" additivity="false" level="INFO">
+        <appender-ref ref="Display_Appender"/>
     </logger>
 
     <!--info和error分开打印，注：ERROR > WARN > INFO > DEBUG > TRACE-->
