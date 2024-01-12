@@ -37,6 +37,9 @@ public class ChangeFlagUtils {
     public static final int WORKFLOW_NODE = 15;
     public static final int WORKFLOW_ROUTE = 16;
     public static final int REQUEST = 17;
+    public static final int SEARCH = 18;
+    public static final int SEARCH_COLUMN = 19;
+    public static final int CHARTS = 20;
 
     public static final String[] Flags = {
             "HUMAN","MODUlE",
@@ -47,7 +50,8 @@ public class ChangeFlagUtils {
             "Form","Link",
             "DEPART","SECTION",
             "WORKFLOW","WORKFLOW_NODE","WORKFLOW_ROUTE",
-            "REQUEST"
+            "REQUEST",
+            "SEARCH","SEARCH_COLUMN","CHARTS"
     };
     private final HashMap<String, Date> flagMap = new HashMap<>();
     private final HashMap<Long, Date> userMap = new HashMap<>();
@@ -151,6 +155,16 @@ public class ChangeFlagUtils {
     public ChangeFlagUtils freshDate(Long userId) {
         Date date = new Date();
         userMap.put(userId, date);
+        return this;
+    }
+
+    /**
+     * 更新全部user时间,用于角色权限变化
+     * @return this
+     */
+    public ChangeFlagUtils freshDate() {
+        Date date = new Date();
+        userMap.keySet().forEach(userId->userMap.put(userId, date));
         return this;
     }
 
