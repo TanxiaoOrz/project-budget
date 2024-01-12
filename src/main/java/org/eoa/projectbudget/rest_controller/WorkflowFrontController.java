@@ -190,7 +190,6 @@ public class WorkflowFrontController {
             RequestDto requestDto = requestService.getRequest(requestId, userId);
 
             Long dataId = requestDto.getDataId();
-            Long tableId = requestDto.getWorkflow().getTableId();
             FormOutDto formOutDto = getFormOutDto(userId, requestDto, dataId);
             requestDto.setFormOutDto(formOutDto);
             WorkflowNode current = workflowService.getWorkflowNode(nodeId, userId);
@@ -239,7 +238,7 @@ public class WorkflowFrontController {
             }
 
             Long tableId = formIn.getTableId();
-            changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
+            changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
             requestDto.setCreator(humanDto)
@@ -255,7 +254,7 @@ public class WorkflowFrontController {
             entityService.updateForm(formInDto, humanDto.getDataId());
 
             Long tableId = formIn.getTableId();
-            changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
+            changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
             requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))

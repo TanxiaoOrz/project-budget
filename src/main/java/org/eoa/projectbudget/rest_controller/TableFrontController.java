@@ -112,19 +112,16 @@ public class TableFrontController {
                                @RequestParam("isVirtual")Boolean isVirtual,
                                @RequestParam("tableId")Long tableId,
                                @RequestParam("formId")Long formId) {
-        Boolean viewCache = cacheService.getCache(ChangeFlagUtils.Form, formId.toString(), humanDto.getDataId(), Boolean.class);
+        String formFlag = ChangeFlagUtils.Flags[ChangeFlagUtils.Form] + "-" + tableId;
+        Boolean viewCache = cacheService.getCache(formFlag, formId.toString(), humanDto.getDataId(), Boolean.class);
         if (viewCache == null) {
             if (formId.equals(0L)) {
                 viewCache = true;
             } else {
-                FormOutDto cache = cacheService.getCache(ChangeFlagUtils.Form, formId + "dto", USER_ID_CACHE, FormOutDto.class);
-                if (cache == null) {
-                    cache = entityService.getFormOne(tableId, formId, humanDto.getDataId());
-                    cacheService.setCache(ChangeFlagUtils.Form,formId + "dto", USER_ID_CACHE,cache);
-                }
+                FormOutDto cache = entityService.getFormOne(tableId, formId, humanDto.getDataId());
                 viewCache = cache.checkView(organizationService.getHumanDto(cache.getCreator(), null), humanDto);
             }
-            cacheService.setCache(ChangeFlagUtils.Form, formId.toString(), humanDto.getDataId(),viewCache);
+            cacheService.setCache(formFlag, formId.toString(), humanDto.getDataId(),viewCache);
         }
         if (viewCache) {
             FileOut out = cacheService.getCache(ChangeFlagUtils.FILE, dataId.toString(), USER_ID_CACHE, FileOut.class);
@@ -172,7 +169,7 @@ public class TableFrontController {
         if (isVirtual) {
             return new Vo<>(factory.out(viewService.getFormOne(tableId, dataId, humanDto.getDataId())));
         } else {
-            String flag = ChangeFlagUtils.Form +"-"+ tableId ;
+            String flag = ChangeFlagUtils.Flags[ChangeFlagUtils.Form] +"-"+ tableId ;
             Boolean viewCache = cacheService.getCache(flag, dataId.toString(), humanDto.getDataId(), Boolean.class);
             boolean create = dataId.equals(0L);
             FormOutDto cache = null;
@@ -229,7 +226,7 @@ public class TableFrontController {
             return new Vo<>(filter.filt(outs),outs.size());
         } else {
             List<FormOut> outs;
-            String flag = ChangeFlagUtils.Form +"-"+ tableId ;
+            String flag = ChangeFlagUtils.Flags[ChangeFlagUtils.Form] +"-"+ tableId ;
             FormOut[] cache = cacheService.getCache(flag, filter.getDescription(), humanDto.getDataId(), FormOut[].class);
             if (cache == null) {
                 outs = factory.outs(entityService.getFormSort(tableId, filter, humanDto.getDataId()).stream().
@@ -265,7 +262,7 @@ public class TableFrontController {
             if (dataId == null) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行新建,请联系管理员");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
+                changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
                 return new Vo<>(dataId);
             }
         } else {
@@ -295,7 +292,7 @@ public class TableFrontController {
             if (update == 0) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
+                changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
                 return new Vo<>("修改成功");
             }
         } else {
@@ -322,7 +319,7 @@ public class TableFrontController {
             if (delete == 0) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
+                changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
                 return new Vo<>("删除成功");
             }
         } else {
