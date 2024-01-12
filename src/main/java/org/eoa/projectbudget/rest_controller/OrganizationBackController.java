@@ -96,6 +96,7 @@ public class OrganizationBackController {
         Integer update = organizationService.updateHuman(human.toEntity(dataId), humanDto.getDataId());
         if (update==1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.HUMAN);
+            changeFlagUtils.freshDate(dataId);
             return new Vo<>("修改成功");
         } else
             return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");

@@ -103,8 +103,14 @@ public class AuthorityBackController {
                                              @PathVariable Long characterId) {
         Integer integer;
         switch (type) {
-            case "human" -> integer = authorityService.characterLinkUser(characterId, dataId, grade, humanDto.getDataId());
-            case "authority" -> integer = authorityService.characterLinkAuthority(characterId, dataId, humanDto.getDataId());
+            case "human" -> {
+                integer = authorityService.characterLinkUser(characterId, dataId, grade, humanDto.getDataId());
+                changeFlagUtils.freshDate(dataId);
+            }
+            case "authority" -> {
+                integer = authorityService.characterLinkAuthority(characterId, dataId, humanDto.getDataId());
+                changeFlagUtils.freshDate();
+            }
             default -> integer = null;
         }
         if (integer == null) {
@@ -128,8 +134,14 @@ public class AuthorityBackController {
                                              @PathVariable Long characterId) {
         Integer integer;
         switch (type) {
-            case "human" -> integer = authorityService.characterDropUser(characterId, dataId, humanDto.getDataId());
-            case "authority" -> integer = authorityService.characterDropAuthority(characterId, dataId, humanDto.getDataId());
+            case "human" -> {
+                integer = authorityService.characterDropUser(characterId, dataId, humanDto.getDataId());
+                changeFlagUtils.freshDate(dataId);
+            }
+            case "authority" -> {
+                integer = authorityService.characterDropAuthority(characterId, dataId, humanDto.getDataId());
+                changeFlagUtils.freshDate();
+            }
             default -> integer = null;
         }
         if (integer == null) {
@@ -186,6 +198,7 @@ public class AuthorityBackController {
         Integer deletes = authorityService.dropCharacter(dataId, humanDto.getDataId());
         if (deletes==1) {
             changeFlagUtils.freshDate(ChangeFlagUtils.CHARACTER);
+            changeFlagUtils.freshDate();
             return new Vo<>("删除成功");
         } else
             return new Vo<>(Vo.SERVER_ERROR,"未进行删除,该数据不存在");
