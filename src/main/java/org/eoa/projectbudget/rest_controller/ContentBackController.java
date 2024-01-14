@@ -78,7 +78,7 @@ public class ContentBackController {
     }
 
     @GetMapping(value = "/content/{id}")
-    @Operation(summary = "获取文件清单")
+    @Operation(summary = "获取目录")
     @SuppressWarnings("Duplicates")
     public Vo<ContentOut> getContent(@RequestAttribute("HumanDto")HumanDto humanDto,
                                      @PathVariable Long id) throws EoaException {
