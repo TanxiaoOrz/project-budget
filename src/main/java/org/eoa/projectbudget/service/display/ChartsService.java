@@ -18,11 +18,11 @@ public interface ChartsService {
     /**
      * 获取图表
      *
-     * @param chartId 图表编号
+     * @param dataId 图表编号
      * @param userId  用户编号
      * @return 图表实体类
      */
-    Charts getCharts(Long chartId, Long userId);
+    Charts getCharts(Long dataId, Long userId);
 
     /**
      * 获取图表数组

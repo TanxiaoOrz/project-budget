@@ -19,11 +19,11 @@ public interface SearchService {
 
     /**
      * 获取列表
-     * @param chartId 列表编号
+     * @param dataId 列表编号
      * @param userId 用户编号
      * @return 列表实体类
      */
-    SearchList getSearchList(Long chartId, Long userId);
+    SearchList getSearchList(Long dataId, Long userId);
 
     /**
      * 获取列表数组
@@ -58,11 +58,11 @@ public interface SearchService {
 
     /**
      * 获取列表字段
-     * @param chartId 列表字段编号
+     * @param dataId 列表字段编号
      * @param userId 用户编号
      * @return 列表字段实体类
      */
-    SearchListColumn getSearchListColumn(Long chartId, Long userId);
+    SearchListColumn getSearchListColumn(Long dataId, Long userId);
 
     /**
      * 获取列表字段数组
