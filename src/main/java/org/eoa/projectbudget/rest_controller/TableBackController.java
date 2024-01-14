@@ -74,7 +74,7 @@ public class TableBackController {
         ModuleOut[] cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, USER_ID_CACHE, ModuleOut[].class);
         if (cache == null) {
             outs = moduleOutFactory.outs(moduleService.getAll(humanDto.getDataId(),filter.getWrapper()));
-            cacheService.setCache(ChangeFlagUtils.Flags[ChangeFlagUtils.MODULE], method, USER_ID_CACHE,outs);
+            cacheService.setCache(ChangeFlagUtils.FLAGS[ChangeFlagUtils.MODULE], method, USER_ID_CACHE,outs);
         }else {
             outs = Arrays.asList(cache);
         }

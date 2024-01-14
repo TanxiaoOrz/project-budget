@@ -29,7 +29,7 @@ public class ChangeFlagUtils {
     public static final int AUTHORITY = 7;
     public static final int CONTENT = 8;
     public static final int FILE = 9;
-    public static final int Form = 10;
+    public static final int FORM = 10;
     public static final int LINK = 11;
     public static final int DEPART = 12;
     public static final int SECTION = 13;
@@ -40,18 +40,67 @@ public class ChangeFlagUtils {
     public static final int SEARCH = 18;
     public static final int SEARCH_COLUMN = 19;
     public static final int CHARTS = 20;
+    public static final int SEARCH_DTO = 21;
 
-    public static final String[] Flags = {
-            "HUMAN","MODUlE",
-            "TABLE_ENTITY","TABLE_VIEW",
-            "COLUMN_ENTITY","COLUMN_VIEW",
-            "CHARACTER","AUTHORITY",
-            "CONTENT","FILE",
-            "Form","Link",
-            "DEPART","SECTION",
-            "WORKFLOW","WORKFLOW_NODE","WORKFLOW_ROUTE",
+    public static final String[] FLAGS = {
+            "HUMAN", "MODUlE",
+            "TABLE_ENTITY", "TABLE_VIEW",
+            "COLUMN_ENTITY", "COLUMN_VIEW",
+            "CHARACTER", "AUTHORITY",
+            "CONTENT", "FILE",
+            "Form", "Link",
+            "DEPART", "SECTION",
+            "WORKFLOW", "WORKFLOW_NODE", "WORKFLOW_ROUTE",
             "REQUEST",
-            "SEARCH","SEARCH_COLUMN","CHARTS"
+            "SEARCH", "SEARCH_COLUMN", "CHARTS", "SEARCH_DTO"
+    };
+
+    //数组内子数组序号代表该序号缓存依赖于其位置序号缓存
+    public static final int[][] DEPENDS_GROUP = {
+            {},
+            //HUMAN             0
+            {},
+            //MODULE            1
+            {9},
+            //TABLE_ENTITY     2
+            {},
+            //TABLE_VIEW        3
+            {9, 21},
+            //COLUMN_ENTITY    4
+            {21,},
+            //COLUMN_VIEW       5
+            {11},
+            //CHARACTER       6
+            {11},
+            //AUTHORITY       7
+            {},
+            //CONTENT           8
+            {10},
+            //FILE            9
+            {17},
+            //FORM            10
+            {},
+            //LINK              11
+            {},
+            //DEPART            12
+            {},
+            //SECTION           13
+            {},
+            //WORKFLOW          14
+            {},
+            //WORKFLOW_NODE     15
+            {},
+            //WORKFLOW_ROUTE    16
+            {},
+            //REQUEST           17
+            {21},
+            //SEARCH            18
+            {21},
+            //SEARCH_COLUMN     19
+            {},
+            //CHARTS            20
+            {},
+            //SEARCH_DTO        21
     };
     private final HashMap<String, Date> flagMap = new HashMap<>();
     private final HashMap<Long, Date> userMap = new HashMap<>();
@@ -62,6 +111,7 @@ public class ChangeFlagUtils {
 
     /**
      * 获取flag对应的更新时间
+     *
      * @param flag flag字符串
      * @return 更新时间
      */
@@ -78,6 +128,7 @@ public class ChangeFlagUtils {
 
     /**
      * 获取人员对应的更新时间
+     *
      * @param userId 人员编号
      * @return 更新时间
      */
@@ -94,61 +145,77 @@ public class ChangeFlagUtils {
 
     /**
      * 获取flag对应的更新时间
+     *
      * @param flag 字符串位置常量
      * @return 更新时间
      */
     public Date getDate(int flag) {
-        return getDate(Flags[flag]);
+        return getDate(FLAGS[flag]);
     }
 
     /**
      * 获取flag和userID的双重更新时间
-     * @param flag 字符串位置常量
+     *
+     * @param flag   字符串位置常量
      * @param userId 人员编号
      * @return 最新更新时间
      */
-    public Date getDate(int flag,Long userId) {
+    public Date getDate(int flag, Long userId) {
         Date flagDate = getDate(flag);
         Date userDate = getDate(userId);
-        return userDate.before(flagDate)?flagDate:userDate;
+        return userDate.before(flagDate) ? flagDate : userDate;
     }
 
     /**
      * 获取flag和userID的双重更新时间
-     * @param flag 字符串位置常量
+     *
+     * @param flag   字符串位置常量
      * @param userId 人员编号
      * @return 最新更新时间
      */
-    public Date getDate(String flag,Long userId) {
+    public Date getDate(String flag, Long userId) {
         Date flagDate = getDate(flag);
         Date userDate = getDate(userId);
-        return userDate.before(flagDate)?flagDate:userDate;
+        return userDate.before(flagDate) ? flagDate : userDate;
     }
 
     /**
      * 更新flag时间
+     *
      * @param flag 字符串位置
      * @return this
      */
     public ChangeFlagUtils freshDate(int flag) {
         Date date = new Date();
-        flagMap.put(Flags[flag], date);
+        flagMap.put(FLAGS[flag], date);
+        for (int belongs :
+                DEPENDS_GROUP[flag]) {
+            freshDate(belongs);
+        }
         return this;
     }
 
     /**
      * 更新flag时间
+     *
      * @param flag 字符串
      * @return this
      */
     public ChangeFlagUtils freshDate(String flag) {
         Date date = new Date();
         flagMap.put(flag, date);
+        int i = searchPosition(flag);
+        if (i != -1)
+            for (int belongs :
+                    DEPENDS_GROUP[i]) {
+                freshDate(belongs);
+            }
         return this;
     }
 
     /**
      * 更新user时间
+     *
      * @param userId 字符串位置
      * @return this
      */
@@ -160,12 +227,24 @@ public class ChangeFlagUtils {
 
     /**
      * 更新全部user时间,用于角色权限变化
+     *
      * @return this
      */
     public ChangeFlagUtils freshDate() {
         Date date = new Date();
-        userMap.keySet().forEach(userId->userMap.put(userId, date));
+        userMap.keySet().forEach(userId -> userMap.put(userId, date));
         return this;
+    }
+
+    private int searchPosition(String flag) {
+        if (flag.contains("-"))
+            return searchPosition(flag.split("-")[0]);
+        else
+            for (int i = 0; i < FLAGS.length; i++) {
+                if (flag.equals(FLAGS[i]))
+                    return i;
+            }
+        return -1;
     }
 
 }

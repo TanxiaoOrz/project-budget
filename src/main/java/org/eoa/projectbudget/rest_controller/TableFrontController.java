@@ -91,7 +91,7 @@ public class TableFrontController {
         ModuleOut[] cache = cacheService.getCache(ChangeFlagUtils.MODULE, method, USER_ID_CACHE, ModuleOut[].class);
         if (cache == null) {
             outs = moduleOutFactory.outs(moduleService.getAll(humanDto.getDataId(),filter.getWrapper()));
-            cacheService.setCache(ChangeFlagUtils.Flags[ChangeFlagUtils.MODULE], method, USER_ID_CACHE,outs);
+            cacheService.setCache(ChangeFlagUtils.FLAGS[ChangeFlagUtils.MODULE], method, USER_ID_CACHE,outs);
         }else {
             outs = Arrays.asList(cache);
         }
@@ -112,7 +112,7 @@ public class TableFrontController {
                                @RequestParam("isVirtual")Boolean isVirtual,
                                @RequestParam("tableId")Long tableId,
                                @RequestParam("formId")Long formId) {
-        String formFlag = ChangeFlagUtils.Flags[ChangeFlagUtils.Form] + "-" + tableId;
+        String formFlag = ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM] + "-" + tableId;
         Boolean viewCache = cacheService.getCache(formFlag, formId.toString(), humanDto.getDataId(), Boolean.class);
         if (viewCache == null) {
             if (formId.equals(0L)) {
@@ -169,7 +169,7 @@ public class TableFrontController {
         if (isVirtual) {
             return new Vo<>(factory.out(viewService.getFormOne(tableId, dataId, humanDto.getDataId())));
         } else {
-            String flag = ChangeFlagUtils.Flags[ChangeFlagUtils.Form] +"-"+ tableId ;
+            String flag = ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM] +"-"+ tableId ;
             Boolean viewCache = cacheService.getCache(flag, dataId.toString(), humanDto.getDataId(), Boolean.class);
             boolean create = dataId.equals(0L);
             FormOutDto cache = null;
@@ -226,7 +226,7 @@ public class TableFrontController {
             return new Vo<>(filter.filt(outs),outs.size());
         } else {
             List<FormOut> outs;
-            String flag = ChangeFlagUtils.Flags[ChangeFlagUtils.Form] +"-"+ tableId ;
+            String flag = ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM] +"-"+ tableId ;
             FormOut[] cache = cacheService.getCache(flag, filter.getDescription(), humanDto.getDataId(), FormOut[].class);
             if (cache == null) {
                 outs = factory.outs(entityService.getFormSort(tableId, filter, humanDto.getDataId()).stream().
@@ -262,7 +262,7 @@ public class TableFrontController {
             if (dataId == null) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行新建,请联系管理员");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
+                changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
                 return new Vo<>(dataId);
             }
         } else {
@@ -292,7 +292,7 @@ public class TableFrontController {
             if (update == 0) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
+                changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
                 return new Vo<>("修改成功");
             }
         } else {
@@ -319,7 +319,7 @@ public class TableFrontController {
             if (delete == 0) {
                 return new Vo<>(Vo.SERVER_ERROR,"未进行修改,没有变动项");
             } else {
-                changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
+                changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
                 return new Vo<>("删除成功");
             }
         } else {

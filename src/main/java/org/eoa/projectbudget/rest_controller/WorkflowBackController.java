@@ -121,7 +121,7 @@ public class WorkflowBackController {
 
         requestService.transferRequest(requestDto, requestIn.getNodeId(), requestIn.getReceivers(), humanDto.getDataId());
 
-        changeFlagUtils.freshDate(ChangeFlagUtils.Form+"-"+tableId);
+        changeFlagUtils.freshDate(ChangeFlagUtils.FORM +"-"+tableId);
         return new Vo<>("流转成功");
     }
 
@@ -140,7 +140,7 @@ public class WorkflowBackController {
                 changeFlagUtils.freshDate(ChangeFlagUtils.REQUEST);
                 map.keySet().forEach((key) -> {
                     entityService.deleteForm(key, map.get(key), humanDto.getDataId());
-                    changeFlagUtils.freshDate(ChangeFlagUtils.Form + "-" + key);
+                    changeFlagUtils.freshDate(ChangeFlagUtils.FORM + "-" + key);
                 });
             }
             return new Vo<>("删除成功");

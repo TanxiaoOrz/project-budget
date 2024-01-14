@@ -142,6 +142,6 @@ public class TokenInterceptor implements HandlerInterceptor, InitializingBean {
         redisTemplate.setHashKeySerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
-        flag = ChangeFlagUtils.Flags[ChangeFlagUtils.HUMAN];
+        flag = ChangeFlagUtils.FLAGS[ChangeFlagUtils.HUMAN];
     }
 }

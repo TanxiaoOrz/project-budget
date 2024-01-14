@@ -238,7 +238,7 @@ public class WorkflowFrontController {
             }
 
             Long tableId = formIn.getTableId();
-            changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
+            changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
             requestDto.setCreator(humanDto)
@@ -254,7 +254,7 @@ public class WorkflowFrontController {
             entityService.updateForm(formInDto, humanDto.getDataId());
 
             Long tableId = formIn.getTableId();
-            changeFlagUtils.freshDate(ChangeFlagUtils.Flags[ChangeFlagUtils.Form]+"-"+tableId);
+            changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
             requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))
@@ -270,7 +270,7 @@ public class WorkflowFrontController {
                 case RequestDto.REFUSE -> requestService.refuseRequest(requestDto, humanDto.getDataId());
                 default -> throw new ParameterException("action", action.toString(), "错误的操作数值");
             }
-            changeFlagUtils.freshDate(ChangeFlagUtils.Form + "-" + formIn.getTableId());
+            changeFlagUtils.freshDate(ChangeFlagUtils.FORM + "-" + formIn.getTableId());
             changeFlagUtils.freshDate(ChangeFlagUtils.REQUEST);
             return new Vo<>(requestDto.getRequestId());
         }catch (EoaException e) {

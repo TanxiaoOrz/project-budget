@@ -96,6 +96,6 @@ public class TokenController implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         algorithm = Algorithm.HMAC256(secretPass);
-        flag = ChangeFlagUtils.Flags[ChangeFlagUtils.HUMAN];
+        flag = ChangeFlagUtils.FLAGS[ChangeFlagUtils.HUMAN];
     }
 }
