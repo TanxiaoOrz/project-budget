@@ -2,6 +2,8 @@ package org.eoa.projectbudget.vo.out;
 
 import org.eoa.projectbudget.entity.Charts;
 
+import java.util.Date;
+
 /**
  * @Author: 张骏山
  * @Date: 2024/1/14 19:51
@@ -25,6 +27,9 @@ public class ChartsOut implements VoOut{
 
     Integer isVirtual;
 
+    Long creator;
+    Date createTime;
+
     String tableName;
     String creatorName;
     String moduleTypeName;
@@ -41,6 +46,8 @@ public class ChartsOut implements VoOut{
         this.rows = charts.getRows();
         this.config = charts.getConfig();
         this.isVirtual = charts.getIsVirtual();
+        this.createTime = charts.getCreateTime();
+        this.creator = charts.getCreator();
     }
 
     public ChartsOut() {
@@ -61,6 +68,8 @@ public class ChartsOut implements VoOut{
         this.tableName = null;
         this.creatorName = null;
         this.moduleTypeName = null;
+        this.createTime = null;
+        this.creator = null;
     }
 
     public Long getDataId() {
@@ -177,6 +186,24 @@ public class ChartsOut implements VoOut{
 
     public ChartsOut setModuleTypeName(String moduleTypeName) {
         this.moduleTypeName = moduleTypeName;
+        return this;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public ChartsOut setCreator(Long creator) {
+        this.creator = creator;
+        return this;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public ChartsOut setCreateTime(Date createTime) {
+        this.createTime = createTime;
         return this;
     }
 }
