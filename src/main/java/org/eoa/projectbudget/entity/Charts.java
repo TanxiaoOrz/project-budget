@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.util.Date;
+
 /**
  * @Author: 张骏山
  * @Date: 2024/1/12 11:32
@@ -19,6 +21,8 @@ public class Charts {
     @TableId(type = IdType.AUTO)
     Long dataId;
 
+    String chartName;
+
     Long moduleTypeId;
 
     String defaultCondition;
@@ -26,8 +30,13 @@ public class Charts {
     String shareAuthority;
     String order;
 
+    Integer isVirtual;
+
     String rows;
     String config;
+
+    Long creator;
+    Date createTime;
 
     public Long getDataId() {
         return dataId;
@@ -35,6 +44,15 @@ public class Charts {
 
     public Charts setDataId(Long dataId) {
         this.dataId = dataId;
+        return this;
+    }
+
+    public String getChartName() {
+        return chartName;
+    }
+
+    public Charts setChartName(String chartName) {
+        this.chartName = chartName;
         return this;
     }
 
@@ -98,6 +116,33 @@ public class Charts {
 
     public Charts setConfig(String config) {
         this.config = config;
+        return this;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public Charts setCreator(Long creator) {
+        this.creator = creator;
+        return this;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public Charts setCreateTime(Date createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    public Integer getIsVirtual() {
+        return isVirtual;
+    }
+
+    public Charts setIsVirtual(Integer isVirtual) {
+        this.isVirtual = isVirtual;
         return this;
     }
 }

@@ -15,10 +15,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("`search_list_column`")
 public class SearchListColumn {
+
     @TableId(type = IdType.AUTO)
     Long dataId;
-
     Long columnId;
+    Long searchListId;
 
     String title;
     Integer viewNo;
@@ -66,6 +67,15 @@ public class SearchListColumn {
 
     public SearchListColumn setIsVirtual(Integer isVirtual) {
         this.isVirtual = isVirtual;
+        return this;
+    }
+
+    public Long getSearchListId() {
+        return searchListId;
+    }
+
+    public SearchListColumn setSearchListId(Long searchListId) {
+        this.searchListId = searchListId;
         return this;
     }
 }

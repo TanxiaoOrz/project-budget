@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.util.Date;
+
 /**
  * @Author: 张骏山
  * @Date: 2024/1/12 11:08
@@ -26,6 +28,9 @@ public class SearchList {
     String shareAuthority;
     String order;
     Integer isVirtual;
+
+    Long creator;
+    Date createTime;
 
     public Long getDataId() {
         return dataId;
@@ -96,6 +101,24 @@ public class SearchList {
 
     public SearchList setIsVirtual(Integer isVirtual) {
         this.isVirtual = isVirtual;
+        return this;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public SearchList setCreator(Long creator) {
+        this.creator = creator;
+        return this;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public SearchList setCreateTime(Date createTime) {
+        this.createTime = createTime;
         return this;
     }
 }
