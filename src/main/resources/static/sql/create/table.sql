@@ -407,7 +407,7 @@ DELIMITER ;
 -- 展示数据模块
 create table `search_list_base`
 (
-    `dataId`           BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '路径编号',
+    `dataId`           BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '列表编号',
     `moduleTypeId`     BIGINT(64) UNSIGNED                NOT NULL COMMENT '所属模块',
     `searchListName`   VARCHAR(100)                       not null comment '列表名称',
     `defaultCondition` json                               null comment '默认查询条件',
@@ -415,19 +415,24 @@ create table `search_list_base`
     `shareAuthority`   json                               null comment '查看权限',
     `order`            json                               not null comment '排序字段',
     `isVirtual`        tinyInt                            null default 0 comment '0否1是虚拟',
+    `creator`          BIGINT(64) UNSIGNED                NOT NULL COMMENT '创建人唯一id',
+    `createTime`       datetime                           null comment '创建时间',
     primary key (`dataId`),
     INDEX `search_list_base_moduleTypeId_index` (`moduleTypeId` asc)
 ) comment = '展示列表基础';
 
 create table `search_list_column`
 (
+    `dataId`           BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '列表字段编号',
     `searchListId` BIGINT(64) UNSIGNED NOT NULL COMMENT '列表编号',
     `columnId`     BIGINT(64) UNSIGNED NOT NULL COMMENT '字段编号',
     `isVirtual`    tinyInt             null default 0 comment '0否1是虚拟',
     `viewNo`       Int                 null default 0 comment '显示顺序',
     `title`        VARCHAR(100)        not null comment '字段标题',
-    primary key (`searchListId`, `columnId`),
-    INDEX `search_list_base_moduleTypeId_index` (`viewNo` asc)
+    primary key (`dataId`),
+    INDEX `search_list_base_viewNo_index` (`viewNo` asc),
+    INDEX `search_list_base_searchListId_index` (`searchListId` asc),
+    INDEX `search_list_base_columnId_index` (`columnId` asc)
 ) comment = '列表字段配置';
 
 create table `charts_base`
@@ -442,6 +447,8 @@ create table `charts_base`
     `rows`             json                               null comment '数据对应',
     `order`            json                               not null comment '排序字段',
     `config`           json                               null comment '图表配置',
+    `creator`          BIGINT(64) UNSIGNED                NOT NULL COMMENT '创建人唯一id',
+    `createTime`       datetime                           null comment '创建时间',
     primary key (`dataId`),
     INDEX `charts_base_moduleTypeId_index` (`moduleTypeId` asc)
 ) comment = '展示图表基础';
