@@ -19,6 +19,8 @@ import java.util.List;
 public class SearchListDtoOutFactory implements OutFactory<SearchListDto, SearchListDtoOut> {
     @Autowired
     SearchListOutFactory searchListOutFactory;
+    @Autowired
+    ColumnOutFactory columnOutFactory;
     @Override
     public SearchListDtoOut out(SearchListDto searchListDto) {
         if (searchListDto == null) {
@@ -26,7 +28,7 @@ public class SearchListDtoOutFactory implements OutFactory<SearchListDto, Search
         }
         return new SearchListDtoOut()
                 .setSearchListOut(searchListOutFactory.out(searchListDto.getSearchList()))
-                .setColumns(searchListDto.getColumns())
+                .setColumns(columnOutFactory.outs(searchListDto.getColumns()))
                 .setSearchListColumns(searchListDto.getSearchListColumns());
     }
 

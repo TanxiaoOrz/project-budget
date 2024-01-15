@@ -1,6 +1,5 @@
 package org.eoa.projectbudget.vo.out;
 
-import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.SearchListColumn;
 
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 public class SearchListDtoOut implements VoOut{
     SearchListOut searchListOut;
     List<SearchListColumn> searchListColumns;
-    List<? extends Column> columns;
+    List<ColumnOut> columns;
 
     public SearchListOut getSearchListOut() {
         return searchListOut;
@@ -36,11 +35,11 @@ public class SearchListDtoOut implements VoOut{
         return this;
     }
 
-    public List<? extends Column> getColumns() {
+    public List<ColumnOut> getColumns() {
         return columns;
     }
 
-    public SearchListDtoOut setColumns(List<? extends Column> columns) {
+    public SearchListDtoOut setColumns(List<ColumnOut> columns) {
         this.columns = columns;
         return this;
     }
