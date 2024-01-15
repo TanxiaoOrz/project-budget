@@ -132,4 +132,20 @@ public interface FormDMLMapper {
     List<Long> getExistDetail(@Param("detailMainId")Long detailMainId,
                               @Param("detailTableName")String detailTableName);
 
+    /**
+     * 规则下批量获取主键id
+     * @param formTableName 表名
+     * @param eqMap 字段筛选规则
+     * @param likeMap 字符串筛选规则
+     * @param betweenMap 日期筛选规则
+     * @param orderColumn  排序字段
+     * @param ascOrDesc 升序或降序
+     * @return 主键数组
+     */
+    List<Long> getIdsByMapWithOrder(@Param("formTableName")String formTableName,
+                                    @Param("eqMap")Map<String,String> eqMap,
+                                    @Param("likeMap")Map<String, String> likeMap,
+                                    @Param("betweenMap")Map<String, String[]> betweenMap,
+                                    @Param("orderColumn")String orderColumn,
+                                    @Param("ascOrDesc")String ascOrDesc);
 }

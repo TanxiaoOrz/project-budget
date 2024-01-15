@@ -69,6 +69,32 @@
                         </foreach>
                 </foreach>
             </if>
+            order by `dataId` desc
+        </where>
+    </select>
+
+    <select id="getIdsByMapWithOrder" resultType="Long">
+        select dataId from ${formTableName}
+        <where>
+            <foreach collection="eqMap.entrySet()" index="key" item="value" separator=" and ">
+                ${key} = #{value}
+            </foreach>
+            <if test="likeMap.size()>0">
+                and
+                <foreach collection="likeMap.entrySet()" index="key" item="value" separator=" and ">
+                    ${key} like #{value}
+                </foreach>
+            </if>
+            <if test="betweenMap.size()>0">
+                and
+                <foreach collection="betweenMap.entrySet()" index="key" item="value" separator=" and ">
+                    ${key}
+                    <foreach collection="value" index="keys" item="valueItem" open="between" separator="and">
+                        #{valueItem}
+                    </foreach>
+                </foreach>
+            </if>
+            order by `${orderColumn}` ${asc}
         </where>
     </select>
 

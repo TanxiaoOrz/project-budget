@@ -75,7 +75,14 @@ public class FilterFormUtils {
                     }
             );
         }
-        return dmlMapper.getIdsByMap(tableName,eq,like,between);
+        String[] orders = map.get("order");
+        if (orders == null) {
+            return dmlMapper.getIdsByMap(tableName,eq,like,between);
+        } else {
+            String asc = orders[0].equals("asc")? "asc" : "desc";
+            return dmlMapper.getIdsByMapWithOrder(tableName,eq,like,between, orders[1], asc);
+        }
+
     }
 
     public Page getPage() {
