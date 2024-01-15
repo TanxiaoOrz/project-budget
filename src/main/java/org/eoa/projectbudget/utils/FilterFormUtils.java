@@ -58,18 +58,18 @@ public class FilterFormUtils {
             String[] value = entry.getValue();
             mains.stream().filter(c->c.getColumnDataName().equals(column)).findFirst().ifPresent(
                     (c)->{
-                        switch (Column.DATATYPE_GROUP_VIEW.indexOf(c.getColumnType())){
-                            case -1:
-                                return;
-                            case Column.BROWSER_BOX | Column.FILE | Column.NUMBER | Column.SELECT_ITEM:
-                                eq.put(column,value[0]);
-                                return;
-                            case Column.DATETIME:
-                                between.put(column,value);
-                                return;
-                            case Column.SINGLE_TEXT|Column.TEXT:
-                                like.put(column,value[0]);
-                                return;
+                        switch (Column.DATATYPE_GROUP_VIEW.indexOf(c.getColumnType())) {
+                            case -1 -> {
+                            }
+                            case Column.BROWSER_BOX , Column.FILE , Column.NUMBER , Column.SELECT_ITEM -> {
+                                eq.put(column, value[0]);
+                            }
+                            case Column.DATETIME -> {
+                                between.put(column, value);
+                            }
+                            case Column.SINGLE_TEXT , Column.TEXT -> {
+                                like.put(column, value[0]);
+                            }
                         }
 
                     }
