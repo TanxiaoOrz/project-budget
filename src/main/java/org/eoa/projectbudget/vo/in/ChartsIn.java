@@ -19,7 +19,7 @@ public class ChartsIn implements CheckParameter<Charts> {
     String defaultCondition;
     Long tableId;
     String shareAuthority;
-    String order;
+    String orders;
 
     String rows;
     String config;
@@ -51,7 +51,7 @@ public class ChartsIn implements CheckParameter<Charts> {
                 .setDefaultCondition(defaultCondition)
                 .setTableId(tableId)
                 .setShareAuthority(shareAuthority)
-                .setOrder(order)
+                .setOrders(orders)
                 .setRows(rows)
                 .setConfig(config);
     }
@@ -110,12 +110,12 @@ public class ChartsIn implements CheckParameter<Charts> {
         return this;
     }
 
-    public String getOrder() {
-        return order;
+    public String getOrders() {
+        return orders;
     }
 
-    public ChartsIn setOrder(String order) {
-        this.order = order;
+    public ChartsIn setOrders(String orders) {
+        this.orders = orders;
         return this;
     }
 

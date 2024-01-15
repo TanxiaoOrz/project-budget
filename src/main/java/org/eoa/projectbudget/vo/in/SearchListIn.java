@@ -18,7 +18,7 @@ public class SearchListIn implements CheckParameter<SearchList> {
     String defaultCondition;
     Long tableId;
     String shareAuthority;
-    String order;
+    String orders;
     Integer isVirtual;
 
     @Override
@@ -43,9 +43,10 @@ public class SearchListIn implements CheckParameter<SearchList> {
         return searchList.setDataId(dataId)
                 .setModuleTypeId(moduleTypeId)
                 .setDefaultCondition(defaultCondition)
+                .setSearchListName(searchListName)
                 .setTableId(tableId)
                 .setShareAuthority(shareAuthority)
-                .setOrder(order)
+                .setOrders(orders)
                 .setIsVirtual(isVirtual);
     }
 
@@ -94,12 +95,12 @@ public class SearchListIn implements CheckParameter<SearchList> {
         return this;
     }
 
-    public String getOrder() {
-        return order;
+    public String getOrders() {
+        return orders;
     }
 
-    public SearchListIn setOrder(String order) {
-        this.order = order;
+    public SearchListIn setOrders(String orders) {
+        this.orders = orders;
         return this;
     }
 

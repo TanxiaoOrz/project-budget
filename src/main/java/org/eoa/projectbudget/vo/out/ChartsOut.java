@@ -20,7 +20,7 @@ public class ChartsOut implements VoOut{
     String defaultCondition;
     Long tableId;
     String shareAuthority;
-    String order;
+    String orders;
 
     String rows;
     String config;
@@ -42,7 +42,7 @@ public class ChartsOut implements VoOut{
         this.defaultCondition = charts.getDefaultCondition();
         this.tableId = charts.getTableId();
         this.shareAuthority = charts.getShareAuthority();
-        this.order = charts.getOrder();
+        this.orders = charts.getOrders();
         this.rows = charts.getRows();
         this.config = charts.getConfig();
         this.isVirtual = charts.getIsVirtual();
@@ -61,7 +61,7 @@ public class ChartsOut implements VoOut{
         this.defaultCondition = null;
         this.tableId = null;
         this.shareAuthority = null;
-        this.order = null;
+        this.orders = null;
         this.rows = null;
         this.config = null;
         this.isVirtual = null;
@@ -126,12 +126,12 @@ public class ChartsOut implements VoOut{
         return this;
     }
 
-    public String getOrder() {
-        return order;
+    public String getOrders() {
+        return orders;
     }
 
-    public ChartsOut setOrder(String order) {
-        this.order = order;
+    public ChartsOut setOrders(String orders) {
+        this.orders = orders;
         return this;
     }
 

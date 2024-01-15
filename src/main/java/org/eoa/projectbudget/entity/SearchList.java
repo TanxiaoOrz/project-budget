@@ -26,7 +26,7 @@ public class SearchList {
     String defaultCondition;
     Long tableId;
     String shareAuthority;
-    String order;
+    String orders;
     Integer isVirtual;
 
     Long creator;
@@ -86,12 +86,12 @@ public class SearchList {
         return this;
     }
 
-    public String getOrder() {
-        return order;
+    public String getOrders() {
+        return orders;
     }
 
-    public SearchList setOrder(String order) {
-        this.order = order;
+    public SearchList setOrders(String orders) {
+        this.orders = orders;
         return this;
     }
 

@@ -28,7 +28,7 @@ public class Charts {
     String defaultCondition;
     Long tableId;
     String shareAuthority;
-    String order;
+    String orders;
 
     Integer isVirtual;
 
@@ -92,12 +92,12 @@ public class Charts {
         return this;
     }
 
-    public String getOrder() {
-        return order;
+    public String getOrders() {
+        return orders;
     }
 
-    public Charts setOrder(String order) {
-        this.order = order;
+    public Charts setOrders(String orders) {
+        this.orders = orders;
         return this;
     }
 

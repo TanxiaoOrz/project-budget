@@ -20,7 +20,7 @@ public class SearchListOut implements VoOut{
     String defaultCondition;
     Long tableId;
     String shareAuthority;
-    String order;
+    String orders;
     Integer isVirtual;
 
     Long creator;
@@ -40,7 +40,7 @@ public class SearchListOut implements VoOut{
         this.defaultCondition = searchList.getDefaultCondition();
         this.tableId = searchList.getTableId();
         this.shareAuthority = searchList.getShareAuthority();
-        this.order = searchList.getOrder();
+        this.orders = searchList.getOrders();
         this.isVirtual = searchList.getIsVirtual();
         this.creator = searchList.getCreator();
         this.createTime = searchList.getCreateTime();
@@ -100,12 +100,12 @@ public class SearchListOut implements VoOut{
         return this;
     }
 
-    public String getOrder() {
-        return order;
+    public String getOrders() {
+        return orders;
     }
 
-    public SearchListOut setOrder(String order) {
-        this.order = order;
+    public SearchListOut setOrders(String orders) {
+        this.orders = orders;
         return this;
     }
 
@@ -170,7 +170,7 @@ public class SearchListOut implements VoOut{
         this.defaultCondition = null;
         this.tableId = null;
         this.shareAuthority = null;
-        this.order = null;
+        this.orders = null;
         this.isVirtual = null;
         this.creator = null;
         this.createTime = null;
