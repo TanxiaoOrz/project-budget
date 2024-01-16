@@ -423,12 +423,12 @@ create table `search_list_base`
 
 create table `search_list_column`
 (
-    `dataId`           BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '列表字段编号',
-    `searchListId` BIGINT(64) UNSIGNED NOT NULL COMMENT '列表编号',
-    `columnId`     BIGINT(64) UNSIGNED NOT NULL COMMENT '字段编号',
-    `isVirtual`    tinyInt             null default 0 comment '0否1是虚拟',
-    `viewNo`       Int                 null default 0 comment '显示顺序',
-    `title`        VARCHAR(100)        not null comment '字段标题',
+    `dataId`       BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '列表字段编号',
+    `searchListId` BIGINT(64) UNSIGNED                NOT NULL COMMENT '列表编号',
+    `columnId`     BIGINT(64) UNSIGNED                NOT NULL COMMENT '字段编号',
+    `isVirtual`    tinyInt                            null default 0 comment '0否1是虚拟',
+    `viewNo`       Int                                null default 0 comment '显示顺序',
+    `title`        VARCHAR(100)                       not null comment '字段标题',
     primary key (`dataId`),
     INDEX `search_list_base_viewNo_index` (`viewNo` asc),
     INDEX `search_list_base_searchListId_index` (`searchListId` asc),
@@ -452,3 +452,50 @@ create table `charts_base`
     primary key (`dataId`),
     INDEX `charts_base_moduleTypeId_index` (`moduleTypeId` asc)
 ) comment = '展示图表基础';
+
+-- 页面菜单模块
+create table `login_config`
+(
+    `dataId`             BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '登录设置编号',
+    `backgroundUrl`      varchar(1000)                      NOT NULL COMMENT '背景文件路径',
+    `logoUrl`            varchar(1000)                      NOT NULL COMMENT '图表文件路径',
+    `backgroundVideoUrl` varchar(1000)                      not null comment '背景视频路径',
+    `loginTitle`         varchar(100)                       not null comment '登录主标题',
+    `loginSubTitle`      varchar(100)                       not null comment '登录副标题',
+    `activeMainTitle`    varchar(100)                       not null comment '活动信息主标题',
+    `activeIntroduction` varchar(100)                       not null comment '活动信息副标题',
+    `contactManager`     varchar(100)                       not null comment '管理员联系方式',
+    `linkUrl`            varchar(100)                       not null comment '活动信息跳转链接',
+    `linkStr`            varchar(100)                       not null comment '活动信息跳转文字',
+    `creator`            BIGINT(64) UNSIGNED                NOT NULL COMMENT '创建人唯一id',
+    `createTime`         datetime                           null comment '创建时间',
+    `onUse`              tinyInt                            null default 0 comment '0否1是启用',
+    primary key (`dataId`)
+) comment = '登录页面配置';
+
+create table `menu_base`
+(
+    `dataId`         BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '菜单编号',
+    `contentName`    varchar(100)                       not null comment '菜单名称',
+    `belongContent`  BIGINT(64) UNSIGNED                NULL COMMENT '菜单编号',
+    `contentUrl`     varchar(1000)                      null comment '菜单链接',
+    `viewNo`         int                                null comment '显示顺序',
+    `isDeprecated`   tinyInt                            null default 0 comment '0否1是废弃',
+    `shareAuthority` json                               null comment '共享权限',
+    `creator`        BIGINT(64) UNSIGNED                NOT NULL COMMENT '创建人唯一id',
+    `createTime`     datetime                           null comment '创建时间',
+    primary key (`dataId`),
+    INDEX `menu_base_belong_content_index` (`belongContent` asc)
+) comment = '页面菜单';
+
+create table `page_config`
+(
+    `dataId`      BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '页面设置编号',
+    `companyName` varchar(100)                       not null comment '公司名称',
+    `headerColor` varchar(100)                       not null comment '头部导航栏颜色',
+    `sideColor`   varchar(100)                       not null comment '侧导航栏颜色',
+    `onUse`       tinyInt                            null default 0 comment '0否1是启用',
+    `creator`     BIGINT(64) UNSIGNED                NOT NULL COMMENT '创建人唯一id',
+    `createTime`  datetime                           null comment '创建时间',
+    primary key (`dataId`)
+) comment = '登陆后页面设置';
