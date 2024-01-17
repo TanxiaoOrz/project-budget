@@ -53,12 +53,12 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public LoginConfig getLoginConfigOnUsed(Long userId) {
+    public LoginConfig getLoginConfigOnUsed() {
         LoginConfig onUse = loginConfigMapper.selectOne(new QueryWrapper<LoginConfig>().eq("OnUse", 1));
         if (onUse == null) {
             onUse = loginConfigMapper.selectById(1);
         }
-        log.info("用户=>{}获取正在使用的登录配置=>{}",userId,onUse);
+        log.info("获取正在使用的登录配置=>{}",onUse);
         return onUse;
     }
 

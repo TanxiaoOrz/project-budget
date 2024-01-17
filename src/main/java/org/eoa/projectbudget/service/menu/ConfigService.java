@@ -27,10 +27,9 @@ public interface ConfigService {
 
     /**
      * 获取正在使用的登录配置
-     * @param userId 用户编号
      * @return 登录配置实体类
      */
-    LoginConfig getLoginConfigOnUsed(Long userId);
+    LoginConfig getLoginConfigOnUsed();
 
     /**
      * 获取登录配置数组
