@@ -7,7 +7,6 @@ import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.MenuMapper;
 import org.eoa.projectbudget.service.menu.MenuService;
 import org.eoa.projectbudget.utils.DataProcessUtils;
-import org.eoa.projectbudget.vo.out.MenuOut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,8 @@ public class MenuServiceImpl implements MenuService {
             menu.setViewNo(menuMapper.getViewNoNew(menu.getBelongContent()));
 
         menu.setCreator(userId)
-                .setCreateTime(new Date());
+                .setCreateTime(new Date())
+                .setIsDeprecated(0);
 
         menuMapper.insert(menu);
         log.info("用户=>{}创建菜单=>{}", userId, menu.getDataId());
@@ -68,7 +68,8 @@ public class MenuServiceImpl implements MenuService {
     public Integer updateMenu(Menu menu, Long userId) {
         Menu old = menuMapper.selectById(menu.getDataId());
         menu.setCreator(old.getCreator())
-                .setCreateTime(old.getCreateTime());
+                .setCreateTime(old.getCreateTime())
+                .setIsDeprecated(0);
         int i = menuMapper.updateById(menu);
         log.info("用户=>{}修改菜单=>{}", userId, menu.getDataId());
         return i;
@@ -76,7 +77,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Integer deleteMenu(Long dataId, Long userId) {
-        Integer drop = menuMapper.deleteById(dataId);
+        Menu menu = menuMapper.selectById(dataId);
+        Integer drop = menuMapper.updateById(menu.setIsDeprecated(1));
         log.info("用户=>{}废弃菜单=>{}", userId, dataId);
         return drop;
     }
@@ -85,10 +87,17 @@ public class MenuServiceImpl implements MenuService {
     public MenuDto getMenuDto(Long dataId, Long userId) {
         Menu menu = menuMapper.selectById(dataId);
         if (menu == null) {
+            log.warn("用户=>{}获取顶级菜单构造=>{},失败该菜单编号不存在", userId, dataId);
             throw new ParameterException("dataId", dataId.toString(), "该菜单编号不存在");
         }
-        if (menu.getBelongContent() != null)
+        if (menu.getBelongContent() != null) {
+            log.warn("用户=>{}获取顶级菜单构造=>{},失败该菜单不是顶级菜单", userId, dataId);
             throw new ParameterException("dataId", dataId.toString(), "该菜单不是顶级菜单");
+        }
+        if (DataProcessUtils.translateIntegerToBoolean(menu.getIsDeprecated())) {
+            log.warn("用户=>{}获取顶级菜单构造=>{},失败该菜单已废弃", userId, dataId);
+            throw new ParameterException("dataId", dataId.toString(), "该菜单已废弃");
+        }
         log.info("用户=>{}获取顶级菜单构造=>{}", userId, dataId);
         MenuDto menuDto = new MenuDto(menu);
         menuDto.setChildren(consistChildren(menu.getBelongContent()));
@@ -99,7 +108,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     private List<MenuDto> consistChildren(Long belongId) {
-        List<Menu> menus = menuMapper.selectList(new QueryWrapper<Menu>().eq("belongContent", belongId).orderByAsc("viewNo"));
+        List<Menu> menus = menuMapper.selectList(new QueryWrapper<Menu>().eq("belongContent", belongId).eq("isDeprecated",0).orderByAsc("viewNo"));
         return menus.stream().map(menu -> new MenuDto(menu).setChildren(consistChildren(menu.getBelongContent()))).collect(Collectors.toList());
     }
 
