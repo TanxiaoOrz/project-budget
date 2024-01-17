@@ -101,6 +101,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         HumanResourceView humanResourceView = humanViewMapper.selectById(humanId);
         if (humanResourceView == null) {
             log.error("人员=>{}不存在",humanId);
+            throw new ParameterException("dataId", humanId.toString(), "不存在该编号");
         }
         return humanResourceView;
     }
@@ -234,6 +235,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Depart depart = departMapper.selectById(departId);
         if (depart == null) {
             log.error("部门=>{}不存在",departId);
+            throw new ParameterException("dataId", departId.toString(), "不存在该编号");
         }
         return depart;
     }
@@ -300,6 +302,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Section section = sectionMapper.selectById(sectionId);
         if (section == null) {
             log.error("分部=>{}不存在",sectionId);
+            throw new ParameterException("dataId", sectionId.toString(), "不存在该编号");
         }
         return section;
     }

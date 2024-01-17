@@ -5,6 +5,7 @@ import org.eoa.projectbudget.dto.SearchListDto;
 import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.SearchList;
 import org.eoa.projectbudget.entity.SearchListColumn;
+import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
 import org.eoa.projectbudget.mapper.ColumnViewMapper;
 import org.eoa.projectbudget.mapper.SearchListColumnMapper;
@@ -55,7 +56,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public SearchList getSearchList(Long dataId, Long userId) {
         SearchList searchList = searchListMapper.selectById(dataId);
-        log.info("用户=>{}获取列表=>{},success=>{}",userId,dataId,searchList==null);
+        if (searchList == null) {
+            log.warn("用户=>{}获取列表=>{},success=>{}",userId,dataId, true);
+            throw new ParameterException("dataId", dataId.toString(), "不存在该编号");
+        }
+        log.info("用户=>{}获取列表=>{},success=>{}",userId,dataId,true);
         return searchList;
     }
 
@@ -95,7 +100,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public SearchListColumn getSearchListColumn(Long dataId, Long userId) {
         SearchListColumn searchListColumn = searchListColumnMapper.selectById(dataId);
-        log.info("用户=>{}获取列表字段=>{},success=>{}",userId,dataId,searchListColumn==null);
+        if (searchListColumn == null) {
+            log.warn("用户=>{}获取列表字段=>{},success=>{}",userId,dataId, true);
+            throw new ParameterException("dataId", dataId.toString(), "不存在该编号");
+        }
+        log.info("用户=>{}获取列表字段=>{},success=>{}",userId,dataId,true);
         return searchListColumn;
     }
 

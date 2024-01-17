@@ -90,7 +90,10 @@ public class TableViewServiceImpl implements TableColumnService<ColumnView,Table
     public Table getTableById(Long tableId, Long userId) {
         log.info("用户:编号=>{}执行查询表单操作\ntableId=>{}",userId,tableId);
         TableView table = tableMapper.selectById(tableId);
-        log.info("查询完成,结果数量=>{}",table==null?0:1);
+        if (table == null) {
+            log.warn("用户=>{}获取表单=>{},success=>{}",userId,tableId, true);
+            throw new ParameterException("dataId", tableId.toString(), "不存在该编号");
+        }
         return table;
     }
 
@@ -159,7 +162,10 @@ public class TableViewServiceImpl implements TableColumnService<ColumnView,Table
     public Column getColumnById(Long columnId, Long userId) {
         log.info("用户:编号=>{}执行查询视图字段操作\ncolumnId=>{}",userId,columnId);
         Column column = columnMapper.selectById(columnId);
-        log.info("查询完成,结果数量=>{}",column==null?0:1);
+        if (column == null) {
+            log.warn("用户=>{}获取字段=>{},success=>{}",userId,columnId, true);
+            throw new ParameterException("dataId", columnId.toString(), "不存在该编号");
+        }
         return column;
     }
 

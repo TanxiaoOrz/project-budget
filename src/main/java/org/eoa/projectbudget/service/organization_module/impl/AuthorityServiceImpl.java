@@ -66,6 +66,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
         log.info("用户=>{}获取权限=>{}",userId,authorityId);
         Authority authority = authorityMapper.selectById(userId);
         if (authority == null) {
+            log.warn("用户=>{}获取权限=>{},success=>{}",userId,authorityId, true);
             throw new ParameterException("authorityId",authorityId.toString(),"不存在该权限");
         }
         return authority;
@@ -216,7 +217,6 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     @Override
     public UserWithToken getUser(Tokens tokens) throws ParameterException, LoginException {
         JWTVerifier build = JWT.require(algorithm).build();
-        DecodedJWT decodeShort = null;
         DecodedJWT decodeLong;
         boolean shortOut = false;
 
@@ -229,7 +229,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
         }
 
         try {
-            decodeShort = build.verify(tokens.getShortToken());
+            build.verify(tokens.getShortToken());
         } catch (TokenExpiredException e) {
             shortOut = true;
         } catch (JWTVerificationException e) {
@@ -242,7 +242,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         algorithm = Algorithm.HMAC256(tokenPass);
     }
 }

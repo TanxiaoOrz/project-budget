@@ -61,6 +61,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         Workflow workflow = workflowMapper.selectById(dataId);
         if (workflow == null) {
             log.error("用户=>{}获取工作流=>{},没有该数据", userId, dataId);
+            throw new ParameterException("requestId",dataId.toString(),"不存在该流程");
         }
         log.info("用户=>{}获取工作流=>{}", userId, dataId);
         return workflow;
@@ -134,6 +135,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         WorkflowNode workflowNode = workflowNodeMapper.selectById(dataId);
         if (workflowNode == null) {
             log.error("用户=>{}获取工作流节点=>{},没有该数据", userId, dataId);
+            throw new ParameterException("requestId",dataId.toString(),"不存在该节点");
         }
         log.info("用户=>{}获取工作流节点=>{}", userId, dataId);
         return workflowNode;
@@ -164,9 +166,7 @@ public class WorkflowServiceImpl implements WorkflowService {
                     .orderByAsc("viewNo"));
             boolean defaultAuthority;
             switch (workflowNode.getNodeType()) {
-                case WorkflowNode.ADMIT, WorkflowNode.CREATE -> {
-                    defaultAuthority = true;
-                }
+                case WorkflowNode.ADMIT, WorkflowNode.CREATE -> defaultAuthority = true;
                 default -> defaultAuthority = false;
             }
             try {
@@ -236,6 +236,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         WorkflowRoute workflowRoute = workflowRouteMapper.selectById(dataId);
         if (workflowRoute == null) {
             log.error("用户=>{}获取工作流路径=>{},没有该数据", userId, dataId);
+            throw new ParameterException("requestId",dataId.toString(),"不存在该路径");
         }
         log.info("用户=>{}获取工作流路径=>{}", userId, dataId);
         return workflowRoute;

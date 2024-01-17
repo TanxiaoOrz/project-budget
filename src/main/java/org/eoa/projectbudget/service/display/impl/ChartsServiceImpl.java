@@ -2,6 +2,7 @@ package org.eoa.projectbudget.service.display.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.entity.Charts;
+import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.ChartsMapper;
 import org.eoa.projectbudget.service.display.ChartsService;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import java.util.List;
  * @Date: 2024/1/14 16:07
  * @PackageName: org.eoa.projectbudget.service.display.impl
  * @ClassName: ChartsServiceImpl
- * @Description: TODO
+ * @Description: 图表业务实现类
  * @Version: 1.0
  */
 
@@ -39,7 +40,11 @@ public class ChartsServiceImpl implements ChartsService {
     @Override
     public Charts getCharts(Long dataId, Long userId) {
         Charts charts = chartsMapper.selectById(dataId);
-        log.info("用户=>{}获取图表=>{},success=>{}",userId,dataId,charts==null);
+        if (charts == null) {
+            log.warn("用户=>{}获取图表=>{},success=>{}",userId,dataId, true);
+            throw new ParameterException("dataId", dataId.toString(), "不存在该编号");
+        }
+        log.info("用户=>{}获取图表=>{},success=>{}",userId,dataId,true);
         return charts;
     }
 

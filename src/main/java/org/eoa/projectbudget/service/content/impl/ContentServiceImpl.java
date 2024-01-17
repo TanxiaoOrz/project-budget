@@ -45,7 +45,11 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Content getContent(Long dataId, Long userId) {
         Content content = contentMapper.selectById(dataId);
-        log.info("用户=>{}获取目录=>{},success=>{}",userId,dataId,content==null);
+        if (content == null) {
+            log.warn("用户=>{}获取目录=>{},success=>{}",userId,dataId, true);
+            throw new ParameterException("dataId", dataId.toString(), "不存在该编号");
+        }
+        log.info("用户=>{}获取目录=>{},success=>{}",userId,dataId, true);
         return content;
     }
 
@@ -90,7 +94,12 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public File getFile(Long dataId, Long userId) {
         File file = fileMapper.selectById(dataId);
-        log.info("用户=>{}获取文件=>{},success=>{}",userId,dataId,file==null);
+
+        if (file == null) {
+            log.warn("用户=>{}获取文件=>{},success=>{}",userId,dataId, true);
+            throw new ParameterException("dataId", dataId.toString(), "不存在该编号");
+        }
+        log.info("用户=>{}获取文件=>{},success=>{}",userId,dataId, true);
         return file;
     }
 

@@ -47,6 +47,7 @@ public class ModuleServiceImpl implements ModuleService {
     public ModuleView getOne(Long moduleTypeId, Long userId) throws ParameterException {
         ModuleView moduleView = viewMapper.selectById(moduleTypeId);
         if (moduleView == null) {
+            log.error("不存在该模块");
             throw new ParameterException("moduleTypeId",moduleTypeId.toString(),"不存在该模块");
         }
         log.info("用户=>{}查询模块id=>{},success",userId,moduleTypeId);

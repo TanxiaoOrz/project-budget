@@ -134,6 +134,7 @@ public class RequestServiceImpl implements RequestService {
         RequestDto requestDto = new RequestDto();
         Request request = requestMapper.selectById(requestId);
         if (request == null) {
+            log.error("用户=>{}获取表单=>{},success=>{}",userId,requestId, true);
             throw new ParameterException("requestId",requestId.toString(),"不存在该流程");
         }
         requestDto.setRequestId(requestId)
