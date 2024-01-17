@@ -6,6 +6,7 @@ import org.eoa.projectbudget.entity.Menu;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.MenuMapper;
 import org.eoa.projectbudget.service.menu.MenuService;
+import org.eoa.projectbudget.utils.DataProcessUtils;
 import org.eoa.projectbudget.vo.out.MenuOut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,11 +92,29 @@ public class MenuServiceImpl implements MenuService {
         log.info("用户=>{}获取顶级菜单构造=>{}", userId, dataId);
         MenuDto menuDto = new MenuDto(menu);
         menuDto.setChildren(consistChildren(menu.getBelongContent()));
+        if (DataProcessUtils.isEmpty(menuDto.getContentUrl())) {
+            menuDto.setContentUrl(searchUrl(menuDto));
+        }
         return menuDto;
     }
 
     private List<MenuDto> consistChildren(Long belongId) {
         List<Menu> menus = menuMapper.selectList(new QueryWrapper<Menu>().eq("belongContent", belongId).orderByAsc("viewNo"));
         return menus.stream().map(menu -> new MenuDto(menu).setChildren(consistChildren(menu.getBelongContent()))).collect(Collectors.toList());
+    }
+
+    private String searchUrl(MenuDto menuDto) {
+        if (DataProcessUtils.isEmpty(menuDto.getContentUrl())) {
+            for (MenuDto child:
+                 menuDto.getChildren()) {
+                String s = searchUrl(child);
+                if (!DataProcessUtils.isEmpty(s)) {
+                    return s;
+                }
+            }
+            return "";
+        } else {
+            return menuDto.getContentUrl();
+        }
     }
 }

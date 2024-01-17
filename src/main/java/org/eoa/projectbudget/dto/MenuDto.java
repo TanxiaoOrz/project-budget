@@ -1,9 +1,13 @@
 package org.eoa.projectbudget.dto;
 
+import org.eoa.projectbudget.dto.constraint.Constraint;
 import org.eoa.projectbudget.entity.Menu;
+import org.eoa.projectbudget.service.organization_module.OrganizationService;
+import org.eoa.projectbudget.utils.AuthorityUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 张骏山
@@ -39,6 +43,15 @@ public class MenuDto {
         this.shareAuthority = menu.getShareAuthority();
         this.creator = menu.getCreator();
         this.createTime = menu.getCreateTime();
+    }
+
+    public MenuDto filter(HumanDto humanDto,OrganizationService organizationService) {
+        this.children = children.stream().filter(menuDto -> {
+            Constraint constraint = AuthorityUtils.getConstraint(menuDto.getShareAuthority());
+            return AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(menuDto.getCreator(),null),constraint);
+        }).collect(Collectors.toList());
+        children.forEach(menuDto -> menuDto.filter(humanDto, organizationService));
+        return this;
     }
     
     public Long getDataId() {
