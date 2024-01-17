@@ -2,6 +2,8 @@ package org.eoa.projectbudget.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.eoa.projectbudget.entity.Menu;
 
 /**
@@ -14,4 +16,12 @@ import org.eoa.projectbudget.entity.Menu;
  */
 @Mapper
 public interface MenuMapper extends BaseMapper<Menu> {
+
+    /**
+     * 获取搜索表单下新viewNo
+     * @param belongContent 所属菜单编号
+     * @return viewNo
+     */
+    @Select("select ifnull(max(viewNo),0)+1 from menu_base where belongContent = #{belongContent}")
+    Integer getViewNoNew(@Param("belongContent")Long belongContent);
 }
