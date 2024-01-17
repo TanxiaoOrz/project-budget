@@ -41,6 +41,9 @@ public class ChangeFlagUtils {
     public static final int SEARCH_COLUMN = 19;
     public static final int CHARTS = 20;
     public static final int SEARCH_DTO = 21;
+    public static final int MENU = 22;
+    public static final int LOGIN_CONFIG = 23;
+    public static final int PAGE_CONFIG = 24;
 
     public static final String[] FLAGS = {
             "HUMAN", "MODUlE",
@@ -52,7 +55,8 @@ public class ChangeFlagUtils {
             "DEPART", "SECTION",
             "WORKFLOW", "WORKFLOW_NODE", "WORKFLOW_ROUTE",
             "REQUEST",
-            "SEARCH", "SEARCH_COLUMN", "CHARTS", "SEARCH_DTO"
+            "SEARCH", "SEARCH_COLUMN", "CHARTS", "SEARCH_DTO",
+            "MENU", "LOGIN_CONFIG", "PAGE_CONFIG"
     };
 
     //数组内子数组序号代表该序号缓存依赖于其位置序号缓存
@@ -62,23 +66,23 @@ public class ChangeFlagUtils {
             {},
             //MODULE            1
             {9},
-            //TABLE_ENTITY     2
+            //TABLE_ENTITY      2
             {},
             //TABLE_VIEW        3
             {9, 21},
-            //COLUMN_ENTITY    4
+            //COLUMN_ENTITY     4
             {21,},
             //COLUMN_VIEW       5
             {11},
-            //CHARACTER       6
+            //CHARACTER         6
             {11},
-            //AUTHORITY       7
+            //AUTHORITY         7
             {},
             //CONTENT           8
             {10},
-            //FILE            9
+            //FILE              9
             {17},
-            //FORM            10
+            //FORM              10
             {},
             //LINK              11
             {},
@@ -101,6 +105,12 @@ public class ChangeFlagUtils {
             //CHARTS            20
             {},
             //SEARCH_DTO        21
+            {},
+            //MENU              22
+            {},
+            //LOGIN_CONFIG      23
+            {},
+            //PAGE_CONFIG       24
     };
     private final HashMap<String, Date> flagMap = new HashMap<>();
     private final HashMap<Long, Date> userMap = new HashMap<>();
