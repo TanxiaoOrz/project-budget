@@ -26,6 +26,13 @@ public interface ConfigService {
     LoginConfig getLoginConfig(Long dataId, Long userId);
 
     /**
+     * 获取正在使用的登录配置
+     * @param userId 用户编号
+     * @return 登录配置实体类
+     */
+    LoginConfig getLoginConfigOnUsed(Long userId);
+
+    /**
      * 获取登录配置数组
      *
      * @param wrapper 查询条件
@@ -71,6 +78,13 @@ public interface ConfigService {
     PageConfig getPageConfig(Long dataId, Long userId);
 
     /**
+     * 获取正在使用的页面配置
+     * @param userId 用户编号
+     * @return 页面配置实体类
+     */
+    PageConfig getPageConfigOnUsed(Long userId);
+
+    /**
      * 获取页面配置数组
      *
      * @param wrapper 查询条件
@@ -105,4 +119,6 @@ public interface ConfigService {
      * @return 更新数量
      */
     Integer deletePageConfig(Long dataId, Long userId);
+
+
 }
