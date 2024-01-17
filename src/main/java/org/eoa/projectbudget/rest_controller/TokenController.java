@@ -12,10 +12,12 @@ import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.LoginException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.service.cache.CacheService;
+import org.eoa.projectbudget.service.menu.ConfigService;
 import org.eoa.projectbudget.service.organization_module.AuthorityService;
 import org.eoa.projectbudget.service.organization_module.OrganizationService;
 import org.eoa.projectbudget.utils.ChangeFlagUtils;
 import org.eoa.projectbudget.utils.DataProcessUtils;
+import org.eoa.projectbudget.utils.factory.LoginConfigOutFactory;
 import org.eoa.projectbudget.vo.Tokens;
 import org.eoa.projectbudget.vo.in.Login;
 import org.eoa.projectbudget.vo.in.TokensIn;
@@ -55,7 +57,16 @@ public class TokenController implements InitializingBean {
     @Autowired
     CacheService cacheService;
 
+
+
     String flag;
+    @Autowired
+    LoginConfigOutFactory loginConfigOutFactory;
+    @Autowired
+    ConfigService configService;
+
+    private static final long USER_ID_CACHE = 0L;
+
 
     @PostMapping
     @Operation(summary = "获取token认证", description = "输入登入名和密码,回传token字符串")
@@ -69,11 +80,15 @@ public class TokenController implements InitializingBean {
         return new Vo<>(JWT.create().withClaim("tokens",new ObjectMapper().writeValueAsString(tokens)).sign(algorithm));
     }
 
-    @GetMapping
+    @GetMapping("/loginConfig/onUse")
     @Operation(summary = "获取登录页面基本设置")
     public Vo<LoginConfigOut> getLoginConfig() {
-        // TODO
-        return new Vo<>(null);
+        LoginConfigOut out = cacheService.getCache(ChangeFlagUtils.LOGIN_CONFIG,"onUse", USER_ID_CACHE, LoginConfigOut.class);
+        if (out == null) {
+            out = loginConfigOutFactory.out(configService.getLoginConfigOnUsed());
+            cacheService.setCache(ChangeFlagUtils.LOGIN_CONFIG,"onUse",USER_ID_CACHE,out);
+        }
+        return new Vo<>(out);
     }
 
     @PostMapping("/check")
