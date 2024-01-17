@@ -226,6 +226,29 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
+
+    <appender name="Menu_Appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/menu/menu.log</File>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
+            <fileNamePattern>${LOG_PATH}/menu/menu-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保留1天的日志,5天的压缩文件是可以发现问题并且解决问题的最长时间-->
+            <maxHistory>1</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>10 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
     <!-- 下面就是根据业务-->
     <logger name="TableModule" additivity="false" level="INFO">
         <appender-ref ref="Table_Appender"/>
@@ -248,6 +271,9 @@
     </logger>
     <logger name="DisplayModule" additivity="false" level="INFO">
         <appender-ref ref="Display_Appender"/>
+    </logger>
+    <logger name="MenuModule" additivity="false" level="INFO">
+        <appender-ref ref="MenuModule"/>
     </logger>
 
     <!--info和error分开打印，注：ERROR > WARN > INFO > DEBUG > TRACE-->
