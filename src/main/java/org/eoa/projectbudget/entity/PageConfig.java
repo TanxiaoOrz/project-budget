@@ -14,7 +14,7 @@ import java.util.Date;
  * @Description: 页面配置实体类
  * @Version: 1.0
  **/
-@TableName("`menu_base`")
+@TableName("`page_config`")
 public class PageConfig {
     @TableId(type = IdType.AUTO)
     Long dataId;

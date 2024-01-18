@@ -15,7 +15,7 @@ import java.util.Date;
  * @Version: 1.0
  **/
 
-@TableName("`menu_base`")
+@TableName("`login_config`")
 public class LoginConfig {
     @TableId(type = IdType.AUTO)
     Long dataId;
