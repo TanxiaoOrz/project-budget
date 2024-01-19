@@ -67,7 +67,7 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
         ArrayList<Long> longs = new ArrayList<>();
         for (Group character:
                 characters) {
-            List<CharacterMapper.Grade> humans = characterMapper.getHumanFromCharacter(character.characterId, character.grade);
+            List<CharacterMapper.Grade> humans = characterMapper.getHumanFromCharacterWithGrade(character.characterId, character.grade);
             longs.addAll(humans.stream().filter(grade -> {
                 Integer userGrade = grade.getGrade();
                 if (userGrade != null) {
@@ -144,7 +144,7 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
         for (Group character:
                 characters) {
             for (Long characterId:translateValue(formOutDto, character)) {
-                List<CharacterMapper.Grade> humans = characterMapper.getHumanFromCharacter(characterId, character.grade);
+                List<CharacterMapper.Grade> humans = characterMapper.getHumanFromCharacterWithGrade(characterId, character.grade);
                 longs.addAll(humans.stream().filter(grade -> {
                     Integer userGrade = grade.getGrade();
                     if (userGrade != null) {

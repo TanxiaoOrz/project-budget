@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -24,7 +25,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("human_view")
-public class HumanResourceView {
+public class HumanResourceView implements Serializable {
     @TableId(type = IdType.AUTO)
     Long dataId;
     String loginName;

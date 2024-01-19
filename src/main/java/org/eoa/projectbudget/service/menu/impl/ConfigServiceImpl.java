@@ -3,6 +3,7 @@ package org.eoa.projectbudget.service.menu.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.eoa.projectbudget.entity.LoginConfig;
 import org.eoa.projectbudget.entity.PageConfig;
+import org.eoa.projectbudget.exception.DataException;
 import org.eoa.projectbudget.exception.ParameterException;
 import org.eoa.projectbudget.mapper.LoginConfigMapper;
 import org.eoa.projectbudget.mapper.PageConfigMapper;
@@ -58,6 +59,10 @@ public class ConfigServiceImpl implements ConfigService {
         if (onUse == null) {
             onUse = loginConfigMapper.selectById(1);
         }
+        if (onUse == null) {
+            log.warn("获取正在使用的登录配置,success=>失败,无符合条件的登录配置");
+            throw new DataException("loginConfig", "1", "id / onUse", "1", "不存在该编号且无启用配置");
+        }
         log.info("获取正在使用的登录配置=>{}",onUse);
         return onUse;
     }
@@ -74,6 +79,9 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public Integer updateLoginConfig(LoginConfig loginConfig, Long userId) {
         LoginConfig old = loginConfigMapper.selectById(loginConfig.getDataId());
+
+        if (old.getOnUse() == 0 && loginConfig.getOnUse() == 1)
+            pageConfigMapper.updateOnUse();
         loginConfig.setCreator(old.getCreator())
                 .setCreateTime(old.getCreateTime());
         int i = loginConfigMapper.updateById(loginConfig);
@@ -113,6 +121,10 @@ public class ConfigServiceImpl implements ConfigService {
         if (onUse == null) {
             onUse = pageConfigMapper.selectById(1);
         }
+        if (onUse == null) {
+            log.warn("获取正在使用的登录配置,success=>失败,无符合条件的登录配置");
+            throw new DataException("pageConfig", "1", "id / onUse", "1", "不存在该编号且无启用配置");
+        }
         log.info("用户=>{}获取正在使用的页面配置=>{}",userId,onUse);
         return onUse;
     }
@@ -129,6 +141,8 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public Integer updatePageConfig(PageConfig pageConfig, Long userId) {
         PageConfig old = pageConfigMapper.selectById(pageConfig.getDataId());
+        if (old.getOnUse() == 0 && pageConfig.getOnUse() == 1)
+            pageConfigMapper.updateOnUse();
         pageConfig.setCreator(old.getCreator())
                 .setCreateTime(old.getCreateTime());
         int i = pageConfigMapper.updateById(pageConfig);

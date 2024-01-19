@@ -2,6 +2,7 @@ package org.eoa.projectbudget.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 import org.eoa.projectbudget.entity.PageConfig;
 
 /**
@@ -14,4 +15,6 @@ import org.eoa.projectbudget.entity.PageConfig;
  */
 @Mapper
 public interface PageConfigMapper extends BaseMapper<PageConfig> {
+    @Update("update page_config set onUse = 0")
+    Integer updateOnUse();
 }

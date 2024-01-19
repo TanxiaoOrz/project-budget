@@ -30,5 +30,5 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @return viewNo
      */
     @Select("select ifnull(max(viewNo),0)+1 from menu_base where belongContent is null")
-    Integer getViewNoNew();
+    Integer getRootViewNoNew();
 }

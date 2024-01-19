@@ -54,7 +54,7 @@ public class MenuServiceImpl implements MenuService {
     public Long newMenu(Menu menu, Long userId) {
         if (menu.getViewNo() == null)
             if (menu.getBelongContent() == null)
-                menu.setViewNo(menuMapper.getViewNoNew());
+                menu.setViewNo(menuMapper.getRootViewNoNew());
 
             else
                 menu.setViewNo(menuMapper.getViewNoNew(menu.getBelongContent()));

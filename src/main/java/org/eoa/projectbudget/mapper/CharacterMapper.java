@@ -44,7 +44,7 @@ public interface CharacterMapper extends BaseMapper<Character> {
     List<Grade> getHumanFromCharacter(@Param("characterId")Long characterId);
 
     @Select("select * from `character_human` where characterId = #{characterId} and grade <= #{grade}")
-    List<Grade> getHumanFromCharacter(@Param("characterId")Long characterId, @Param("grade")Integer grade);
+    List<Grade> getHumanFromCharacterWithGrade(@Param("characterId")Long characterId, @Param("grade")Integer grade);
 
     @Select("select `authority`.* from `authority` right join `authority_character` on  authorityId = dataId where characterId = #{characterId}")
     List<Authority> getAuthorityFromCharacter(@Param("characterId")Long characterId);

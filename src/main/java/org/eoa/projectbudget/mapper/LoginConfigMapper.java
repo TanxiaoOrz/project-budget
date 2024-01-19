@@ -2,6 +2,7 @@ package org.eoa.projectbudget.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 import org.eoa.projectbudget.entity.LoginConfig;
 
 /**
@@ -14,4 +15,7 @@ import org.eoa.projectbudget.entity.LoginConfig;
  */
 @Mapper
 public interface LoginConfigMapper extends BaseMapper<LoginConfig> {
+
+    @Update("update login_config set onUse = 0")
+    Integer updateOnUse();
 }
