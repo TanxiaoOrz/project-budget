@@ -24,4 +24,11 @@ public interface MenuMapper extends BaseMapper<Menu> {
      */
     @Select("select ifnull(max(viewNo),0)+1 from menu_base where belongContent = #{belongContent}")
     Integer getViewNoNew(@Param("belongContent")Long belongContent);
+
+    /**
+     * 获取搜索表单下新viewNo
+     * @return viewNo
+     */
+    @Select("select ifnull(max(viewNo),0)+1 from menu_base where belongContent is null")
+    Integer getViewNoNew();
 }

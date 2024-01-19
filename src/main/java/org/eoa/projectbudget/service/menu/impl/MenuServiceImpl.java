@@ -53,7 +53,11 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Long newMenu(Menu menu, Long userId) {
         if (menu.getViewNo() == null)
-            menu.setViewNo(menuMapper.getViewNoNew(menu.getBelongContent()));
+            if (menu.getBelongContent() == null)
+                menu.setViewNo(menuMapper.getViewNoNew());
+
+            else
+                menu.setViewNo(menuMapper.getViewNoNew(menu.getBelongContent()));
 
         menu.setCreator(userId)
                 .setCreateTime(new Date())
