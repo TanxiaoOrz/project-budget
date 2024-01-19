@@ -104,22 +104,23 @@ public class MenuServiceImpl implements MenuService {
         }
         log.info("用户=>{}获取顶级菜单构造=>{}", userId, dataId);
         MenuDto menuDto = new MenuDto(menu);
-        menuDto.setChildren(consistChildren(menuMapper.selectList(new QueryWrapper<Menu>().isNull("belongContent").eq("isDeprecated",0).orderByAsc("viewNo"))));
+        menuDto.setChildren(consistChildren(menu.getDataId()));
         if (DataProcessUtils.isEmpty(menuDto.getContentUrl())) {
             menuDto.setContentUrl(searchUrl(menuDto));
         }
         return menuDto;
     }
 
-    private List<MenuDto> consistChildren(List<Menu> menus) {
+    private List<MenuDto> consistChildren(Long belongContent) {
+        List<Menu> menus = menuMapper.selectList(new QueryWrapper<Menu>().
+                eq("belongContent", belongContent).
+                eq("isDeprecated", 0).
+                orderByAsc("viewNo")
+        );
         return menus.stream().map(
                 menu -> new MenuDto(menu).
-                        setChildren(consistChildren(
-                                menuMapper.selectList(new QueryWrapper<Menu>().
-                                        eq("belongContent", menu.getBelongContent()).
-                                        eq("isDeprecated",0).
-                                        orderByAsc("viewNo")
-                                ))
+                        setChildren(consistChildren(menu.getDataId()
+                                )
                         ))
                 .collect(Collectors.toList());
     }
