@@ -142,7 +142,7 @@ VALUES (1, '主页', NULL, NULL, 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"st
 
 INSERT INTO `eoa_build`.`login_config` (`dataId`, `backgroundUrl`, `logoUrl`, `backgroundVideoUrl`, `loginTitle`, `loginSubTitle`, `activeMainTitle`, `activeIntroduction`, `contactManager`, `linkUrl`, `linkStr`, `creator`, `createTime`, `onUse`) VALUES ('1', 'https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp', 'https://github.githubassets.com/images/modules/logos_page/Octocat.png', 'https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr', 'EOA', '可配置的低代码办公平台', '项目预算特化开发版本', '作者相关', '张骏山:13671985248', 'http://127.0.0.1:8080/doc.html', '查看', '1', now(), '1');
 
-INSERT INTO `eoa_build`.`page_config` (`dataId`, `companyName`, `headerColor`, `sideColor`, `onUse`, `creator`, `createTime`) VALUES ('1', 'EOA', '#FFC89A', '#ABA09F', '1', '1',NOW());
+INSERT INTO `eoa_build`.`page_config` (`dataId`, `companyName`, `headerColor`, `sideColor`, `onUse`, `creator`, `createTime`) VALUES ('1', 'EOA', '#140066', '#8A8DAD', '1', '1',NOW());
 
 
 

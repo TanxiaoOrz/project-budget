@@ -74,7 +74,7 @@ public class MenuFrontController {
         String method = "root";
         MenuOut[] cache = cacheService.getCache(ChangeFlagUtils.MENU,method, humanDto.getDataId(), MenuOut[].class);
         if (cache == null) {
-            List<Menu> menuList = menuService.getMenuList(new QueryWrapper<Menu>().eq("belongContent", null).orderByAsc("viewNo"), humanDto.getDataId());
+            List<Menu> menuList = menuService.getMenuList(new QueryWrapper<Menu>().isNull("belongContent").orderByAsc("viewNo"), humanDto.getDataId());
             outs = menuOutFactory.outs(menuList.stream().filter(menu -> {
                 Constraint constraint = AuthorityUtils.getConstraint(menu.getShareAuthority());
                 return AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(menu.getCreator(),null),constraint);
