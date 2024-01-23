@@ -1,8 +1,8 @@
 INSERT INTO `human_resource` (dataId, loginName, password, name, sex, birth, telephone, mail, phone, fax, workCode,
-                              section, depart, job, directorLeader, supporter, photo, signature, lastLogin)
+                              section, depart, job, directorLeader, supporter, photo, signature, lastLogin,safety)
 VALUES (1, 'sysadmin', 'eoa', '系统管理员', null, null, null, null, null, null, null, 0, 0, '系统管理员', 0, 0, 0, null,
-        null),
-       (2, 'tourist', 'eoa', '游客用户', null, null, null, null, null, null, null, 0, 0, '游客', 1, 0, 0, null, null);
+        null,0),
+       (2, 'tourist', 'eoa', '游客用户', null, null, null, null, null, null, null, 0, 0, '游客', 1, 0, 0, null, null,0);
 -- 添加管理员
 
 
@@ -119,7 +119,7 @@ VALUES (1, '组织架构展示资料', '系统默认目录,勿动', 1, now(), nu
      },
      "tableType":null,
      "table":null
-   }', 0)
+   }', 0);
 
 -- 前端目录默认配置
     INSERT
