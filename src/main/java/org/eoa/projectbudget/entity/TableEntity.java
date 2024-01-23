@@ -95,4 +95,26 @@ public class TableEntity extends Table{
         this.defaultShare = defaultShare;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "TableEntity{" +
+                "workFlowNo='" + workFlowNo + '\'' +
+                ", detailCount=" + detailCount +
+                ", detailName='" + detailName + '\'' +
+                ", defaultEdit='" + defaultEdit + '\'' +
+                ", defaultCreate='" + defaultCreate + '\'' +
+                ", defaultDelete='" + defaultDelete + '\'' +
+                ", defaultShare='" + defaultShare + '\'' +
+                ", tableId=" + tableId +
+                ", tableViewName='" + tableViewName + '\'' +
+                ", tableDataName='" + tableDataName + '\'' +
+                ", moduleNo=" + moduleNo +
+                ", groupCount=" + groupCount +
+                ", groupName='" + groupName + '\'' +
+                ", remark='" + remark + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

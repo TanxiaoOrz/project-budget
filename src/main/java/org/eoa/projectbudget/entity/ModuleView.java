@@ -33,4 +33,19 @@ public class ModuleView {
     private Integer flowCounts;
     private Integer tableCounts;
     private Integer chartsCounts;
+
+    @Override
+    public String toString() {
+        return "ModuleView{" +
+                "moduleTypeId=" + moduleTypeId +
+                ", moduleTypeName='" + moduleTypeName + '\'' +
+                ", workflowRemark='" + workflowRemark + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                ", searchCounts=" + searchCounts +
+                ", flowCounts=" + flowCounts +
+                ", tableCounts=" + tableCounts +
+                ", chartsCounts=" + chartsCounts +
+                '}';
+    }
 }

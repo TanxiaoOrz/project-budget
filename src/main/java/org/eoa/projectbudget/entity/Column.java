@@ -65,4 +65,20 @@ public abstract class Column {
     public int hashCode() {
         return Objects.hash(columnId);
     }
+
+    @Override
+    public String toString() {
+        return "Column{" +
+                "columnId=" + columnId +
+                ", columnViewName='" + columnViewName + '\'' +
+                ", columnDataName='" + columnDataName + '\'' +
+                ", columnType='" + columnType + '\'' +
+                ", columnTypeDescription='" + columnTypeDescription + '\'' +
+                ", tableNo=" + tableNo +
+                ", columnGroupNo=" + columnGroupNo +
+                ", columnViewNo=" + columnViewNo +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

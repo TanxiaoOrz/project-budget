@@ -124,4 +124,20 @@ public class Workflow {
         this.isDeprecated = isDeprecated;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Workflow{" +
+                "dataId=" + dataId +
+                ", moduleTypeId=" + moduleTypeId +
+                ", tableId=" + tableId +
+                ", titleColumnId=" + titleColumnId +
+                ", workFlowName='" + workFlowName + '\'' +
+                ", workFlowDescription='" + workFlowDescription + '\'' +
+                ", workflowBaseTitle='" + workflowBaseTitle + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                ", isDeprecated=" + isDeprecated +
+                '}';
+    }
 }

@@ -36,4 +36,23 @@ public class RequestBacklogView extends Request{
         this.arriveTime = arriveTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "RequestBacklogView{" +
+                "humanId=" + humanId +
+                ", arriveTime=" + arriveTime +
+                ", requestId=" + requestId +
+                ", dataId=" + dataId +
+                ", workflowId=" + workflowId +
+                ", currentNode=" + currentNode +
+                ", creator=" + creator +
+                ", requestTitle='" + requestTitle + '\'' +
+                ", requestStatus=" + requestStatus +
+                ", doneHistory='" + doneHistory + '\'' +
+                ", flowHistory='" + flowHistory + '\'' +
+                ", submitTime=" + submitTime +
+                ", finishTime=" + finishTime +
+                '}';
+    }
 }

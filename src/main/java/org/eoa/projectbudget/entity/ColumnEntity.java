@@ -47,4 +47,20 @@ public class ColumnEntity extends Column{
     }
 
 
+    @Override
+    public String toString() {
+        return "ColumnEntity{" +
+                "columnDetailNo=" + columnDetailNo +
+                ", columnId=" + columnId +
+                ", columnViewName='" + columnViewName + '\'' +
+                ", columnDataName='" + columnDataName + '\'' +
+                ", columnType='" + columnType + '\'' +
+                ", columnTypeDescription='" + columnTypeDescription + '\'' +
+                ", tableNo=" + tableNo +
+                ", columnGroupNo=" + columnGroupNo +
+                ", columnViewNo=" + columnViewNo +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

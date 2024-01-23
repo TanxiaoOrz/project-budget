@@ -145,4 +145,22 @@ public class Charts {
         this.isVirtual = isVirtual;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Charts{" +
+                "dataId=" + dataId +
+                ", chartName='" + chartName + '\'' +
+                ", moduleTypeId=" + moduleTypeId +
+                ", defaultCondition='" + defaultCondition + '\'' +
+                ", tableId=" + tableId +
+                ", shareAuthority='" + shareAuthority + '\'' +
+                ", orders='" + orders + '\'' +
+                ", isVirtual=" + isVirtual +
+                ", rows='" + rows + '\'' +
+                ", config='" + config + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

@@ -81,4 +81,14 @@ public class Authority implements VoOut {
         this.authorityDescription = browserId!=1?null:authorityDescription;
         this.authorityRemark = browserId!=2?null:authorityRemark;
     }
+
+    @Override
+    public String toString() {
+        return "Authority{" +
+                "dataId=" + dataId +
+                ", authorityName='" + authorityName + '\'' +
+                ", authorityDescription='" + authorityDescription + '\'' +
+                ", authorityRemark='" + authorityRemark + '\'' +
+                '}';
+    }
 }

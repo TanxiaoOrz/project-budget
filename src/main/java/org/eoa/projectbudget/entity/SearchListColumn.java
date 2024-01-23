@@ -78,4 +78,16 @@ public class SearchListColumn {
         this.searchListId = searchListId;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "SearchListColumn{" +
+                "dataId=" + dataId +
+                ", columnId=" + columnId +
+                ", searchListId=" + searchListId +
+                ", title='" + title + '\'' +
+                ", viewNo=" + viewNo +
+                ", isVirtual=" + isVirtual +
+                '}';
+    }
 }

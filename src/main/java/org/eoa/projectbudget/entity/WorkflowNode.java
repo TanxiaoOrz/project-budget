@@ -159,4 +159,23 @@ public class WorkflowNode {
         this.createTime = createTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "WorkflowNode{" +
+                "dataId=" + dataId +
+                ", workflowNodeName='" + workflowNodeName + '\'' +
+                ", isCounterSign=" + isCounterSign +
+                ", nodeType=" + nodeType +
+                ", workflowId=" + workflowId +
+                ", viewNo=" + viewNo +
+                ", userAuthorityLimit='" + userAuthorityLimit + '\'' +
+                ", tableModifyAuthority='" + tableModifyAuthority + '\'' +
+                ", beforeAction='" + beforeAction + '\'' +
+                ", checkAction='" + checkAction + '\'' +
+                ", afterAction='" + afterAction + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

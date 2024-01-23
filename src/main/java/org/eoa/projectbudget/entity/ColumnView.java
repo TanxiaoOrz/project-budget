@@ -27,4 +27,20 @@ public class ColumnView extends Column{
     private Integer columnViewDisplay;
 
 
+    @Override
+    public String toString() {
+        return "ColumnView{" +
+                "columnViewDisplay=" + columnViewDisplay +
+                ", columnId=" + columnId +
+                ", columnViewName='" + columnViewName + '\'' +
+                ", columnDataName='" + columnDataName + '\'' +
+                ", columnType='" + columnType + '\'' +
+                ", columnTypeDescription='" + columnTypeDescription + '\'' +
+                ", tableNo=" + tableNo +
+                ", columnGroupNo=" + columnGroupNo +
+                ", columnViewNo=" + columnViewNo +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

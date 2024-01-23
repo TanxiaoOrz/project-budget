@@ -35,4 +35,23 @@ public class RequestDoneView extends Request{
         this.doneTime = doneTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "RequestDoneView{" +
+                "humanId=" + humanId +
+                ", doneTime=" + doneTime +
+                ", requestId=" + requestId +
+                ", dataId=" + dataId +
+                ", workflowId=" + workflowId +
+                ", currentNode=" + currentNode +
+                ", creator=" + creator +
+                ", requestTitle='" + requestTitle + '\'' +
+                ", requestStatus=" + requestStatus +
+                ", doneHistory='" + doneHistory + '\'' +
+                ", flowHistory='" + flowHistory + '\'' +
+                ", submitTime=" + submitTime +
+                ", finishTime=" + finishTime +
+                '}';
+    }
 }

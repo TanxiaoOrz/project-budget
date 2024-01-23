@@ -80,4 +80,15 @@ public class Character {
         this.creator = creator;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Character{" +
+                "dataId=" + dataId +
+                ", characterName='" + characterName + '\'' +
+                ", characterDescription='" + characterDescription + '\'' +
+                ", createTime=" + createTime +
+                ", creator=" + creator +
+                '}';
+    }
 }

@@ -117,4 +117,20 @@ public class Section {
         this.isDeprecated = isDeprecated;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Section{" +
+                "dataId=" + dataId +
+                ", sectionName='" + sectionName + '\'' +
+                ", sectionCode='" + sectionCode + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", belongSection=" + belongSection +
+                ", sectionManager=" + sectionManager +
+                ", sectionIntroduction='" + sectionIntroduction + '\'' +
+                ", createTime=" + createTime +
+                ", photo=" + photo +
+                ", isDeprecated=" + isDeprecated +
+                '}';
+    }
 }

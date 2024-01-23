@@ -119,4 +119,20 @@ public class File {
         this.leadContent = leadContent;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "dataId=" + dataId +
+                ", isDeprecated=" + isDeprecated +
+                ", fileName='" + fileName + '\'' +
+                ", fileRoute='" + fileRoute + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                ", editAuthority='" + editAuthority + '\'' +
+                ", viewAuthority='" + viewAuthority + '\'' +
+                ", deleteAuthority='" + deleteAuthority + '\'' +
+                ", leadContent=" + leadContent +
+                '}';
+    }
 }

@@ -98,4 +98,17 @@ public class PageConfig {
         this.createTime = createTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "PageConfig{" +
+                "dataId=" + dataId +
+                ", companyName='" + companyName + '\'' +
+                ", headerColor='" + headerColor + '\'' +
+                ", sideColor='" + sideColor + '\'' +
+                ", onUse=" + onUse +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

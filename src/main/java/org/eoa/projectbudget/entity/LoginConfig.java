@@ -176,4 +176,24 @@ public class LoginConfig {
         this.onUse = onUse;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "LoginConfig{" +
+                "dataId=" + dataId +
+                ", backgroundUrl='" + backgroundUrl + '\'' +
+                ", logoUrl='" + logoUrl + '\'' +
+                ", backgroundVideoUrl='" + backgroundVideoUrl + '\'' +
+                ", loginTitle='" + loginTitle + '\'' +
+                ", loginSubTitle='" + loginSubTitle + '\'' +
+                ", activeMainTitle='" + activeMainTitle + '\'' +
+                ", activeIntroduction='" + activeIntroduction + '\'' +
+                ", contactManager='" + contactManager + '\'' +
+                ", linkUrl='" + linkUrl + '\'' +
+                ", linkStr='" + linkStr + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                ", onUse=" + onUse +
+                '}';
+    }
 }

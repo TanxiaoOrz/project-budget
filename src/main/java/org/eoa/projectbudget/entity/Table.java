@@ -107,4 +107,19 @@ public abstract class Table {
         this.createTime = createTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Table{" +
+                "tableId=" + tableId +
+                ", tableViewName='" + tableViewName + '\'' +
+                ", tableDataName='" + tableDataName + '\'' +
+                ", moduleNo=" + moduleNo +
+                ", groupCount=" + groupCount +
+                ", groupName='" + groupName + '\'' +
+                ", remark='" + remark + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

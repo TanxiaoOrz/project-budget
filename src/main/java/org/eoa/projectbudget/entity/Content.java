@@ -128,4 +128,21 @@ public class Content {
         this.leadContent = leadContent;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Content{" +
+                "dataId=" + dataId +
+                ", isDeprecated=" + isDeprecated +
+                ", contentName='" + contentName + '\'' +
+                ", contentRemark='" + contentRemark + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                ", defaultEdit='" + defaultEdit + '\'' +
+                ", defaultCreate='" + defaultCreate + '\'' +
+                ", defaultDelete='" + defaultDelete + '\'' +
+                ", defaultShare='" + defaultShare + '\'' +
+                ", leadContent=" + leadContent +
+                '}';
+    }
 }

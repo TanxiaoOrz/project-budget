@@ -122,4 +122,20 @@ public class WorkflowRoute {
         this.createTime = createTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "WorkflowRoute{" +
+                "dataId=" + dataId +
+                ", routeName='" + routeName + '\'' +
+                ", workflowId=" + workflowId +
+                ", startNodeId=" + startNodeId +
+                ", endNodeId=" + endNodeId +
+                ", viewNo=" + viewNo +
+                ", enterCondition='" + enterCondition + '\'' +
+                ", routeAction='" + routeAction + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

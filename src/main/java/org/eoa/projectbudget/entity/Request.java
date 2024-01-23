@@ -187,6 +187,24 @@ public class Request {
         this.requestTitle = requestTitle;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "objectMapper=" + objectMapper +
+                ", requestId=" + requestId +
+                ", dataId=" + dataId +
+                ", workflowId=" + workflowId +
+                ", currentNode=" + currentNode +
+                ", creator=" + creator +
+                ", requestTitle='" + requestTitle + '\'' +
+                ", requestStatus=" + requestStatus +
+                ", doneHistory='" + doneHistory + '\'' +
+                ", flowHistory='" + flowHistory + '\'' +
+                ", submitTime=" + submitTime +
+                ", finishTime=" + finishTime +
+                '}';
+    }
 }
 
 

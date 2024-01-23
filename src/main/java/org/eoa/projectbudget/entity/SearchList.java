@@ -121,4 +121,20 @@ public class SearchList {
         this.createTime = createTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "SearchList{" +
+                "dataId=" + dataId +
+                ", moduleTypeId=" + moduleTypeId +
+                ", searchListName='" + searchListName + '\'' +
+                ", defaultCondition='" + defaultCondition + '\'' +
+                ", tableId=" + tableId +
+                ", shareAuthority='" + shareAuthority + '\'' +
+                ", orders='" + orders + '\'' +
+                ", isVirtual=" + isVirtual +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

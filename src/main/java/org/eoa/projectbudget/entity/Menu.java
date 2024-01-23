@@ -121,4 +121,19 @@ public class Menu {
         this.createTime = createTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "dataId=" + dataId +
+                ", contentName='" + contentName + '\'' +
+                ", belongContent=" + belongContent +
+                ", contentUrl='" + contentUrl + '\'' +
+                ", viewNo=" + viewNo +
+                ", isDeprecated=" + isDeprecated +
+                ", shareAuthority='" + shareAuthority + '\'' +
+                ", creator=" + creator +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

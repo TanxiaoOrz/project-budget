@@ -130,4 +130,21 @@ public class Depart {
         this.isDeprecated = isDeprecated;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Depart{" +
+                "dataId=" + dataId +
+                ", departName='" + departName + '\'' +
+                ", departCode='" + departCode + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", belongDepart=" + belongDepart +
+                ", belongSection=" + belongSection +
+                ", departManager=" + departManager +
+                ", departIntroduction='" + departIntroduction + '\'' +
+                ", createTime=" + createTime +
+                ", photo=" + photo +
+                ", isDeprecated=" + isDeprecated +
+                '}';
+    }
 }

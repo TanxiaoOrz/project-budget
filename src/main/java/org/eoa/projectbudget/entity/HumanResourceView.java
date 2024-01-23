@@ -98,4 +98,32 @@ public class HumanResourceView implements Serializable {
         this.age = humanResourceView.age;
         this.isDeprecated = humanResourceView.isDeprecated;
     }
+
+    @Override
+    public String toString() {
+        return "HumanResourceView{" +
+                "dataId=" + dataId +
+                ", loginName='" + loginName + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", sex=" + sex +
+                ", birth=" + birth +
+                ", age=" + age +
+                ", telephone='" + telephone + '\'' +
+                ", mail='" + mail + '\'' +
+                ", phone='" + phone + '\'' +
+                ", fax='" + fax + '\'' +
+                ", workCode='" + workCode + '\'' +
+                ", section=" + section +
+                ", depart=" + depart +
+                ", job='" + job + '\'' +
+                ", directorLeader=" + directorLeader +
+                ", supporter=" + supporter +
+                ", photo=" + photo +
+                ", signature='" + signature + '\'' +
+                ", lastLogin=" + lastLogin +
+                ", safety=" + safety +
+                ", isDeprecated=" + isDeprecated +
+                '}';
+    }
 }
