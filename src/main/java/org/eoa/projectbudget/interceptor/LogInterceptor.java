@@ -23,7 +23,7 @@ public class LogInterceptor implements HandlerInterceptor {
         if (request.getMethod().equalsIgnoreCase("OPTIONS"))
             return true;
         HumanDto humanDto =(HumanDto) request.getAttribute("HumanDto");
-        log.info("用户=>{}访问url=>{}",humanDto.getDataId(),request.getPathInfo());
+        log.info("用户=>{}访问url=>{}",humanDto.getDataId(),request.getRequestURL() + "?" + request.getQueryString());
         return true;
     }
 }

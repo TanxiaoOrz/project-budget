@@ -7,6 +7,7 @@ import org.eoa.projectbudget.vo.out.FormOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -36,11 +37,11 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
                 .setCreatorName(humanResourceView==null?"":humanResourceView.getName());
 
         dto.getGroups().forEach(group -> {
-            HashMap<String, FormOut.ColumnSimple> columns = new HashMap<>();
+            List< FormOut.ColumnSimple> columns = new ArrayList<>();
             HashMap<String, Object> values = new HashMap<>();
             group.getColumns().forEach((column, value) -> {
                 String columnDataName = column.getColumnDataName();
-                columns.put(columnDataName, new FormOut.ColumnSimple(column.getColumnType(),column.getColumnTypeDescription(),column.getColumnViewName(), column.getColumnId()));
+                columns.add(new FormOut.ColumnSimple(column.getColumnType(),column.getColumnTypeDescription(),column.getColumnViewName(), column.getColumnId(),columnDataName));
                 values.put(columnDataName,value);
             });
 
@@ -52,9 +53,9 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
         dto.getGroups().sort(Comparator.comparingInt(FormOutDto.Group::getGroupId));
         if (!dto.getVirtual())
             dto.getDetails().forEach(detail -> {
-                HashMap<String, FormOut.ColumnSimple> columns = new HashMap<>();
+                List< FormOut.ColumnSimple> columns = new ArrayList<>();
                 detail.getDetailColumns().forEach(column ->
-                        columns.put(column.getColumnDataName(),new FormOut.ColumnSimple(column.getColumnType(), column.getColumnTypeDescription(), column.getColumnViewName(), column.getColumnId())));
+                        columns.add(new FormOut.ColumnSimple(column.getColumnType(), column.getColumnTypeDescription(), column.getColumnViewName(), column.getColumnId(),column.getColumnDataName())));
                 formOut.addDetail(detail.getDetailId(),detail.getDetailName(), columns,detail.getDetailValuesList());
             });
 

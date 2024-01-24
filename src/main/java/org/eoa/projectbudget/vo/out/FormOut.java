@@ -55,9 +55,9 @@ public class FormOut implements VoOut{
     public void toBrowser(Long columnId) {
         for (Group group:
              groups) {
-            Optional<Map.Entry<String, ColumnSimple>> entry = group.columns.entrySet().stream().filter(set -> set.getValue().columnId.equals(columnId)).findFirst();
+            Optional<ColumnSimple> entry = group.columns.stream().filter(set -> set.columnId.equals(columnId)).findFirst();
             if (entry.isPresent()) {
-                Object o = group.values.get(entry.get().getKey());
+                Object o = group.values.get(entry.get().columnDataName);
                 title = o==null?dataId.toString():o.toString();
                 break;
             }
@@ -111,12 +111,12 @@ public class FormOut implements VoOut{
         return this;
     }
 
-    public FormOut addGroup(Integer groupId, String groupName, Map<String, ColumnSimple> columns, Map<String, Object> values) {
+    public FormOut addGroup(Integer groupId, String groupName, List<ColumnSimple> columns, Map<String, Object> values) {
         groups.add(new Group(groupId, groupName, columns, values));
         return this;
     }
 
-    public FormOut addDetail(Integer detailId, String detailName, Map<String, FormOut.ColumnSimple> columns, List<Map<String, Object>> values) {
+    public FormOut addDetail(Integer detailId, String detailName, List<FormOut.ColumnSimple> columns, List<Map<String, Object>> values) {
         details.add(new Detail(detailId, detailName, columns, values));
         return this;
     }
@@ -236,14 +236,17 @@ public class FormOut implements VoOut{
         String columnType;
         String columnTypeDescription;
 
+        String columnDataName;
+
         public ColumnSimple() {
         }
 
-        public ColumnSimple(String columnType, String columnTypeDescription, String columnViewName, Long columnId) {
+        public ColumnSimple(String columnType, String columnTypeDescription, String columnViewName, Long columnId, String columnDataName) {
             this.columnType = columnType;
             this.columnTypeDescription = columnTypeDescription;
             this.columnViewName = columnViewName;
             this.columnId = columnId;
+            this.columnDataName = columnDataName;
         }
 
         public Long getColumnId() {
@@ -281,18 +284,27 @@ public class FormOut implements VoOut{
             this.columnViewName = columnViewName;
             return this;
         }
+
+        public String getColumnDataName() {
+            return columnDataName;
+        }
+
+        public ColumnSimple setColumnDataName(String columnDataName) {
+            this.columnDataName = columnDataName;
+            return this;
+        }
     }
 
     public static class Group {
         Integer groupId;
         String groupName;
-        Map<String, FormOut.ColumnSimple> columns;
+        List<FormOut.ColumnSimple> columns;
         Map<String,Object> values;
 
         public Group() {
         }
 
-        public Group(Integer groupId, String groupName, Map<String, FormOut.ColumnSimple> columns, Map<String, Object> values) {
+        public Group(Integer groupId, String groupName, List<FormOut.ColumnSimple> columns, Map<String, Object> values) {
             this.groupId = groupId;
             this.groupName = groupName;
             this.columns = columns;
@@ -317,11 +329,11 @@ public class FormOut implements VoOut{
             return this;
         }
 
-        public Map<String, FormOut.ColumnSimple> getColumns() {
+        public List<FormOut.ColumnSimple> getColumns() {
             return columns;
         }
 
-        public Group setColumns(Map<String, FormOut.ColumnSimple> columns) {
+        public Group setColumns(List<FormOut.ColumnSimple> columns) {
             this.columns = columns;
             return this;
         }
@@ -339,13 +351,13 @@ public class FormOut implements VoOut{
     public static class Detail {
         Integer detailId;
         String detailName;
-        Map<String, FormOut.ColumnSimple> columns;
+        List<FormOut.ColumnSimple> columns;
         List<Map<String, Object>> values;
 
         public Detail() {
         }
 
-        public Detail(Integer detailId, String detailName, Map<String, FormOut.ColumnSimple> columns, List<Map<String, Object>> values) {
+        public Detail(Integer detailId, String detailName, List<FormOut.ColumnSimple> columns, List<Map<String, Object>> values) {
             this.detailId = detailId;
             this.detailName = detailName;
             this.columns = columns;
@@ -370,11 +382,11 @@ public class FormOut implements VoOut{
             return this;
         }
 
-        public Map<String, FormOut.ColumnSimple> getColumns() {
+        public List<FormOut.ColumnSimple> getColumns() {
             return columns;
         }
 
-        public Detail setColumns(Map<String, FormOut.ColumnSimple> columns) {
+        public Detail setColumns(List<FormOut.ColumnSimple> columns) {
             this.columns = columns;
             return this;
         }
