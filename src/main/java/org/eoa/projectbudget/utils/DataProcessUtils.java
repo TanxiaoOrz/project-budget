@@ -50,7 +50,7 @@ public class DataProcessUtils {
      */
     public static String contactStringArray(String[] strings) {
         if (strings == null || strings.length == 0) {
-            return "";
+            return null;
         }
         if (strings.length>=2) {
             StringBuilder stringBuffer = new StringBuilder();

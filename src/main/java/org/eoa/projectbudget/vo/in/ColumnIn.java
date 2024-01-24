@@ -68,7 +68,7 @@ public class ColumnIn implements CheckParameter<Column> {
                 .setColumnTypeDescription(columnTypeDescription);
         if (isVirtual) {
             assert ret instanceof ColumnView;
-            ((ColumnView) ret).setColumnViewDisplay(DataProcessUtils.translateBooleanToInteger(columnViewDisplay));
+            // ((ColumnView) ret).setColumnViewDisplay(DataProcessUtils.translateBooleanToInteger(columnViewDisplay));
         }
         else {
             assert ret instanceof ColumnEntity;
