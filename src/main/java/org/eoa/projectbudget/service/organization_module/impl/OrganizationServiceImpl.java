@@ -268,10 +268,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (section.getCreateTime() == null)
             section.setCreateTime(new Date());
 
-        Section sectionLead = sectionMapper.selectById(section.getBelongSection());
-        if (sectionLead == null||DataProcessUtils.translateIntegerToBoolean(sectionLead.getIsDeprecated())) {
-            log.error("用户=>{}创建分部=>{},分部=>{}不存在",userId,section,section.getBelongSection());
-            throw new ParameterException("section",section.getBelongSection().toString(),"分部不存在或已废弃");
+        Long belongSection = section.getBelongSection();
+        Section sectionLead = sectionMapper.selectById(belongSection);
+        if (belongSection!= 0 && (sectionLead == null||DataProcessUtils.translateIntegerToBoolean(sectionLead.getIsDeprecated()))) {
+            log.error("用户=>{}创建分部=>{},分部=>{}不存在",userId,section, belongSection);
+            throw new ParameterException("section", belongSection.toString(),"分部不存在或已废弃");
         }
 
         log.info("用户=>{}创建分部=>{}",userId,section);
@@ -285,10 +286,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (section.getCreateTime() == null)
             section.setCreateTime(sectionMapper.selectById(section.getDataId()).getCreateTime());
 
-        Section sectionLead = sectionMapper.selectById(section.getBelongSection());
-        if (sectionLead == null||DataProcessUtils.translateIntegerToBoolean(sectionLead.getIsDeprecated())) {
-            log.error("用户=>{}创建分部=>{},分部=>{}不存在",userId,section,section.getBelongSection());
-            throw new ParameterException("section",section.getBelongSection().toString(),"分部不存在或已废弃");
+        Long belongSection = section.getBelongSection();
+        Section sectionLead = sectionMapper.selectById(belongSection);
+        if (belongSection!= 0 && (sectionLead == null||DataProcessUtils.translateIntegerToBoolean(sectionLead.getIsDeprecated()))) {
+            log.error("用户=>{}修改分部=>{},分部=>{}不存在",userId,section, belongSection);
+            throw new ParameterException("section", belongSection.toString(),"分部不存在或已废弃");
         }
 
         int update = sectionMapper.updateById(section);

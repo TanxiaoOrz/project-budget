@@ -162,7 +162,7 @@ create table `section_resource`
     `sectionCode`         varchar(100)                       not null comment '分部编号',
     `fullName`            varchar(100)                       null comment '分部全称',
     `belongSection`       BIGINT(64) UNSIGNED                NOT NULL comment '上级分部',
-    `sectionManager`      BIGINT(64) UNSIGNED                NOT NULL comment '分部负责人',
+    `sectionManager`      BIGINT(64) UNSIGNED                NULL comment '分部负责人',
     `sectionIntroduction` varchar(1000)                      NULL comment '分部介绍',
     `createTime`          datetime                           null default now() comment '创建时间',
     `photo`               BIGINT(64) UNSIGNED                NULL comment '照片文件编号',
