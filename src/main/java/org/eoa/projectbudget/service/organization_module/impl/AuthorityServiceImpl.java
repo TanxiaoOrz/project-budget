@@ -82,7 +82,7 @@ public class AuthorityServiceImpl implements AuthorityService, InitializingBean 
     @Override
     public Character getCharacterById(Long characterId, Long userId) {
         log.info("用户=>{}获取角色=>{}",userId,characterId);
-        Character character = characterMapper.selectById(userId);
+        Character character = characterMapper.selectById(characterId);
         if (character == null) {
             throw new ParameterException("authorityId",characterId.toString(),"不存在该权限");
         }
