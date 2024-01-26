@@ -109,7 +109,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Long checkLogin(String loginName, String password) throws ParameterException {
         log.info("用户名=>{}尝试登录",loginName);
-        HumanResourceView humanResourceView = humanViewMapper.selectOne(new QueryWrapper<HumanResourceView>().eq("loginName", loginName).eq("password", password));
+        HumanResourceView humanResourceView = humanViewMapper.selectOne(new QueryWrapper<HumanResourceView>().eq("loginName", loginName).eq("password", password).eq("isDeprecated",0));
         if (humanResourceView == null) {
             log.info("未检索到符合输入用户名与密码的人员");
             throw new ParameterException("longinName",loginName,"用户名或密码不正确");
