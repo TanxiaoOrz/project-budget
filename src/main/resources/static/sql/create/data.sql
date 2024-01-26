@@ -59,7 +59,7 @@ values ('1', '1');
 -- 链接系统管理员人员与角色
 
 Insert Into `content_list` (dataId, contentName, contentRemark, creator, createTime, defaultEdit, defaultCreate,
-                            defaultDelete, defaultShare, leadContent)
+                            defaultDelete, defaultShare, leadContent, defaultView)
 VALUES (1, '组织架构展示资料', '系统默认目录,勿动', 1, now(), null, '{
   "bodyType": "allConstraint",
   "body": {
@@ -74,7 +74,14 @@ VALUES (1, '组织架构展示资料', '系统默认目录,勿动', 1, now(), nu
   },
   "tableType": null,
   "table": null
-}', 0),
+}', 0, '{
+  "bodyType": "allConstraint",
+  "body": {
+    "allConstraint": "{\\"start\\":0,\\"end\\":100}"
+  },
+  "tableType": null,
+  "table": null
+}'),
        (2, '人员头像', '系统默认目录,勿动', 1, now(), null, '{
          "bodyType": "allConstraint",
          "body": {
@@ -89,7 +96,14 @@ VALUES (1, '组织架构展示资料', '系统默认目录,勿动', 1, now(), nu
          },
          "tableType": null,
          "table": null
-       }', 1),
+       }', 1, '{
+         "bodyType": "allConstraint",
+         "body": {
+           "allConstraint": "{\\"start\\":0,\\"end\\":100}"
+         },
+         "tableType": null,
+         "table": null
+       }'),
        (3, '部门头像', '系统默认目录,勿动', 1, now(), null, '{
          "bodyType": "allConstraint",
          "body": {
@@ -104,7 +118,14 @@ VALUES (1, '组织架构展示资料', '系统默认目录,勿动', 1, now(), nu
          },
          "tableType": null,
          "table": null
-       }', 1),
+       }', 1, '{
+         "bodyType": "allConstraint",
+         "body": {
+           "allConstraint": "{\\"start\\":0,\\"end\\":100}"
+         },
+         "tableType": null,
+         "table": null
+       }'),
        (4, '分部头像', '系统默认目录,勿动', 1, now(), null, '{
          "bodyType": "allConstraint",
          "body": {
@@ -119,7 +140,14 @@ VALUES (1, '组织架构展示资料', '系统默认目录,勿动', 1, now(), nu
          },
          "tableType": null,
          "table": null
-       }', 1);
+       }', 1, '{
+         "bodyType": "allConstraint",
+         "body": {
+           "allConstraint": "{\\"start\\":0,\\"end\\":100}"
+         },
+         "tableType": null,
+         "table": null
+       }');
 
 -- 前端目录默认配置
 INSERT
@@ -270,10 +298,4 @@ VALUES (1, '姓名', 'name', 'SINGLE_TEXT', NULL, 1, 1, 1, 1, '2024-01-24 14:29:
      , (5, '分部名称', 'sectionName', 'SINGLE_TEXT', NULL, 3, 1, 1, 1, '2024-01-24 17:39:56', 1)
      , (6, '目录名称', 'contentName', 'SINGLE_TEXT', NULL, 4, 1, 1, 1, '2024-01-25 16:26:56', 1)
      , (7, '文件名称', 'fileName', 'SINGLE_TEXT', NULL, 5, 1, 1, 1, '2024-01-25 16:30:10', 1);
-
-INSERT INTO `section_resource` (`dataId`, `sectionName`, `sectionCode`, `fullName`, `belongSection`, `sectionManager`,
-                                `sectionIntroduction`, `createTime`, `photo`, `isDeprecated`)
-VALUES (1, '支撑服务分部', 'SERVE', '维森化工石油公司支撑服务分部', 0, NULL, NULL, '2024-01-25 17:10:40', NULL, 0),
-       (2, '能源制造公司', 'ENERGY', '维森化工石油-能源制造公司', 0, NULL, NULL, '2024-01-25 17:19:26', NULL, 0),
-       (3, '设备制造分部', 'EQUIPMENT', '维森化工石油-设备制造分部', 0, NULL, NULL, '2024-01-25 17:26:51', NULL, 0);
 
