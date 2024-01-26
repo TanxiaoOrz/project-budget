@@ -28,7 +28,18 @@ public class Content {
     String defaultCreate;
     String defaultDelete;
     String defaultShare;
+
+
     Long leadContent;
+    String defaultView;
+    public String getDefaultView() {
+        return defaultView;
+    }
+
+    public Content setDefaultView(String defaultView) {
+        this.defaultView = defaultView;
+        return this;
+    }
 
     public Long getDataId() {
         return dataId;

@@ -24,7 +24,15 @@ public class ContentIn implements CheckParameter<Content>{
     String defaultDelete;
     String defaultShare;
     Long leadContent;
+    String defaultView;
+    public String getDefaultView() {
+        return defaultView;
+    }
 
+    public ContentIn setDefaultView(String defaultView) {
+        this.defaultView = defaultView;
+        return this;
+    }
     @Override
     public void checkSelf() throws ParameterException {
         if (DataProcessUtils.isEmpty(contentName)) {
@@ -44,7 +52,8 @@ public class ContentIn implements CheckParameter<Content>{
                 .setDefaultDelete(defaultDelete)
                 .setDefaultShare(defaultShare)
                 .setLeadContent(leadContent)
-                .setIsDeprecated(0);
+                .setIsDeprecated(0)
+                .setDefaultView(defaultView);
     }
 
     public String getContentName() {

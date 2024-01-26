@@ -106,7 +106,7 @@ public class ContentFrontController {
         ContentOut[] cache = cacheService.getCache(ChangeFlagUtils.CONTENT,method, humanDto.getDataId(), ContentOut[].class);
         if (cache == null) {
             outs = contentOutFactory.outs(contentService.getContentList(filter.getWrapper(), humanDto.getDataId())).stream().filter(contentOut -> {
-                Constraint constraint = AuthorityUtils.getConstraint(contentOut.getDefaultShare());
+                Constraint constraint = AuthorityUtils.getConstraint(contentOut.getDefaultView());
                 return AuthorityUtils.checkAuthority(humanDto,organizationService.getHumanDto(contentOut.getCreator(),null),constraint);
             }).toList();
             cacheService.setCache(ChangeFlagUtils.CONTENT,method, humanDto.getDataId(), outs);
@@ -129,7 +129,7 @@ public class ContentFrontController {
                 out = contentOutFactory.out(contentService.getContent(id, humanDto.getDataId()));
             }
             if (viewCache == null) {
-                viewCache = AuthorityUtils.checkAuthority(humanDto, organizationService.getHumanDto(out.getCreator(), null), AuthorityUtils.getConstraint(out.getDefaultShare()));
+                viewCache = AuthorityUtils.checkAuthority(humanDto, organizationService.getHumanDto(out.getCreator(), null), AuthorityUtils.getConstraint(out.getDefaultView()));
                 cacheService.setCache(ChangeFlagUtils.CONTENT, id.toString(), humanDto.getDataId(), viewCache);
             }
             if (viewCache)

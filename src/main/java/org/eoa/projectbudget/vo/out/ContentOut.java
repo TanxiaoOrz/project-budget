@@ -43,7 +43,15 @@ public class ContentOut implements VoOut{
     String creatorName;
     @Schema(description = "上级目录名称")
     String leadName;
+    String defaultView;
+    public String getDefaultView() {
+        return defaultView;
+    }
 
+    public ContentOut setDefaultView(String defaultView) {
+        this.defaultView = defaultView;
+        return this;
+    }
     public ContentOut() {
     }
 
@@ -59,6 +67,7 @@ public class ContentOut implements VoOut{
         this.defaultDelete = content.getDefaultDelete();
         this.defaultShare = content.getDefaultShare();
         this.leadContent = content.getLeadContent();
+        this.defaultView = content.getDefaultView();
     }
 
     public Long getDataId() {
