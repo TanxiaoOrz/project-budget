@@ -68,7 +68,7 @@ VALUES (5, 0, '合同管理', NULL, 1, '2024-01-26 16:11:23', NULL, '{
   \"table\": {},
   \"bodyType\": \"createConstraint,characterConstraint,\",
   \"tableType\": \"\"
-}', NULL, '{
+}', 0, '{
   \"body\": {
     \"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"
   },
@@ -83,7 +83,7 @@ VALUES (5, 0, '合同管理', NULL, 1, '2024-01-26 16:11:23', NULL, '{
          \"table\": {},
          \"bodyType\": \"createConstraint,\",
          \"tableType\": \"\"
-       }', NULL, '{
+       }', 0, '{
          \"body\": {
            \"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"
          },
