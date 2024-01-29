@@ -70,7 +70,8 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public Long newLoginConfig(LoginConfig loginConfig, Long userId) {
         loginConfig.setCreator(userId).setCreateTime(new Date());
-
+        if (loginConfig.getOnUse() == 1)
+            loginConfigMapper.updateOnUse();
         loginConfigMapper.insert(loginConfig);
         log.info("用户=>{}创建登录配置=>{}",userId,loginConfig.getDataId());
         return loginConfig.getDataId();
@@ -81,7 +82,7 @@ public class ConfigServiceImpl implements ConfigService {
         LoginConfig old = loginConfigMapper.selectById(loginConfig.getDataId());
 
         if (old.getOnUse() == 0 && loginConfig.getOnUse() == 1)
-            pageConfigMapper.updateOnUse();
+            loginConfigMapper.updateOnUse();
         loginConfig.setCreator(old.getCreator())
                 .setCreateTime(old.getCreateTime());
         int i = loginConfigMapper.updateById(loginConfig);
@@ -132,7 +133,8 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public Long newPageConfig(PageConfig pageConfig, Long userId) {
         pageConfig.setCreator(userId).setCreateTime(new Date());
-
+        if (pageConfig.getOnUse() == 1)
+            pageConfigMapper.updateOnUse();
         pageConfigMapper.insert(pageConfig);
         log.info("用户=>{}创建页面配置=>{}",userId,pageConfig.getDataId());
         return pageConfig.getDataId();

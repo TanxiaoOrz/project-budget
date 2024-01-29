@@ -299,7 +299,7 @@ create table `request`
 create table `workflow_node`
 (
     `dataId`               BIGINT(64) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '节点编号',
-    `name`                 varchar(100) comment '节点名称',
+    `workflowNodeName`     varchar(100) comment '节点名称',
     `userAuthorityLimit`   json                               null comment '操作对象权限组',
     `isCounterSign`        int                                not null default 0 comment '是否需要会签',
     `nodeType`             int                                not null comment '节点类型 0、创建，1、提交，2、审批，3、抄送，4、归档',
