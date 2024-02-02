@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2023/10/8 17:17
  * @PackageName: org.eoa.projectbudget.vo.ViewData
  * @ClassName: DropSelect
- * @Description: TODO
+ * @Description: 下拉框显示输出类
  * @Version 1.0
  */
 
@@ -24,6 +24,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class DropSelect {
     private Integer key;
+    private Integer value;
     private String label;
     private Boolean disable;
     private List<DropSelect> children;

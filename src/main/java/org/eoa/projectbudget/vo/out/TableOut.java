@@ -116,21 +116,21 @@ public class TableOut implements VoOut{
         if (!virtual) {
             int detailCount = detailNames.length;
             detailSelect = new ArrayList<>(detailCount+1);
-            detailSelect.add(new DropSelect(-1,"不在明细表",true,null));
+            detailSelect.add(new DropSelect(-1,-1,"不在明细表",true,null));
             if (detailCount > 0) {
                 for (int i = 0; i < detailCount; i++) {
-                    detailSelect.add(new DropSelect(i+1, detailNames[i], true, null));
+                    detailSelect.add(new DropSelect(i+1,i+1, detailNames[i], true, null));
                 }
             }
         } else {
             detailSelect = new ArrayList<>(1);
-            detailSelect.add(new DropSelect(-1,"不在明细表",true,null));
+            detailSelect.add(new DropSelect(-1,-1,"不在明细表",true,null));
         }
         int groupCount = groupNames.length;
         groupSelect = new ArrayList<>(groupCount + 1);
-        groupSelect.add(new DropSelect(-1,"不在主表",true,null));
+        groupSelect.add(new DropSelect(-1,-1,"不在主表",true,null));
         for (int i = 0; i < groupCount; i++) {
-            groupSelect.add(new DropSelect(i+1,groupNames[i],true,null));
+            groupSelect.add(new DropSelect(i+1,i+1,groupNames[i],true,null));
         }
     }
 
