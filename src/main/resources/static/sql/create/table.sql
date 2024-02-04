@@ -255,7 +255,7 @@ create table `content_list`
     `defaultDelete` json                               null comment '删除权限描述',
     `defaultView`   json                               null comment '查看权限描述',
     `defaultShare`  json                               null comment '共享权限描述',
-    `leadContent`   BIGINT(64) UNSIGNED                NULL COMMENT '数据编号,所在目录唯一id',
+    `leadContent`   BIGINT(64) UNSIGNED                NULL default 0 COMMENT '数据编号,所在目录唯一id',
     primary key (`dataId`),
     INDEX `leadContent_FOREIGN` (`leadContent` ASC)
 ) COMMENT = '目录';
