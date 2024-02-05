@@ -163,12 +163,9 @@ public class WorkflowServiceImpl implements WorkflowService {
         if (workflowNode.getTableModifyAuthority() == null) {
             List<ColumnEntity> columnEntities = columnEntityMapper.selectList(new QueryWrapper<ColumnEntity>()
                     .eq("tableNo", workflow.getTableId())
-                    .orderByAsc("viewNo"));
+                    .orderByAsc("columnViewNo"));
             boolean defaultAuthority;
-            switch (workflowNode.getNodeType()) {
-                case WorkflowNode.ADMIT, WorkflowNode.CREATE -> defaultAuthority = true;
-                default -> defaultAuthority = false;
-            }
+            defaultAuthority = workflowNode.getNodeType() == WorkflowNode.CREATE;
             try {
                 workflowNode.setTableModifyAuthority(
                         new ObjectMapper().writeValueAsString(columnEntities.stream().collect(Collectors.toMap(ColumnEntity::getColumnId,c->defaultAuthority)))
