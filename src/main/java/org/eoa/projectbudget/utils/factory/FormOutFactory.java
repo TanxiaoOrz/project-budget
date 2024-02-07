@@ -1,6 +1,7 @@
 package org.eoa.projectbudget.utils.factory;
 
 import org.eoa.projectbudget.dto.FormOutDto;
+import org.eoa.projectbudget.entity.Column;
 import org.eoa.projectbudget.entity.HumanResourceView;
 import org.eoa.projectbudget.mapper.HumanViewMapper;
 import org.eoa.projectbudget.vo.out.FormOut;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 张骏山
@@ -37,17 +39,17 @@ public class FormOutFactory implements OutFactory<FormOutDto,FormOut>{
                 .setCreatorName(humanResourceView==null?"":humanResourceView.getName());
 
         dto.getGroups().forEach(group -> {
-            List< FormOut.ColumnSimple> columns = new ArrayList<>();
+            List<Column> columnEntities = new ArrayList<>();
             HashMap<String, Object> values = new HashMap<>();
             group.getColumns().forEach((column, value) -> {
                 String columnDataName = column.getColumnDataName();
-                columns.add(new FormOut.ColumnSimple(column.getColumnType(),column.getColumnTypeDescription(),column.getColumnViewName(), column.getColumnId(),columnDataName));
+                columnEntities.add(column);
                 values.put(columnDataName,value);
             });
-
+            columnEntities.sort(Comparator.comparingInt(Column::getColumnViewNo));
             formOut.addGroup(group.getGroupId(),
                     group.getGroupName(),
-                    columns,
+                    columnEntities.stream().map(column -> new FormOut.ColumnSimple(column.getColumnType(), column.getColumnTypeDescription(), column.getColumnViewName(), column.getColumnId(), column.getColumnDataName())).collect(Collectors.toList()),
                     values);
         });
         dto.getGroups().sort(Comparator.comparingInt(FormOutDto.Group::getGroupId));
