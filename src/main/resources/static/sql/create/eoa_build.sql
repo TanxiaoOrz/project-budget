@@ -11,7 +11,7 @@
  Target Server Version : 50743
  File Encoding         : 65001
 
- Date: 06/02/2024 17:27:08
+ Date: 07/02/2024 17:42:25
 */
 
 SET NAMES utf8mb4;
@@ -22,11 +22,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `authority`;
 CREATE TABLE `authority`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,权限唯一id',
-  `authorityName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限名称',
-  `authorityDescription` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限描述',
-  `authorityRemark` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限备注,用来描述那些角色或人员拥有该权限',
-  PRIMARY KEY (`dataId`) USING BTREE
+                              `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,权限唯一id',
+                              `authorityName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限名称',
+                              `authorityDescription` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限描述',
+                              `authorityRemark` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限备注,用来描述那些角色或人员拥有该权限',
+                              PRIMARY KEY (`dataId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后端操作权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -48,9 +48,9 @@ INSERT INTO `authority` VALUES (10, '页面权限', '页面菜单的配置操作
 -- ----------------------------
 DROP TABLE IF EXISTS `authority_character`;
 CREATE TABLE `authority_character`  (
-  `characterId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
-  `authorityId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,权限唯一id',
-  PRIMARY KEY (`characterId`, `authorityId`) USING BTREE
+                                        `characterId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
+                                        `authorityId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,权限唯一id',
+                                        PRIMARY KEY (`characterId`, `authorityId`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色权限索引表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -72,9 +72,9 @@ INSERT INTO `authority_character` VALUES (10, 10);
 -- ----------------------------
 DROP TABLE IF EXISTS `authority_human`;
 CREATE TABLE `authority_human`  (
-  `humanId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,人员唯一id',
-  `authorityId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,权限唯一id',
-  PRIMARY KEY (`humanId`, `authorityId`) USING BTREE
+                                    `humanId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,人员唯一id',
+                                    `authorityId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,权限唯一id',
+                                    PRIMARY KEY (`humanId`, `authorityId`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '人员权限索引表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -86,13 +86,13 @@ CREATE TABLE `authority_human`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `character`;
 CREATE TABLE `character`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,角色唯一id',
-  `characterName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称',
-  `characterDescription` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色描述',
-  `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建者id',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `characterName_Unique`(`characterName`) USING BTREE
+                              `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,角色唯一id',
+                              `characterName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称',
+                              `characterDescription` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色描述',
+                              `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建者id',
+                              PRIMARY KEY (`dataId`) USING BTREE,
+                              UNIQUE INDEX `characterName_Unique`(`characterName`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -120,10 +120,10 @@ INSERT INTO `character` VALUES (16, '分部领导', '项目预算管理角色', 
 -- ----------------------------
 DROP TABLE IF EXISTS `character_human`;
 CREATE TABLE `character_human`  (
-  `humanId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,人员唯一id',
-  `characterId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
-  `grade` int(11) NOT NULL DEFAULT 0 COMMENT '角色作用级别',
-  PRIMARY KEY (`humanId`, `characterId`) USING BTREE
+                                    `humanId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,人员唯一id',
+                                    `characterId` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,角色唯一id',
+                                    `grade` int(11) NOT NULL DEFAULT 0 COMMENT '角色作用级别',
+                                    PRIMARY KEY (`humanId`, `characterId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色人员索引表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -142,20 +142,20 @@ INSERT INTO `character_human` VALUES (12, 11, 0);
 -- ----------------------------
 DROP TABLE IF EXISTS `charts_base`;
 CREATE TABLE `charts_base`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '路径编号',
-  `moduleTypeId` bigint(64) UNSIGNED NOT NULL COMMENT '所属模块',
-  `chartName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '列表名称',
-  `defaultCondition` json NULL COMMENT '默认查询条件',
-  `tableId` bigint(64) UNSIGNED NOT NULL COMMENT '表单编号',
-  `shareAuthority` json NULL COMMENT '查看权限',
-  `isVirtual` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是虚拟',
-  `rows` json NULL COMMENT '数据对应',
-  `orders` json NULL COMMENT '排序字段',
-  `config` json NULL COMMENT '图表配置',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  INDEX `charts_base_moduleTypeId_index`(`moduleTypeId`) USING BTREE
+                                `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '路径编号',
+                                `moduleTypeId` bigint(64) UNSIGNED NOT NULL COMMENT '所属模块',
+                                `chartName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '列表名称',
+                                `defaultCondition` json NULL COMMENT '默认查询条件',
+                                `tableId` bigint(64) UNSIGNED NOT NULL COMMENT '表单编号',
+                                `shareAuthority` json NULL COMMENT '查看权限',
+                                `isVirtual` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是虚拟',
+                                `rows` json NULL COMMENT '数据对应',
+                                `orders` json NULL COMMENT '排序字段',
+                                `config` json NULL COMMENT '图表配置',
+                                `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                                `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                                PRIMARY KEY (`dataId`) USING BTREE,
+                                INDEX `charts_base_moduleTypeId_index`(`moduleTypeId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '展示图表基础' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -167,20 +167,20 @@ CREATE TABLE `charts_base`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `content_list`;
 CREATE TABLE `content_list`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,目录唯一id',
-  `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
-  `contentName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '目录名',
-  `contentRemark` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '目录描述',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `defaultEdit` json NULL COMMENT '编辑权限描述',
-  `defaultCreate` json NULL COMMENT '创建权限描述',
-  `defaultDelete` json NULL COMMENT '删除权限描述',
-  `defaultShare` json NULL COMMENT '共享权限描述',
-  `leadContent` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '数据编号,所在目录唯一id',
-  `defaultView` json NULL,
-  PRIMARY KEY (`dataId`) USING BTREE,
-  INDEX `leadContent_FOREIGN`(`leadContent`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,目录唯一id',
+                                 `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
+                                 `contentName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '目录名',
+                                 `contentRemark` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '目录描述',
+                                 `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                                 `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                                 `defaultEdit` json NULL COMMENT '编辑权限描述',
+                                 `defaultCreate` json NULL COMMENT '创建权限描述',
+                                 `defaultDelete` json NULL COMMENT '删除权限描述',
+                                 `defaultShare` json NULL COMMENT '共享权限描述',
+                                 `leadContent` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '数据编号,所在目录唯一id',
+                                 `defaultView` json NULL,
+                                 PRIMARY KEY (`dataId`) USING BTREE,
+                                 INDEX `leadContent_FOREIGN`(`leadContent`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '目录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -201,19 +201,19 @@ INSERT INTO `content_list` VALUES (9, 0, '项目组织名录', '项目组织预�
 -- ----------------------------
 DROP TABLE IF EXISTS `depart_resource`;
 CREATE TABLE `depart_resource`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,部门唯一id',
-  `departName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '部门名称',
-  `departCode` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '部门编号',
-  `fullName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部门全称',
-  `belongDepart` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '上级部门',
-  `belongSection` bigint(64) UNSIGNED NOT NULL COMMENT '上级分部',
-  `departManager` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '部门负责人',
-  `departIntroduction` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部门介绍',
-  `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `photo` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '照片文件编号',
-  `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `departCode_Unique`(`departCode`) USING BTREE
+                                    `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,部门唯一id',
+                                    `departName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '部门名称',
+                                    `departCode` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '部门编号',
+                                    `fullName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部门全称',
+                                    `belongDepart` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '上级部门',
+                                    `belongSection` bigint(64) UNSIGNED NOT NULL COMMENT '上级分部',
+                                    `departManager` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '部门负责人',
+                                    `departIntroduction` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部门介绍',
+                                    `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                    `photo` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '照片文件编号',
+                                    `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
+                                    PRIMARY KEY (`dataId`) USING BTREE,
+                                    UNIQUE INDEX `departCode_Unique`(`departCode`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部门表单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -235,18 +235,18 @@ INSERT INTO `depart_resource` VALUES (10, '采购部', 'FINICAL-PURCHASE', '采�
 -- ----------------------------
 DROP TABLE IF EXISTS `file_storage`;
 CREATE TABLE `file_storage`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,文件唯一id',
-  `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
-  `fileName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名',
-  `fileRoute` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件路径',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `editAuthority` json NULL COMMENT '编辑权限描述',
-  `viewAuthority` json NULL COMMENT '查看权限描述',
-  `deleteAuthority` json NULL COMMENT '删除权限描述',
-  `leadContent` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,所在目录唯一id,null',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  INDEX `leadContent_FOREIGN`(`leadContent`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,文件唯一id',
+                                 `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
+                                 `fileName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名',
+                                 `fileRoute` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件路径',
+                                 `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                                 `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                                 `editAuthority` json NULL COMMENT '编辑权限描述',
+                                 `viewAuthority` json NULL COMMENT '查看权限描述',
+                                 `deleteAuthority` json NULL COMMENT '删除权限描述',
+                                 `leadContent` bigint(64) UNSIGNED NOT NULL COMMENT '数据编号,所在目录唯一id,null',
+                                 PRIMARY KEY (`dataId`) USING BTREE,
+                                 INDEX `leadContent_FOREIGN`(`leadContent`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件存储' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -258,38 +258,38 @@ CREATE TABLE `file_storage`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_1`;
 CREATE TABLE `form_table_1`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `requestId` bigint(64) NULL DEFAULT NULL,
-  `requestStatus` int(11) NULL DEFAULT NULL,
-  `creator` bigint(64) NULL DEFAULT NULL,
-  `createTime` datetime NULL DEFAULT NULL,
-  `lastEditTime` datetime NULL DEFAULT NULL,
-  `editAuthority` json NULL,
-  `viewAuthority` json NULL,
-  `deleteAuthority` json NULL,
-  `xsry` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `xssj` datetime NULL DEFAULT NULL,
-  `xsbm` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `xsfb` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `htbh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `htmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `yxqdsj` datetime NULL DEFAULT NULL,
-  `yjqssj` datetime NULL DEFAULT NULL,
-  `xdfgsmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xdfgsyhzh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xdfgssh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xdfgsdz` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xdfgslxr` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xdfgslxfs` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xsje` decimal(38, 2) NULL DEFAULT NULL,
-  `xsbz` int(11) NULL DEFAULT NULL,
-  `hl` decimal(38, 2) NULL DEFAULT NULL,
-  `sl` decimal(38, 2) NULL DEFAULT NULL,
-  `hjrmbje` decimal(38, 2) NULL DEFAULT NULL,
-  `htfj` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
-  UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                 `requestId` bigint(64) NULL DEFAULT NULL,
+                                 `requestStatus` int(11) NULL DEFAULT NULL,
+                                 `creator` bigint(64) NULL DEFAULT NULL,
+                                 `createTime` datetime NULL DEFAULT NULL,
+                                 `lastEditTime` datetime NULL DEFAULT NULL,
+                                 `editAuthority` json NULL,
+                                 `viewAuthority` json NULL,
+                                 `deleteAuthority` json NULL,
+                                 `xsry` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `xssj` datetime NULL DEFAULT NULL,
+                                 `xsbm` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `xsfb` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `htbh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `htmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `yxqdsj` datetime NULL DEFAULT NULL,
+                                 `yjqssj` datetime NULL DEFAULT NULL,
+                                 `xdfgsmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xdfgsyhzh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xdfgssh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xdfgsdz` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xdfgslxr` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xdfgslxfs` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xsje` decimal(38, 2) NULL DEFAULT NULL,
+                                 `xsbz` int(11) NULL DEFAULT NULL,
+                                 `hl` decimal(38, 2) NULL DEFAULT NULL,
+                                 `sl` decimal(38, 2) NULL DEFAULT NULL,
+                                 `hjrmbje` decimal(38, 2) NULL DEFAULT NULL,
+                                 `htfj` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 PRIMARY KEY (`dataId`) USING BTREE,
+                                 UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
+                                 UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -301,15 +301,15 @@ CREATE TABLE `form_table_1`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_1_dt_1`;
 CREATE TABLE `form_table_1_dt_1`  (
-  `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `detailMainId` bigint(64) NOT NULL,
-  `fkxmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `fktj` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `yjfksj` datetime NULL DEFAULT NULL,
-  `fkje` decimal(38, 2) NULL DEFAULT NULL,
-  PRIMARY KEY (`detailDataId`) USING BTREE,
-  UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
-  INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
+                                      `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                      `detailMainId` bigint(64) NOT NULL,
+                                      `fkxmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                      `fktj` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                      `yjfksj` datetime NULL DEFAULT NULL,
+                                      `fkje` decimal(38, 2) NULL DEFAULT NULL,
+                                      PRIMARY KEY (`detailDataId`) USING BTREE,
+                                      UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
+                                      INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -321,36 +321,36 @@ CREATE TABLE `form_table_1_dt_1`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_2`;
 CREATE TABLE `form_table_2`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `requestId` bigint(64) NULL DEFAULT NULL,
-  `requestStatus` int(11) NULL DEFAULT NULL,
-  `creator` bigint(64) NULL DEFAULT NULL,
-  `createTime` datetime NULL DEFAULT NULL,
-  `lastEditTime` datetime NULL DEFAULT NULL,
-  `editAuthority` json NULL,
-  `viewAuthority` json NULL,
-  `deleteAuthority` json NULL,
-  `xmbh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xmmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xmlxsj` datetime NULL DEFAULT NULL,
-  `xmyjjssj` datetime NULL DEFAULT NULL,
-  `xmsjjssj` datetime NULL DEFAULT NULL,
-  `xmhst` decimal(38, 2) NULL DEFAULT NULL,
-  `htbh` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `zxfb` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `xsje` decimal(38, 2) NULL DEFAULT NULL,
-  `ysje` decimal(38, 2) NULL DEFAULT NULL,
-  `sjzc` decimal(38, 2) NULL DEFAULT NULL,
-  `bz` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `sfyl` int(11) NULL DEFAULT NULL,
-  `sfcz` int(11) NULL DEFAULT NULL,
-  `yglr` decimal(38, 2) NULL DEFAULT NULL,
-  `sjlr` decimal(38, 2) NULL DEFAULT NULL,
-  `zzmlfj` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
-  UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                 `requestId` bigint(64) NULL DEFAULT NULL,
+                                 `requestStatus` int(11) NULL DEFAULT NULL,
+                                 `creator` bigint(64) NULL DEFAULT NULL,
+                                 `createTime` datetime NULL DEFAULT NULL,
+                                 `lastEditTime` datetime NULL DEFAULT NULL,
+                                 `editAuthority` json NULL,
+                                 `viewAuthority` json NULL,
+                                 `deleteAuthority` json NULL,
+                                 `xmbh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xmmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xmlxsj` datetime NULL DEFAULT NULL,
+                                 `xmyjjssj` datetime NULL DEFAULT NULL,
+                                 `xmsjjssj` datetime NULL DEFAULT NULL,
+                                 `xmhst` decimal(38, 2) NULL DEFAULT NULL,
+                                 `htbh` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `zxfb` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `xsje` decimal(38, 2) NULL DEFAULT NULL,
+                                 `ysje` decimal(38, 2) NULL DEFAULT NULL,
+                                 `sjzc` decimal(38, 2) NULL DEFAULT NULL,
+                                 `bz` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `sfyl` int(11) NULL DEFAULT NULL,
+                                 `sfcz` int(11) NULL DEFAULT NULL,
+                                 `yglr` decimal(38, 2) NULL DEFAULT NULL,
+                                 `sjlr` decimal(38, 2) NULL DEFAULT NULL,
+                                 `zzmlfj` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 PRIMARY KEY (`dataId`) USING BTREE,
+                                 UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
+                                 UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -362,15 +362,15 @@ CREATE TABLE `form_table_2`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_2_dt_1`;
 CREATE TABLE `form_table_2_dt_1`  (
-  `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `detailMainId` bigint(64) NOT NULL,
-  `ysmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `jdje` decimal(38, 2) NULL DEFAULT NULL,
-  `yyje` decimal(38, 2) NULL DEFAULT NULL,
-  `sfcz` int(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`detailDataId`) USING BTREE,
-  UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
-  INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
+                                      `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                      `detailMainId` bigint(64) NOT NULL,
+                                      `ysmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                      `jdje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `yyje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `sfcz` int(11) NULL DEFAULT NULL,
+                                      PRIMARY KEY (`detailDataId`) USING BTREE,
+                                      UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
+                                      INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -382,32 +382,32 @@ CREATE TABLE `form_table_2_dt_1`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_3`;
 CREATE TABLE `form_table_3`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `requestId` bigint(64) NULL DEFAULT NULL,
-  `requestStatus` int(11) NULL DEFAULT NULL,
-  `creator` bigint(64) NULL DEFAULT NULL,
-  `createTime` datetime NULL DEFAULT NULL,
-  `lastEditTime` datetime NULL DEFAULT NULL,
-  `editAuthority` json NULL,
-  `viewAuthority` json NULL,
-  `deleteAuthority` json NULL,
-  `cgr` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `cgsj` datetime NULL DEFAULT NULL,
-  `cgbh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `cgmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `htfj` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `bz` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `xmmc` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `cgje` decimal(38, 2) NULL DEFAULT NULL,
-  `cgbz` int(11) NULL DEFAULT NULL,
-  `sl` decimal(38, 2) NULL DEFAULT NULL,
-  `hl` decimal(38, 2) NULL DEFAULT NULL,
-  `fkje` decimal(38, 2) NULL DEFAULT NULL,
-  `fpqk` int(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
-  UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                 `requestId` bigint(64) NULL DEFAULT NULL,
+                                 `requestStatus` int(11) NULL DEFAULT NULL,
+                                 `creator` bigint(64) NULL DEFAULT NULL,
+                                 `createTime` datetime NULL DEFAULT NULL,
+                                 `lastEditTime` datetime NULL DEFAULT NULL,
+                                 `editAuthority` json NULL,
+                                 `viewAuthority` json NULL,
+                                 `deleteAuthority` json NULL,
+                                 `cgr` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `cgsj` datetime NULL DEFAULT NULL,
+                                 `cgbh` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `cgmc` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `htfj` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `bz` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `xmmc` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `cgje` decimal(38, 2) NULL DEFAULT NULL,
+                                 `cgbz` int(11) NULL DEFAULT NULL,
+                                 `sl` decimal(38, 2) NULL DEFAULT NULL,
+                                 `hl` decimal(38, 2) NULL DEFAULT NULL,
+                                 `fkje` decimal(38, 2) NULL DEFAULT NULL,
+                                 `fpqk` int(11) NULL DEFAULT NULL,
+                                 PRIMARY KEY (`dataId`) USING BTREE,
+                                 UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
+                                 UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -419,16 +419,16 @@ CREATE TABLE `form_table_3`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_3_dt_1`;
 CREATE TABLE `form_table_3_dt_1`  (
-  `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `detailMainId` bigint(64) NOT NULL,
-  `jfx` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `jftj` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `jfsj` datetime NULL DEFAULT NULL,
-  `jfnr` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `dyfk` decimal(38, 2) NULL DEFAULT NULL,
-  PRIMARY KEY (`detailDataId`) USING BTREE,
-  UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
-  INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
+                                      `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                      `detailMainId` bigint(64) NOT NULL,
+                                      `jfx` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                      `jftj` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                      `jfsj` datetime NULL DEFAULT NULL,
+                                      `jfnr` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                      `dyfk` decimal(38, 2) NULL DEFAULT NULL,
+                                      PRIMARY KEY (`detailDataId`) USING BTREE,
+                                      UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
+                                      INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -440,15 +440,15 @@ CREATE TABLE `form_table_3_dt_1`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_3_dt_2`;
 CREATE TABLE `form_table_3_dt_2`  (
-  `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `detailMainId` bigint(64) NOT NULL,
-  `ysx` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `jdje` decimal(38, 2) NULL DEFAULT NULL,
-  `yyje` decimal(38, 2) NULL DEFAULT NULL,
-  `bcje` decimal(38, 2) NULL DEFAULT NULL,
-  PRIMARY KEY (`detailDataId`) USING BTREE,
-  UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
-  INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
+                                      `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                      `detailMainId` bigint(64) NOT NULL,
+                                      `ysx` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                      `jdje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `yyje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `bcje` decimal(38, 2) NULL DEFAULT NULL,
+                                      PRIMARY KEY (`detailDataId`) USING BTREE,
+                                      UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
+                                      INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -460,25 +460,25 @@ CREATE TABLE `form_table_3_dt_2`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_4`;
 CREATE TABLE `form_table_4`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `requestId` bigint(64) NULL DEFAULT NULL,
-  `requestStatus` int(11) NULL DEFAULT NULL,
-  `creator` bigint(64) NULL DEFAULT NULL,
-  `createTime` datetime NULL DEFAULT NULL,
-  `lastEditTime` datetime NULL DEFAULT NULL,
-  `editAuthority` json NULL,
-  `viewAuthority` json NULL,
-  `deleteAuthority` json NULL,
-  `bxr` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `bxsj` datetime NULL DEFAULT NULL,
-  `xmmc` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `bxje` decimal(38, 2) NULL DEFAULT NULL,
-  `bxsx` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `fpqk` int(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
-  UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                 `requestId` bigint(64) NULL DEFAULT NULL,
+                                 `requestStatus` int(11) NULL DEFAULT NULL,
+                                 `creator` bigint(64) NULL DEFAULT NULL,
+                                 `createTime` datetime NULL DEFAULT NULL,
+                                 `lastEditTime` datetime NULL DEFAULT NULL,
+                                 `editAuthority` json NULL,
+                                 `viewAuthority` json NULL,
+                                 `deleteAuthority` json NULL,
+                                 `bxr` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `bxsj` datetime NULL DEFAULT NULL,
+                                 `xmmc` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `bxje` decimal(38, 2) NULL DEFAULT NULL,
+                                 `bxsx` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `fpqk` int(11) NULL DEFAULT NULL,
+                                 PRIMARY KEY (`dataId`) USING BTREE,
+                                 UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
+                                 UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -490,14 +490,14 @@ CREATE TABLE `form_table_4`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_4_dt_1`;
 CREATE TABLE `form_table_4_dt_1`  (
-  `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `detailMainId` bigint(64) NOT NULL,
-  `bxnr` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `mxje` decimal(38, 2) NULL DEFAULT NULL,
-  `mxfp` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`detailDataId`) USING BTREE,
-  UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
-  INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
+                                      `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                      `detailMainId` bigint(64) NOT NULL,
+                                      `bxnr` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                      `mxje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `mxfp` varchar(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                      PRIMARY KEY (`detailDataId`) USING BTREE,
+                                      UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
+                                      INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -509,15 +509,15 @@ CREATE TABLE `form_table_4_dt_1`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_4_dt_2`;
 CREATE TABLE `form_table_4_dt_2`  (
-  `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `detailMainId` bigint(64) NOT NULL,
-  `ysx` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `jdje` decimal(38, 2) NULL DEFAULT NULL,
-  `yyje` decimal(38, 2) NULL DEFAULT NULL,
-  `bcje` decimal(38, 2) NULL DEFAULT NULL,
-  PRIMARY KEY (`detailDataId`) USING BTREE,
-  UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
-  INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
+                                      `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                      `detailMainId` bigint(64) NOT NULL,
+                                      `ysx` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                      `jdje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `yyje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `bcje` decimal(38, 2) NULL DEFAULT NULL,
+                                      PRIMARY KEY (`detailDataId`) USING BTREE,
+                                      UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
+                                      INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -529,22 +529,22 @@ CREATE TABLE `form_table_4_dt_2`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_5`;
 CREATE TABLE `form_table_5`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `requestId` bigint(64) NULL DEFAULT NULL,
-  `requestStatus` int(11) NULL DEFAULT NULL,
-  `creator` bigint(64) NULL DEFAULT NULL,
-  `createTime` datetime NULL DEFAULT NULL,
-  `lastEditTime` datetime NULL DEFAULT NULL,
-  `editAuthority` json NULL,
-  `viewAuthority` json NULL,
-  `deleteAuthority` json NULL,
-  `xmmc` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `tzsj` datetime NULL DEFAULT NULL,
-  `tzyy` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
-  UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                 `requestId` bigint(64) NULL DEFAULT NULL,
+                                 `requestStatus` int(11) NULL DEFAULT NULL,
+                                 `creator` bigint(64) NULL DEFAULT NULL,
+                                 `createTime` datetime NULL DEFAULT NULL,
+                                 `lastEditTime` datetime NULL DEFAULT NULL,
+                                 `editAuthority` json NULL,
+                                 `viewAuthority` json NULL,
+                                 `deleteAuthority` json NULL,
+                                 `xmmc` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `tzsj` datetime NULL DEFAULT NULL,
+                                 `tzyy` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 PRIMARY KEY (`dataId`) USING BTREE,
+                                 UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
+                                 UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -556,14 +556,14 @@ CREATE TABLE `form_table_5`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_5_dt_1`;
 CREATE TABLE `form_table_5_dt_1`  (
-  `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `detailMainId` bigint(64) NOT NULL,
-  `ysx` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `yjdje` decimal(38, 2) NULL DEFAULT NULL,
-  `xjdje` decimal(38, 2) NULL DEFAULT NULL,
-  PRIMARY KEY (`detailDataId`) USING BTREE,
-  UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
-  INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
+                                      `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                      `detailMainId` bigint(64) NOT NULL,
+                                      `ysx` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                      `yjdje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `xjdje` decimal(38, 2) NULL DEFAULT NULL,
+                                      PRIMARY KEY (`detailDataId`) USING BTREE,
+                                      UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
+                                      INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -575,22 +575,23 @@ CREATE TABLE `form_table_5_dt_1`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_6`;
 CREATE TABLE `form_table_6`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `requestId` bigint(64) NULL DEFAULT NULL,
-  `requestStatus` int(11) NULL DEFAULT NULL,
-  `creator` bigint(64) NULL DEFAULT NULL,
-  `createTime` datetime NULL DEFAULT NULL,
-  `lastEditTime` datetime NULL DEFAULT NULL,
-  `editAuthority` json NULL,
-  `viewAuthority` json NULL,
-  `deleteAuthority` json NULL,
-  `xmmc` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `tzsj` datetime NULL DEFAULT NULL,
-  `tzyy` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
-  UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                 `requestId` bigint(64) NULL DEFAULT NULL,
+                                 `requestStatus` int(11) NULL DEFAULT NULL,
+                                 `creator` bigint(64) NULL DEFAULT NULL,
+                                 `createTime` datetime NULL DEFAULT NULL,
+                                 `lastEditTime` datetime NULL DEFAULT NULL,
+                                 `editAuthority` json NULL,
+                                 `viewAuthority` json NULL,
+                                 `deleteAuthority` json NULL,
+                                 `xmmc` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `xmjl` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                 `tzsj` datetime NULL DEFAULT NULL,
+                                 `tzyy` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                 `tzqk` int(11) NULL DEFAULT NULL,
+                                 PRIMARY KEY (`dataId`) USING BTREE,
+                                 UNIQUE INDEX `dataId_UNIQUE`(`dataId`) USING BTREE,
+                                 UNIQUE INDEX `requestId_UNIQUE`(`requestId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -602,15 +603,15 @@ CREATE TABLE `form_table_6`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `form_table_6_dt_1`;
 CREATE TABLE `form_table_6_dt_1`  (
-  `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `detailMainId` bigint(64) NOT NULL,
-  `ysx` bigint(64) UNSIGNED NULL DEFAULT NULL,
-  `jdje` decimal(38, 2) NULL DEFAULT NULL,
-  `ysyje` decimal(38, 2) NULL DEFAULT NULL,
-  `tzje` decimal(38, 2) NULL DEFAULT NULL,
-  PRIMARY KEY (`detailDataId`) USING BTREE,
-  UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
-  INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
+                                      `detailDataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                      `detailMainId` bigint(64) NOT NULL,
+                                      `ysx` bigint(64) UNSIGNED NULL DEFAULT NULL,
+                                      `jdje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `ysyje` decimal(38, 2) NULL DEFAULT NULL,
+                                      `tzje` decimal(38, 2) NULL DEFAULT NULL,
+                                      PRIMARY KEY (`detailDataId`) USING BTREE,
+                                      UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
+                                      INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -622,38 +623,38 @@ CREATE TABLE `form_table_6_dt_1`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `human_resource`;
 CREATE TABLE `human_resource`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,人员唯一id',
-  `loginName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录名',
-  `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
-  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
-  `sex` int(11) NULL DEFAULT NULL COMMENT '性别,0男1女',
-  `birth` datetime NULL DEFAULT NULL COMMENT '出生年月',
-  `telephone` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号',
-  `mail` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
-  `phone` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '固话',
-  `fax` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '传真',
-  `workCode` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '工号',
-  `section` bigint(64) UNSIGNED NOT NULL COMMENT '分部编号',
-  `depart` bigint(64) UNSIGNED NOT NULL COMMENT '部门编号',
-  `job` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '岗位',
-  `directorLeader` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '直属领导',
-  `supporter` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '助理',
-  `photo` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '头像文件编号',
-  `signature` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '个性签名',
-  `lastLogin` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
-  `safety` int(11) NULL DEFAULT 0 COMMENT '安全等级',
-  `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `loginName_Unique`(`loginName`) USING BTREE,
-  INDEX `section_FOREIGN`(`section`) USING BTREE,
-  INDEX `depart_FOREIGN`(`depart`) USING BTREE,
-  INDEX `directorLeader_FOREIGN`(`directorLeader`) USING BTREE
+                                   `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,人员唯一id',
+                                   `loginName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录名',
+                                   `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
+                                   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
+                                   `sex` int(11) NULL DEFAULT NULL COMMENT '性别,0男1女',
+                                   `birth` datetime NULL DEFAULT NULL COMMENT '出生年月',
+                                   `telephone` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号',
+                                   `mail` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
+                                   `phone` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '固话',
+                                   `fax` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '传真',
+                                   `workCode` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '工号',
+                                   `section` bigint(64) UNSIGNED NOT NULL COMMENT '分部编号',
+                                   `depart` bigint(64) UNSIGNED NOT NULL COMMENT '部门编号',
+                                   `job` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '岗位',
+                                   `directorLeader` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '直属领导',
+                                   `supporter` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '助理',
+                                   `photo` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '头像文件编号',
+                                   `signature` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '个性签名',
+                                   `lastLogin` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
+                                   `safety` int(11) NULL DEFAULT 0 COMMENT '安全等级',
+                                   `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
+                                   PRIMARY KEY (`dataId`) USING BTREE,
+                                   UNIQUE INDEX `loginName_Unique`(`loginName`) USING BTREE,
+                                   INDEX `section_FOREIGN`(`section`) USING BTREE,
+                                   INDEX `depart_FOREIGN`(`depart`) USING BTREE,
+                                   INDEX `directorLeader_FOREIGN`(`directorLeader`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '人员索引表,构建对应虚拟视图' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of human_resource
 -- ----------------------------
-INSERT INTO `human_resource` VALUES (1, 'sysadmin', 'eoa', '系统管理员', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '系统管理员', 0, 0, 0, NULL, '2024-02-06 17:15:26', 0, 0);
+INSERT INTO `human_resource` VALUES (1, 'sysadmin', 'eoa', '系统管理员', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '系统管理员', 0, 0, 0, NULL, '2024-02-07 17:36:51', 0, 0);
 INSERT INTO `human_resource` VALUES (2, 'tourist', 'eoa', '游客用户', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '游客', 1, 0, 0, NULL, NULL, 0, 0);
 INSERT INTO `human_resource` VALUES (3, 'ywy', 'eoa', '杨文元', 0, NULL, NULL, NULL, NULL, NULL, 'W001', 1, 1, '总经理', 0, 0, 0, NULL, NULL, 0, 0);
 INSERT INTO `human_resource` VALUES (4, 'wzc', 'eoa', '王晨志', 0, NULL, NULL, NULL, NULL, NULL, 'W002', 2, 1, '法务', 3, 0, 0, NULL, NULL, 0, 0);
@@ -671,21 +672,21 @@ INSERT INTO `human_resource` VALUES (12, 'fzc', 'eoa', '范成志', 0, NULL, NUL
 -- ----------------------------
 DROP TABLE IF EXISTS `login_config`;
 CREATE TABLE `login_config`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '登录设置编号',
-  `backgroundUrl` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '背景文件路径',
-  `logoUrl` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '图表文件路径',
-  `backgroundVideoUrl` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '背景视频路径',
-  `loginTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录主标题',
-  `loginSubTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录副标题',
-  `activeMainTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动信息主标题',
-  `activeIntroduction` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动信息副标题',
-  `contactManager` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '管理员联系方式',
-  `linkUrl` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动信息跳转链接',
-  `linkStr` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动信息跳转文字',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `onUse` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是启用',
-  PRIMARY KEY (`dataId`) USING BTREE
+                                 `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '登录设置编号',
+                                 `backgroundUrl` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '背景文件路径',
+                                 `logoUrl` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '图表文件路径',
+                                 `backgroundVideoUrl` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '背景视频路径',
+                                 `loginTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录主标题',
+                                 `loginSubTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录副标题',
+                                 `activeMainTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动信息主标题',
+                                 `activeIntroduction` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动信息副标题',
+                                 `contactManager` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '管理员联系方式',
+                                 `linkUrl` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动信息跳转链接',
+                                 `linkStr` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动信息跳转文字',
+                                 `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                                 `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                                 `onUse` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是启用',
+                                 PRIMARY KEY (`dataId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '登录页面配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -698,18 +699,18 @@ INSERT INTO `login_config` VALUES (1, 'https://mdn.alipayobjects.com/huamei_gcee
 -- ----------------------------
 DROP TABLE IF EXISTS `menu_base`;
 CREATE TABLE `menu_base`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '菜单编号',
-  `contentName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单名称',
-  `belongContent` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '菜单编号',
-  `contentUrl` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单链接',
-  `viewNo` int(11) NULL DEFAULT NULL COMMENT '显示顺序',
-  `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
-  `shareAuthority` json NULL COMMENT '共享权限',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  INDEX `menu_base_belong_content_index`(`belongContent`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '页面菜单' ROW_FORMAT = Dynamic;
+                              `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '菜单编号',
+                              `contentName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单名称',
+                              `belongContent` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '菜单编号',
+                              `contentUrl` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单链接',
+                              `viewNo` int(11) NULL DEFAULT NULL COMMENT '显示顺序',
+                              `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
+                              `shareAuthority` json NULL COMMENT '共享权限',
+                              `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                              `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                              PRIMARY KEY (`dataId`) USING BTREE,
+                              INDEX `menu_base_belong_content_index`(`belongContent`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '页面菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu_base
@@ -730,29 +731,31 @@ INSERT INTO `menu_base` VALUES (13, '我的请求', 4, '/request/self', 3, 0, '{
 INSERT INTO `menu_base` VALUES (14, '发起请求', 4, '/workflow', 4, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
 INSERT INTO `menu_base` VALUES (15, '项目预算', NULL, NULL, 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 14:21:25');
 INSERT INTO `menu_base` VALUES (16, '项目信息', 15, '', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 14:30:44');
-INSERT INTO `menu_base` VALUES (17, '分配信息', 15, NULL, 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 14:37:40');
-INSERT INTO `menu_base` VALUES (18, '调整信息', 15, NULL, 3, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 14:55:08');
+INSERT INTO `menu_base` VALUES (17, '分配信息', 15, NULL, 3, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 14:37:40');
+INSERT INTO `menu_base` VALUES (18, '调整信息', 15, NULL, 4, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 14:55:08');
 INSERT INTO `menu_base` VALUES (19, '采购金额分配记录', 17, '/search/2', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:00:43');
-INSERT INTO `menu_base` VALUES (20, '报销金额分配记录', 17, '/search/6', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:01:38');
+INSERT INTO `menu_base` VALUES (20, '报销金额分配记录', 17, '/search/3', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:01:38');
 INSERT INTO `menu_base` VALUES (21, '既定预算调整记录', 18, '/search/5', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:31:09');
-INSERT INTO `menu_base` VALUES (22, '预算使用明细', 16, '/search/7', 3, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:51:07');
+INSERT INTO `menu_base` VALUES (22, '预算使用统计', 28, '/search/7', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:51:07');
 INSERT INTO `menu_base` VALUES (23, '销售合同台账', 16, '/search/4', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:54:08');
 INSERT INTO `menu_base` VALUES (24, '使用预算调整记录', 18, '/search/6', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:56:09');
 INSERT INTO `menu_base` VALUES (25, '项目预算业务流程', 1, '/main', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:57:02');
 INSERT INTO `menu_base` VALUES (26, '组织预算', 16, '/search/1', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 16:35:02');
+INSERT INTO `menu_base` VALUES (27, '预算使用明细', 28, '/search/8', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-07 17:37:29');
+INSERT INTO `menu_base` VALUES (28, '预算信息', 15, '', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-07 17:39:46');
 
 -- ----------------------------
 -- Table structure for module_type
 -- ----------------------------
 DROP TABLE IF EXISTS `module_type`;
 CREATE TABLE `module_type`  (
-  `moduleTypeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '模块类型编号',
-  `moduleTypeName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模块类型名称',
-  `workflowRemark` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模块类型备注',
-  `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
-  `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`moduleTypeId`) USING BTREE,
-  UNIQUE INDEX `moduleTypeName_UNIQUE`(`moduleTypeName`) USING BTREE
+                                `moduleTypeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '模块类型编号',
+                                `moduleTypeName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模块类型名称',
+                                `workflowRemark` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模块类型备注',
+                                `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+                                `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                PRIMARY KEY (`moduleTypeId`) USING BTREE,
+                                UNIQUE INDEX `moduleTypeName_UNIQUE`(`moduleTypeName`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '模块表单 __module_type__' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -770,14 +773,14 @@ INSERT INTO `module_type` VALUES (6, '项目预算', '项目预算管理应用',
 -- ----------------------------
 DROP TABLE IF EXISTS `page_config`;
 CREATE TABLE `page_config`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '页面设置编号',
-  `companyName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '公司名称',
-  `headerColor` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '头部导航栏颜色',
-  `sideColor` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '侧导航栏颜色',
-  `onUse` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是启用',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`dataId`) USING BTREE
+                                `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '页面设置编号',
+                                `companyName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '公司名称',
+                                `headerColor` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '头部导航栏颜色',
+                                `sideColor` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '侧导航栏颜色',
+                                `onUse` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是启用',
+                                `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                                `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                                PRIMARY KEY (`dataId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '登陆后页面设置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -791,20 +794,20 @@ INSERT INTO `page_config` VALUES (2, '标题', '#ff0000', '#ff0000', 0, 1, '2024
 -- ----------------------------
 DROP TABLE IF EXISTS `request`;
 CREATE TABLE `request`  (
-  `requestId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '流程数据编号',
-  `dataId` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '表单数据编号',
-  `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
-  `currentNode` bigint(64) UNSIGNED NOT NULL COMMENT '当前节点编号',
-  `doneHistory` json NULL COMMENT '操作历史',
-  `requestTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程标题',
-  `requestStatus` int(11) NULL DEFAULT NULL COMMENT '流程状态',
-  `flowHistory` json NULL COMMENT '流转历史',
-  `submitTime` datetime NULL DEFAULT NULL COMMENT '发起事件',
-  `finishTime` datetime NULL DEFAULT NULL COMMENT '归档事件',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建者编号',
-  PRIMARY KEY (`requestId`) USING BTREE,
-  INDEX `request_workflowId_index`(`workflowId`) USING BTREE,
-  INDEX `requestStatus`(`requestStatus`) USING BTREE
+                            `requestId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '流程数据编号',
+                            `dataId` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '表单数据编号',
+                            `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+                            `currentNode` bigint(64) UNSIGNED NOT NULL COMMENT '当前节点编号',
+                            `doneHistory` json NULL COMMENT '操作历史',
+                            `requestTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程标题',
+                            `requestStatus` int(11) NULL DEFAULT NULL COMMENT '流程状态',
+                            `flowHistory` json NULL COMMENT '流转历史',
+                            `submitTime` datetime NULL DEFAULT NULL COMMENT '发起事件',
+                            `finishTime` datetime NULL DEFAULT NULL COMMENT '归档事件',
+                            `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建者编号',
+                            PRIMARY KEY (`requestId`) USING BTREE,
+                            INDEX `request_workflowId_index`(`workflowId`) USING BTREE,
+                            INDEX `requestStatus`(`requestStatus`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '审批数据' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -816,14 +819,14 @@ CREATE TABLE `request`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `request_backlog`;
 CREATE TABLE `request_backlog`  (
-  `humanId` bigint(64) UNSIGNED NOT NULL COMMENT '人员编号',
-  `requestId` bigint(64) UNSIGNED NOT NULL COMMENT '请求编号',
-  `nodeId` bigint(64) UNSIGNED NOT NULL COMMENT '到达请求节点',
-  `arriveTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '到达时间',
-  `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
-  PRIMARY KEY (`humanId`, `requestId`) USING BTREE,
-  INDEX `request_backlog_workflowId_index`(`workflowId`) USING BTREE,
-  INDEX `request_backlog_arriveTime_index`(`arriveTime`) USING BTREE
+                                    `humanId` bigint(64) UNSIGNED NOT NULL COMMENT '人员编号',
+                                    `requestId` bigint(64) UNSIGNED NOT NULL COMMENT '请求编号',
+                                    `nodeId` bigint(64) UNSIGNED NOT NULL COMMENT '到达请求节点',
+                                    `arriveTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '到达时间',
+                                    `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+                                    PRIMARY KEY (`humanId`, `requestId`) USING BTREE,
+                                    INDEX `request_backlog_workflowId_index`(`workflowId`) USING BTREE,
+                                    INDEX `request_backlog_arriveTime_index`(`arriveTime`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '待办列表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -835,14 +838,14 @@ CREATE TABLE `request_backlog`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `request_done`;
 CREATE TABLE `request_done`  (
-  `humanId` bigint(64) UNSIGNED NOT NULL COMMENT '人员编号',
-  `requestId` bigint(64) UNSIGNED NOT NULL COMMENT '请求编号',
-  `nodeId` bigint(64) UNSIGNED NOT NULL COMMENT '完成请求节点',
-  `doneTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '完成时间',
-  `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
-  PRIMARY KEY (`humanId`, `requestId`) USING BTREE,
-  INDEX `request_done_workflowId_index`(`workflowId`) USING BTREE,
-  INDEX `request_done_doneTime_index`(`doneTime`) USING BTREE
+                                 `humanId` bigint(64) UNSIGNED NOT NULL COMMENT '人员编号',
+                                 `requestId` bigint(64) UNSIGNED NOT NULL COMMENT '请求编号',
+                                 `nodeId` bigint(64) UNSIGNED NOT NULL COMMENT '完成请求节点',
+                                 `doneTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '完成时间',
+                                 `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+                                 PRIMARY KEY (`humanId`, `requestId`) USING BTREE,
+                                 INDEX `request_done_workflowId_index`(`workflowId`) USING BTREE,
+                                 INDEX `request_done_doneTime_index`(`doneTime`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '已办列表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -854,47 +857,48 @@ CREATE TABLE `request_done`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `search_list_base`;
 CREATE TABLE `search_list_base`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '列表编号',
-  `moduleTypeId` bigint(64) UNSIGNED NOT NULL COMMENT '所属模块',
-  `searchListName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '列表名称',
-  `defaultCondition` json NULL COMMENT '默认查询条件',
-  `tableId` bigint(64) UNSIGNED NOT NULL COMMENT '表单编号',
-  `shareAuthority` json NULL COMMENT '查看权限',
-  `orders` json NULL COMMENT '排序字段',
-  `isVirtual` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是虚拟',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  INDEX `search_list_base_moduleTypeId_index`(`moduleTypeId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '展示列表基础' ROW_FORMAT = Dynamic;
+                                     `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '列表编号',
+                                     `moduleTypeId` bigint(64) UNSIGNED NOT NULL COMMENT '所属模块',
+                                     `searchListName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '列表名称',
+                                     `defaultCondition` json NULL COMMENT '默认查询条件',
+                                     `tableId` bigint(64) UNSIGNED NOT NULL COMMENT '表单编号',
+                                     `shareAuthority` json NULL COMMENT '查看权限',
+                                     `orders` json NULL COMMENT '排序字段',
+                                     `isVirtual` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是虚拟',
+                                     `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                                     `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                                     PRIMARY KEY (`dataId`) USING BTREE,
+                                     INDEX `search_list_base_moduleTypeId_index`(`moduleTypeId`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '展示列表基础' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of search_list_base
 -- ----------------------------
 INSERT INTO `search_list_base` VALUES (1, 6, '项目组织台账', NULL, 2, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:17:57');
-INSERT INTO `search_list_base` VALUES (2, 6, '采购合同分配台账', NULL, 3, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:18:40');
+INSERT INTO `search_list_base` VALUES (2, 6, '采购合同分配台账', '{}', 3, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:18:40');
 INSERT INTO `search_list_base` VALUES (3, 6, '报销账单分配台账', NULL, 4, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:19:01');
 INSERT INTO `search_list_base` VALUES (4, 6, '销售合同台账', '{}', 1, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:19:31');
 INSERT INTO `search_list_base` VALUES (5, 6, '既定预算调整台账', NULL, 5, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:22:20');
 INSERT INTO `search_list_base` VALUES (6, 6, '使用预算调账台账', NULL, 6, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:22:33');
-INSERT INTO `search_list_base` VALUES (7, 6, '预算使用明细台账', NULL, 6, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 1, 1, '2024-02-06 10:01:34');
+INSERT INTO `search_list_base` VALUES (7, 6, '预算统计台账', '{}', 6, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 1, 1, '2024-02-06 10:01:34');
+INSERT INTO `search_list_base` VALUES (8, 6, '预算使用记录台账', '{}', 7, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 1, 1, '2024-02-07 17:22:59');
 
 -- ----------------------------
 -- Table structure for search_list_column
 -- ----------------------------
 DROP TABLE IF EXISTS `search_list_column`;
 CREATE TABLE `search_list_column`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '列表字段编号',
-  `searchListId` bigint(64) UNSIGNED NOT NULL COMMENT '列表编号',
-  `columnId` bigint(64) UNSIGNED NOT NULL COMMENT '字段编号',
-  `isVirtual` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是虚拟',
-  `viewNo` int(11) NULL DEFAULT 0 COMMENT '显示顺序',
-  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段标题',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  INDEX `search_list_base_viewNo_index`(`viewNo`) USING BTREE,
-  INDEX `search_list_base_searchListId_index`(`searchListId`) USING BTREE,
-  INDEX `search_list_base_columnId_index`(`columnId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '列表字段配置' ROW_FORMAT = Dynamic;
+                                       `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '列表字段编号',
+                                       `searchListId` bigint(64) UNSIGNED NOT NULL COMMENT '列表编号',
+                                       `columnId` bigint(64) UNSIGNED NOT NULL COMMENT '字段编号',
+                                       `isVirtual` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是虚拟',
+                                       `viewNo` int(11) NULL DEFAULT 0 COMMENT '显示顺序',
+                                       `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段标题',
+                                       PRIMARY KEY (`dataId`) USING BTREE,
+                                       INDEX `search_list_base_viewNo_index`(`viewNo`) USING BTREE,
+                                       INDEX `search_list_base_searchListId_index`(`searchListId`) USING BTREE,
+                                       INDEX `search_list_base_columnId_index`(`columnId`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '列表字段配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of search_list_column
@@ -926,25 +930,39 @@ INSERT INTO `search_list_column` VALUES (24, 5, 85, 0, 3, '调整原因');
 INSERT INTO `search_list_column` VALUES (25, 6, 89, 0, 1, '调整项目');
 INSERT INTO `search_list_column` VALUES (26, 6, 91, 0, 2, '调整时间');
 INSERT INTO `search_list_column` VALUES (27, 6, 92, 0, 3, '调整原因');
+INSERT INTO `search_list_column` VALUES (28, 7, 8, 1, 1, '预算名称');
+INSERT INTO `search_list_column` VALUES (29, 7, 9, 1, 2, '预算金额');
+INSERT INTO `search_list_column` VALUES (30, 7, 10, 1, 3, '已使用预算');
+INSERT INTO `search_list_column` VALUES (31, 7, 11, 1, 4, '相关项目');
+INSERT INTO `search_list_column` VALUES (32, 7, 12, 1, 5, '项目经理');
+INSERT INTO `search_list_column` VALUES (33, 7, 13, 1, 6, '相关合同');
+INSERT INTO `search_list_column` VALUES (34, 7, 21, 1, 7, '是否超支');
+INSERT INTO `search_list_column` VALUES (35, 8, 17, 1, 1, '预算名称');
+INSERT INTO `search_list_column` VALUES (36, 8, 18, 1, 2, '使用金额');
+INSERT INTO `search_list_column` VALUES (37, 8, 19, 1, 3, '支出类型');
+INSERT INTO `search_list_column` VALUES (38, 8, 20, 1, 4, '使用时间');
+INSERT INTO `search_list_column` VALUES (39, 8, 15, 1, 5, '相关项目');
+INSERT INTO `search_list_column` VALUES (40, 8, 16, 1, 6, '项目经理');
+INSERT INTO `search_list_column` VALUES (41, 8, 14, 1, 7, '相关合同');
 
 -- ----------------------------
 -- Table structure for section_resource
 -- ----------------------------
 DROP TABLE IF EXISTS `section_resource`;
 CREATE TABLE `section_resource`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,分部唯一id',
-  `sectionName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分部名称',
-  `sectionCode` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分部编号',
-  `fullName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '分部全称',
-  `belongSection` bigint(64) UNSIGNED NOT NULL COMMENT '上级分部',
-  `sectionManager` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '分部负责人',
-  `sectionIntroduction` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '分部介绍',
-  `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `photo` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '照片文件编号',
-  `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `sectionName_Unique`(`sectionName`) USING BTREE,
-  UNIQUE INDEX `sectionCode_Unique`(`sectionCode`) USING BTREE
+                                     `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,分部唯一id',
+                                     `sectionName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分部名称',
+                                     `sectionCode` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分部编号',
+                                     `fullName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '分部全称',
+                                     `belongSection` bigint(64) UNSIGNED NOT NULL COMMENT '上级分部',
+                                     `sectionManager` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '分部负责人',
+                                     `sectionIntroduction` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '分部介绍',
+                                     `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                     `photo` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '照片文件编号',
+                                     `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
+                                     PRIMARY KEY (`dataId`) USING BTREE,
+                                     UNIQUE INDEX `sectionName_Unique`(`sectionName`) USING BTREE,
+                                     UNIQUE INDEX `sectionCode_Unique`(`sectionCode`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '分部表单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -961,20 +979,20 @@ INSERT INTO `section_resource` VALUES (5, '商务分部', 'SERVER/FINICAL', '维
 -- ----------------------------
 DROP TABLE IF EXISTS `table_column_index`;
 CREATE TABLE `table_column_index`  (
-  `columnId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '字段id',
-  `columnViewName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段显示名称',
-  `columnDataName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段数据库存储名称',
-  `columnType` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段类型',
-  `columnTypeDescription` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附带格式描述',
-  `tableNo` bigint(64) UNSIGNED NOT NULL COMMENT '对应存储数据库表',
-  `columnGroupNo` int(11) NULL DEFAULT -1 COMMENT '格式分组',
-  `columnDetailNo` int(11) NULL DEFAULT -1 COMMENT '明细字段分组',
-  `columnViewNo` int(11) NULL DEFAULT NULL COMMENT '顺序序号',
-  `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
-  `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`columnId`) USING BTREE,
-  INDEX `tableNo_FOREIGN`(`tableNo`) USING BTREE COMMENT '所属表单索引加速'
-) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字段数据索引表（table_column_index）' ROW_FORMAT = Dynamic;
+                                       `columnId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '字段id',
+                                       `columnViewName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段显示名称',
+                                       `columnDataName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段数据库存储名称',
+                                       `columnType` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段类型',
+                                       `columnTypeDescription` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附带格式描述',
+                                       `tableNo` bigint(64) UNSIGNED NOT NULL COMMENT '对应存储数据库表',
+                                       `columnGroupNo` int(11) NULL DEFAULT -1 COMMENT '格式分组',
+                                       `columnDetailNo` int(11) NULL DEFAULT -1 COMMENT '明细字段分组',
+                                       `columnViewNo` int(11) NULL DEFAULT NULL COMMENT '顺序序号',
+                                       `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+                                       `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                       PRIMARY KEY (`columnId`) USING BTREE,
+                                       INDEX `tableNo_FOREIGN`(`tableNo`) USING BTREE COMMENT '所属表单索引加速'
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字段数据索引表（table_column_index）' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of table_column_index
@@ -1032,7 +1050,7 @@ INSERT INTO `table_column_index` VALUES (50, '采购名称', 'cgmc', 'SINGLE_TEX
 INSERT INTO `table_column_index` VALUES (51, '合同附件', 'htfj', 'FILE', '{\"contentId\":8}', 3, 1, -1, 5, 1, '2024-02-04 14:57:48');
 INSERT INTO `table_column_index` VALUES (52, '备注', 'bz', 'TEXT', NULL, 3, 1, -1, 6, 1, '2024-02-04 15:01:24');
 INSERT INTO `table_column_index` VALUES (53, '项目名称', 'xmmc', 'BROWSER_BOX', '{\"isVirtual\":false,\"tableId\":2,\"columnId\":26}', 3, 2, -1, 7, 1, '2024-02-04 15:01:56');
-INSERT INTO `table_column_index` VALUES (54, '项目经理', 'xmjl', 'BROWSER_BOX', NULL, 3, 2, -1, 8, 1, '2024-02-04 15:03:44');
+INSERT INTO `table_column_index` VALUES (54, '项目经理', 'xmjl', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":1,\"columnId\":1}', 3, 2, -1, 8, 1, '2024-02-04 15:03:44');
 INSERT INTO `table_column_index` VALUES (55, '采购金额', 'cgje', 'NUMBER', NULL, 3, 3, -1, 9, 1, '2024-02-04 15:04:58');
 INSERT INTO `table_column_index` VALUES (56, '采购币种', 'cgbz', 'SELECT_ITEM', '{\"items\":\"CNY,HKD,USD,EUR,JPY\"}', 3, 3, -1, 10, 1, '2024-02-04 15:11:18');
 INSERT INTO `table_column_index` VALUES (57, '税率', 'sl', 'NUMBER', NULL, 3, 3, -1, 11, 1, '2024-02-04 15:11:33');
@@ -1050,7 +1068,7 @@ INSERT INTO `table_column_index` VALUES (68, '本次金额', 'bcje', 'NUMBER', N
 INSERT INTO `table_column_index` VALUES (69, '报销人', 'bxr', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":1,\"columnId\":1}', 4, 1, -1, 1, 1, '2024-02-04 14:53:48');
 INSERT INTO `table_column_index` VALUES (70, '报销时间', 'bxsj', 'DATETIME', NULL, 4, 1, -1, 2, 1, '2024-02-04 14:56:08');
 INSERT INTO `table_column_index` VALUES (71, '项目名称', 'xmmc', 'BROWSER_BOX', '{\"isVirtual\":false,\"tableId\":2,\"columnId\":26}', 4, 2, -1, 3, 1, '2024-02-04 15:01:56');
-INSERT INTO `table_column_index` VALUES (72, '项目经理', 'xmjl', 'BROWSER_BOX', NULL, 4, 2, -1, 4, 1, '2024-02-04 15:03:44');
+INSERT INTO `table_column_index` VALUES (72, '项目经理', 'xmjl', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":1,\"columnId\":1}', 4, 2, -1, 4, 1, '2024-02-04 15:03:44');
 INSERT INTO `table_column_index` VALUES (73, '报销金额', 'bxje', 'NUMBER', NULL, 4, 3, -1, 5, 1, '2024-02-04 15:04:58');
 INSERT INTO `table_column_index` VALUES (74, '报销事项', 'bxsx', 'TEXT', NULL, 4, 3, -1, 6, 1, '2024-02-04 15:11:18');
 INSERT INTO `table_column_index` VALUES (75, '报销明细', 'bxnr', 'SINGLE_TEXT', NULL, 4, -1, 1, 7, 1, '2024-02-04 16:48:19');
@@ -1077,64 +1095,65 @@ INSERT INTO `table_column_index` VALUES (95, '已使用金额', 'ysyje', 'NUMBER
 INSERT INTO `table_column_index` VALUES (96, '调整金额', 'dzje', 'NUMBER', NULL, 6, -1, 1, 7, 1, '2024-02-04 17:25:39');
 INSERT INTO `table_column_index` VALUES (97, '分配情况', 'fpqk', 'SELECT_ITEM', '{\"items\":\"待分配,已分配,已废弃\"}', 3, 3, -1, 23, 1, '2024-02-06 16:55:31');
 INSERT INTO `table_column_index` VALUES (98, '分配情况', 'fpqk', 'SELECT_ITEM', '{\"items\":\"待分配,已分配,已废弃\"}', 4, 3, -1, 14, 1, '2024-02-06 16:57:45');
+INSERT INTO `table_column_index` VALUES (99, '调整情况', 'tzqk', 'SELECT_ITEM', '{\"items\":\"待审批,已调整,已退回\"}', 6, 2, -1, 8, 1, '2024-02-07 16:34:22');
 
 -- ----------------------------
 -- Table structure for table_index
 -- ----------------------------
 DROP TABLE IF EXISTS `table_index`;
 CREATE TABLE `table_index`  (
-  `tableId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '表单编号',
-  `tableViewName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '表单显示名称',
-  `tableDataName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '表单存储名称',
-  `moduleNo` bigint(100) UNSIGNED NULL DEFAULT NULL COMMENT '所属模块',
-  `workFlowNo` bigint(100) UNSIGNED NULL DEFAULT NULL COMMENT '对应流程',
-  `detailCount` int(11) NULL DEFAULT NULL COMMENT '明细表数量',
-  `detailName` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '明细表名称',
-  `groupCount` int(11) NULL DEFAULT NULL COMMENT '格式分组数量',
-  `groupName` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '格式分组名称',
-  `remark` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `defaultEdit` json NULL COMMENT '默认编辑权限',
-  `defaultCreate` json NULL COMMENT '默认创建权限',
-  `defaultDelete` json NULL COMMENT '默认删除权限',
-  `defaultShare` json NULL COMMENT '默认共享权限',
-  `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
-  `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`tableId`) USING BTREE,
-  UNIQUE INDEX `tableViewName_UNIQUE`(`tableViewName`) USING BTREE,
-  UNIQUE INDEX `tableDataName_UNIQUE`(`tableDataName`) USING BTREE,
-  INDEX `workFlowId_Foreign`(`workFlowNo`) USING BTREE COMMENT '流程搜索加速索引',
-  INDEX `ModuleNo_Foreign`(`moduleNo`) USING BTREE COMMENT '模块搜索加速索引'
+                                `tableId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '表单编号',
+                                `tableViewName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '表单显示名称',
+                                `tableDataName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '表单存储名称',
+                                `moduleNo` bigint(100) UNSIGNED NULL DEFAULT NULL COMMENT '所属模块',
+                                `workFlowNo` bigint(100) UNSIGNED NULL DEFAULT NULL COMMENT '对应流程',
+                                `detailCount` int(11) NULL DEFAULT NULL COMMENT '明细表数量',
+                                `detailName` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '明细表名称',
+                                `groupCount` int(11) NULL DEFAULT NULL COMMENT '格式分组数量',
+                                `groupName` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '格式分组名称',
+                                `remark` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                `defaultEdit` json NULL COMMENT '默认编辑权限',
+                                `defaultCreate` json NULL COMMENT '默认创建权限',
+                                `defaultDelete` json NULL COMMENT '默认删除权限',
+                                `defaultShare` json NULL COMMENT '默认共享权限',
+                                `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+                                `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                PRIMARY KEY (`tableId`) USING BTREE,
+                                UNIQUE INDEX `tableViewName_UNIQUE`(`tableViewName`) USING BTREE,
+                                UNIQUE INDEX `tableDataName_UNIQUE`(`tableDataName`) USING BTREE,
+                                INDEX `workFlowId_Foreign`(`workFlowNo`) USING BTREE COMMENT '流程搜索加速索引',
+                                INDEX `ModuleNo_Foreign`(`moduleNo`) USING BTREE COMMENT '模块搜索加速索引'
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '表单数据索引表（table_index）' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of table_index
 -- ----------------------------
-INSERT INTO `table_index` VALUES (1, '销售合同', 'form_table_1', 6, NULL, 1, '付款条件', 4, '申请信息,合同基础信息,相对方信息,金额信息', NULL, NULL, NULL, NULL, NULL, 1, '2024-02-02 16:03:51');
-INSERT INTO `table_index` VALUES (2, '项目预算编制', 'form_table_2', 6, NULL, 1, '预算明细', 5, '项目信息,合同信息,组织信息,金额信息,利润信息', NULL, NULL, NULL, NULL, NULL, 1, '2024-02-02 16:18:13');
-INSERT INTO `table_index` VALUES (3, '采购单', 'form_table_3', 6, NULL, 2, '物料交付明细,预算分配明细', 3, '采购信息,项目信息,金额信息', NULL, NULL, NULL, NULL, NULL, 1, '2024-02-02 16:19:35');
-INSERT INTO `table_index` VALUES (4, '报销单', 'form_table_4', 6, NULL, 2, '报销金额明细,预算分配明细', 3, '报销信息,项目信息,金额信息', NULL, NULL, NULL, NULL, NULL, 1, '2024-02-02 16:19:40');
-INSERT INTO `table_index` VALUES (5, '既定预算调整单', 'form_table_5', 6, NULL, 1, '调整明细', 2, '项目信息,调整信息', NULL, NULL, NULL, NULL, NULL, 1, '2024-02-04 09:53:27');
-INSERT INTO `table_index` VALUES (6, '使用预算调整单', 'form_table_6', 6, NULL, 1, '调整明细', 2, '项目信息,调整信息', NULL, NULL, NULL, NULL, NULL, 1, '2024-02-04 09:53:41');
+INSERT INTO `table_index` VALUES (1, '销售合同', 'form_table_1', 6, NULL, 1, '付款条件', 4, '申请信息,合同基础信息,相对方信息,金额信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-02 16:03:51');
+INSERT INTO `table_index` VALUES (2, '项目预算编制', 'form_table_2', 6, NULL, 1, '预算明细', 5, '项目信息,合同信息,组织信息,金额信息,利润信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-02 16:18:13');
+INSERT INTO `table_index` VALUES (3, '采购单', 'form_table_3', 6, NULL, 2, '物料交付明细,预算分配明细', 3, '采购信息,项目信息,金额信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-02 16:19:35');
+INSERT INTO `table_index` VALUES (4, '报销单', 'form_table_4', 6, NULL, 2, '报销金额明细,预算分配明细', 3, '报销信息,项目信息,金额信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-02 16:19:40');
+INSERT INTO `table_index` VALUES (5, '既定预算调整单', 'form_table_5', 6, NULL, 1, '调整明细', 2, '项目信息,调整信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-04 09:53:27');
+INSERT INTO `table_index` VALUES (6, '使用预算调整单', 'form_table_6', 6, NULL, 1, '调整明细', 2, '项目信息,调整信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-04 09:53:41');
 
 -- ----------------------------
 -- Table structure for table_view_column_index
 -- ----------------------------
 DROP TABLE IF EXISTS `table_view_column_index`;
 CREATE TABLE `table_view_column_index`  (
-  `columnId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '字段id',
-  `columnViewName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段显示名称',
-  `columnDataName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段数据库存储名称',
-  `columnType` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段类型',
-  `columnTypeDescription` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附带格式描述',
-  `tableNo` bigint(64) UNSIGNED NOT NULL COMMENT '对应存储数据库表',
-  `columnGroupNo` int(11) NULL DEFAULT -1 COMMENT '格式分组',
-  `columnViewNo` int(11) NULL DEFAULT NULL COMMENT '顺序序号',
-  `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
-  `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `columnViewDisplay` tinyint(4) NULL DEFAULT 1 COMMENT '展示时是否显示(0否，1是)',
-  PRIMARY KEY (`columnId`) USING BTREE,
-  INDEX `tableNo_FOREIGN`(`tableNo`) USING BTREE COMMENT '所属表单索引加速'
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字段数据索引表（table_column_index）' ROW_FORMAT = Dynamic;
+                                            `columnId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '字段id',
+                                            `columnViewName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段显示名称',
+                                            `columnDataName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段数据库存储名称',
+                                            `columnType` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字段类型',
+                                            `columnTypeDescription` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附带格式描述',
+                                            `tableNo` bigint(64) UNSIGNED NOT NULL COMMENT '对应存储数据库表',
+                                            `columnGroupNo` int(11) NULL DEFAULT -1 COMMENT '格式分组',
+                                            `columnViewNo` int(11) NULL DEFAULT NULL COMMENT '顺序序号',
+                                            `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+                                            `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                            `columnViewDisplay` tinyint(4) NULL DEFAULT 1 COMMENT '展示时是否显示(0否，1是)',
+                                            PRIMARY KEY (`columnId`) USING BTREE,
+                                            INDEX `tableNo_FOREIGN`(`tableNo`) USING BTREE COMMENT '所属表单索引加速'
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字段数据索引表（table_column_index）' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of table_view_column_index
@@ -1146,28 +1165,40 @@ INSERT INTO `table_view_column_index` VALUES (4, '部门名称', 'departName', '
 INSERT INTO `table_view_column_index` VALUES (5, '分部名称', 'sectionName', 'SINGLE_TEXT', NULL, 3, 1, 1, 1, '2024-01-24 17:39:56', 1);
 INSERT INTO `table_view_column_index` VALUES (6, '目录名称', 'contentName', 'SINGLE_TEXT', NULL, 4, 1, 1, 1, '2024-01-25 16:26:56', 1);
 INSERT INTO `table_view_column_index` VALUES (7, '文件名称', 'fileName', 'SINGLE_TEXT', NULL, 5, 1, 1, 1, '2024-01-25 16:30:10', 1);
-INSERT INTO `table_view_column_index` VALUES (8, '预算名称', 'ysmc', 'SINGLE_TEXT', NULL, 6, -1, 1, 1, '2024-02-04 15:33:18', 1);
-INSERT INTO `table_view_column_index` VALUES (9, '预算金额', 'jdys', 'NUMBER', NULL, 6, -1, 2, 1, '2024-02-04 15:35:51', 1);
+INSERT INTO `table_view_column_index` VALUES (8, '预算名称', 'ysmc', 'SINGLE_TEXT', NULL, 6, 1, 1, 1, '2024-02-04 15:33:18', 1);
+INSERT INTO `table_view_column_index` VALUES (9, '预算金额', 'jdys', 'NUMBER', NULL, 6, 1, 2, 1, '2024-02-04 15:35:51', 1);
+INSERT INTO `table_view_column_index` VALUES (10, '使用预算', 'ysyje', 'NUMBER', NULL, 6, 1, 3, 1, '2024-02-07 16:52:08', 1);
+INSERT INTO `table_view_column_index` VALUES (11, '项目名称', 'xmmc', 'BROWSER_BOX', '{\"isVirtual\":false,\"tableId\":2,\"columnId\":26}', 6, 2, 4, 1, '2024-02-07 16:56:43', 1);
+INSERT INTO `table_view_column_index` VALUES (12, '项目经理', 'xmjl', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":1,\"columnId\":1}', 6, 2, 5, 1, '2024-02-07 17:01:40', 1);
+INSERT INTO `table_view_column_index` VALUES (13, '合同编号', 'htbh', 'BROWSER_BOX', '{\"isVirtual\":false,\"tableId\":1,\"columnId\":5}', 6, 3, 6, 1, '2024-02-07 17:02:05', 1);
+INSERT INTO `table_view_column_index` VALUES (14, '合同编号', 'htbh', 'BROWSER_BOX', NULL, 7, 1, 1, 1, '2024-02-07 17:06:18', 1);
+INSERT INTO `table_view_column_index` VALUES (15, '项目名称', 'xmmc', 'BROWSER_BOX', '{\"isVirtual\":false,\"tableId\":2,\"columnId\":26}', 7, 2, 2, 1, '2024-02-07 17:06:30', 1);
+INSERT INTO `table_view_column_index` VALUES (16, '项目经理', 'xmjl', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":1,\"columnId\":1}', 7, 2, 3, 1, '2024-02-07 17:06:45', 1);
+INSERT INTO `table_view_column_index` VALUES (17, '预算名称', 'ysmc', 'SINGLE_TEXT', NULL, 7, 3, 4, 1, '2024-02-07 17:07:04', 1);
+INSERT INTO `table_view_column_index` VALUES (18, '使用金额', 'je', 'NUMBER', NULL, 7, 3, 5, 1, '2024-02-07 17:07:27', 1);
+INSERT INTO `table_view_column_index` VALUES (19, '支出类型', 'type', 'SELECT_ITEM', '{\"items\":\"采购支出,报销支出,调整支出\"}', 7, 3, 6, 1, '2024-02-07 17:10:55', 1);
+INSERT INTO `table_view_column_index` VALUES (20, '支出时间', 'createTime', 'DATETIME', NULL, 7, 3, 7, 1, '2024-02-07 17:11:11', 1);
+INSERT INTO `table_view_column_index` VALUES (21, '是否超支', 'sfcz', 'SELECT_ITEM', '{\"items\":\"未超支,已超支\"}', 6, -1, 7, 1, '2024-02-07 17:21:44', 1);
 
 -- ----------------------------
 -- Table structure for table_view_index
 -- ----------------------------
 DROP TABLE IF EXISTS `table_view_index`;
 CREATE TABLE `table_view_index`  (
-  `tableId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '表单编号',
-  `tableViewName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '表单显示名称',
-  `tableDataName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '表单存储名称',
-  `moduleNo` bigint(100) UNSIGNED NULL DEFAULT NULL COMMENT '所属模块',
-  `groupCount` int(11) NULL DEFAULT NULL COMMENT '格式分组数量',
-  `groupName` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '格式分组名称',
-  `remark` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
-  `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`tableId`) USING BTREE,
-  UNIQUE INDEX `tableViewName_UNIQUE`(`tableViewName`) USING BTREE,
-  UNIQUE INDEX `tableDataName_UNIQUE`(`tableDataName`) USING BTREE,
-  INDEX `ModuleNo_Foreign`(`moduleNo`) USING BTREE COMMENT '模块搜索加速索引'
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '表单数据索引表（table_index）' ROW_FORMAT = Dynamic;
+                                     `tableId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '表单编号',
+                                     `tableViewName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '表单显示名称',
+                                     `tableDataName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '表单存储名称',
+                                     `moduleNo` bigint(100) UNSIGNED NULL DEFAULT NULL COMMENT '所属模块',
+                                     `groupCount` int(11) NULL DEFAULT NULL COMMENT '格式分组数量',
+                                     `groupName` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '格式分组名称',
+                                     `remark` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+                                     `creator` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+                                     `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                     PRIMARY KEY (`tableId`) USING BTREE,
+                                     UNIQUE INDEX `tableViewName_UNIQUE`(`tableViewName`) USING BTREE,
+                                     UNIQUE INDEX `tableDataName_UNIQUE`(`tableDataName`) USING BTREE,
+                                     INDEX `ModuleNo_Foreign`(`moduleNo`) USING BTREE COMMENT '模块搜索加速索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '表单数据索引表（table_index）' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of table_view_index
@@ -1177,25 +1208,26 @@ INSERT INTO `table_view_index` VALUES (2, '职能部门', 'depart_resource', 1, 
 INSERT INTO `table_view_index` VALUES (3, '公司分部', 'section_resource', 1, 1, '分部信息', '系统默认索引表单', 1, '2024-01-24 17:26:21');
 INSERT INTO `table_view_index` VALUES (4, '目录', 'content_list', 2, 1, '目录信息', '系统默认索引表单', 1, '2024-01-25 16:25:21');
 INSERT INTO `table_view_index` VALUES (5, '文件', 'file_storage', 2, 1, '文件信息', '系统默认索引表单', 1, '2024-01-25 16:27:29');
-INSERT INTO `table_view_index` VALUES (6, '预算项使用', 'form_table_2_dt_1', 6, 0, NULL, NULL, 1, '2024-02-04 15:31:25');
+INSERT INTO `table_view_index` VALUES (6, '预算使用统计', 'ysxx_use_statistics', 6, 3, '预算细项,项目信息,合同信息', '项目预算表单', 1, '2024-02-04 15:31:25');
+INSERT INTO `table_view_index` VALUES (7, '预算使用明细', 'ysxx_use_record', 6, 3, '合同信息,项目信息,支出信息', '项目预算表单', 1, '2024-02-07 16:39:53');
 
 -- ----------------------------
 -- Table structure for workflow
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow`;
 CREATE TABLE `workflow`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,流程唯一id',
-  `moduleTypeId` bigint(64) UNSIGNED NOT NULL COMMENT '所属模块id',
-  `tableId` bigint(64) UNSIGNED NOT NULL COMMENT '对应表单id',
-  `titleColumnId` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '流程标题字段id',
-  `workFlowName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '流程名称',
-  `workflowDescription` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程描述',
-  `workflowBaseTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程默认标题',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `isDeprecated` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否废弃',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  UNIQUE INDEX `workFlowName_Unique`(`workFlowName`) USING BTREE
+                             `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '数据编号,流程唯一id',
+                             `moduleTypeId` bigint(64) UNSIGNED NOT NULL COMMENT '所属模块id',
+                             `tableId` bigint(64) UNSIGNED NOT NULL COMMENT '对应表单id',
+                             `titleColumnId` bigint(64) UNSIGNED NULL DEFAULT NULL COMMENT '流程标题字段id',
+                             `workFlowName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '流程名称',
+                             `workflowDescription` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程描述',
+                             `workflowBaseTitle` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程默认标题',
+                             `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                             `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                             `isDeprecated` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否废弃',
+                             PRIMARY KEY (`dataId`) USING BTREE,
+                             UNIQUE INDEX `workFlowName_Unique`(`workFlowName`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '流程表单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -1213,21 +1245,21 @@ INSERT INTO `workflow` VALUES (6, 6, 6, NULL, '使用预算调整审批流程', 
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow_node`;
 CREATE TABLE `workflow_node`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '节点编号',
-  `workflowNodeName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '节点名称',
-  `userAuthorityLimit` json NULL COMMENT '操作对象权限组',
-  `isCounterSign` int(11) NOT NULL DEFAULT 0 COMMENT '是否需要会签',
-  `nodeType` int(11) NOT NULL COMMENT '节点类型 0、创建，1、提交，2、审批，3、抄送，4、归档',
-  `tableModifyAuthority` json NULL COMMENT '当前节点允许修改的表单字段',
-  `beforeAction` json NULL COMMENT '节点前操作',
-  `checkAction` json NULL COMMENT '提交需要满足的条件',
-  `afterAction` json NULL COMMENT '节点后操作',
-  `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
-  `viewNo` int(11) NOT NULL COMMENT '显示顺序',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  INDEX `node_workflowId_index`(`workflowId`) USING BTREE
+                                  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '节点编号',
+                                  `workflowNodeName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '节点名称',
+                                  `userAuthorityLimit` json NULL COMMENT '操作对象权限组',
+                                  `isCounterSign` int(11) NOT NULL DEFAULT 0 COMMENT '是否需要会签',
+                                  `nodeType` int(11) NOT NULL COMMENT '节点类型 0、创建，1、提交，2、审批，3、抄送，4、归档',
+                                  `tableModifyAuthority` json NULL COMMENT '当前节点允许修改的表单字段',
+                                  `beforeAction` json NULL COMMENT '节点前操作',
+                                  `checkAction` json NULL COMMENT '提交需要满足的条件',
+                                  `afterAction` json NULL COMMENT '节点后操作',
+                                  `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+                                  `viewNo` int(11) NOT NULL COMMENT '显示顺序',
+                                  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                                  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                                  PRIMARY KEY (`dataId`) USING BTREE,
+                                  INDEX `node_workflowId_index`(`workflowId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '节点数据' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -1263,18 +1295,18 @@ INSERT INTO `workflow_node` VALUES (24, '归档', '{\"body\": {\"createConstrain
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow_route`;
 CREATE TABLE `workflow_route`  (
-  `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '路径编号',
-  `routeName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '路径名称',
-  `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
-  `startNodeId` bigint(64) UNSIGNED NOT NULL COMMENT '起点节点编号',
-  `endNodeId` bigint(64) UNSIGNED NOT NULL COMMENT '终点节点编号',
-  `viewNo` int(11) NOT NULL COMMENT '显示顺序',
-  `enterCondition` json NULL COMMENT '进入条件',
-  `routeAction` json NULL COMMENT '路径操作',
-  `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
-  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`dataId`) USING BTREE,
-  INDEX `route_node_start_index`(`startNodeId`) USING BTREE
+                                   `dataId` bigint(64) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '路径编号',
+                                   `routeName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '路径名称',
+                                   `workflowId` bigint(64) UNSIGNED NOT NULL COMMENT '所属流程编号',
+                                   `startNodeId` bigint(64) UNSIGNED NOT NULL COMMENT '起点节点编号',
+                                   `endNodeId` bigint(64) UNSIGNED NOT NULL COMMENT '终点节点编号',
+                                   `viewNo` int(11) NOT NULL COMMENT '显示顺序',
+                                   `enterCondition` json NULL COMMENT '进入条件',
+                                   `routeAction` json NULL COMMENT '路径操作',
+                                   `creator` bigint(64) UNSIGNED NOT NULL COMMENT '创建人唯一id',
+                                   `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                                   PRIMARY KEY (`dataId`) USING BTREE,
+                                   INDEX `route_node_start_index`(`startNodeId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '路径表单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -1336,6 +1368,18 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `request_done_view` AS (s
 -- ----------------------------
 DROP VIEW IF EXISTS `request_view_authority`;
 CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `request_view_authority` AS (select `t`.`requestId` AS `requestId`,`t`.`humanId` AS `humanId`,`t`.`nodeId` AS `nodeId`,`t`.`time` AS `time` from ((select `request_done_view`.`requestId` AS `requestId`,`request_done_view`.`humanId` AS `humanId`,`request_done_view`.`nodeId` AS `nodeId`,`request_done_view`.`doneTime` AS `time` from `eoa_build`.`request_done_view`) union (select `request_back_log_view`.`requestId` AS `requestId`,`request_back_log_view`.`humanId` AS `humanId`,`request_back_log_view`.`nodeId` AS `nodeId`,(`request_back_log_view`.`arriveTime` + interval 1 second) AS `time` from `eoa_build`.`request_back_log_view`)) `t` order by `t`.`time` desc);
+
+-- ----------------------------
+-- View structure for ysxx_use_record
+-- ----------------------------
+DROP VIEW IF EXISTS `ysxx_use_record`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `ysxx_use_record` AS select ((unix_timestamp(`userecord`.`createTime`) * 3) + `userecord`.`type`) AS `dataId`,`ysxx`.`htbh` AS `htbh`,`ysxx`.`xmmc` AS `xmmc`,`ysxx`.`xmjl` AS `xmjl`,`ysxx`.`ysmc` AS `ysmc`,`userecord`.`je` AS `je`,`userecord`.`type` AS `type`,`userecord`.`createTime` AS `createTime` from (((select `dt`.`detailDataId` AS `detailDataId`,`dt`.`ysx` AS `ysx`,`dt`.`bcje` AS `je`,0 AS `type`,`main`.`createTime` AS `createTime` from (`eoa_build`.`form_table_3_dt_2` `dt` left join `eoa_build`.`form_table_3` `main` on((`dt`.`detailMainId` = `main`.`dataId`))) where (`main`.`fpqk` = 1)) union (select `dt`.`detailDataId` AS `detailDataId`,`dt`.`ysx` AS `ysx`,`dt`.`bcje` AS `je`,1 AS `type`,`main`.`createTime` AS `createTime` from (`eoa_build`.`form_table_4_dt_2` `dt` left join `eoa_build`.`form_table_4` `main` on((`dt`.`detailMainId` = `main`.`dataId`))) where (`main`.`fpqk` = 1)) union (select `dt`.`detailDataId` AS `detailDataId`,`dt`.`ysx` AS `ysx`,`dt`.`tzje` AS `je`,2 AS `type`,`main`.`createTime` AS `createTime` from (`eoa_build`.`form_table_6_dt_1` `dt` left join `eoa_build`.`form_table_6` `main` on((`dt`.`detailMainId` = `main`.`dataId`))) where (`main`.`tzqk` = 1))) `userecord` left join (select `dt`.`detailDataId` AS `detailDataId`,`dt`.`ysmc` AS `ysmc`,`main`.`dataId` AS `xmmc`,`main`.`xmjl` AS `xmjl`,`main`.`htbh` AS `htbh` from (`eoa_build`.`form_table_2_dt_1` `dt` left join `eoa_build`.`form_table_2` `main` on((`dt`.`detailMainId` = `main`.`dataId`)))) `ysxx` on((`userecord`.`detailDataId` = `ysxx`.`detailDataId`)));
+
+-- ----------------------------
+-- View structure for ysxx_use_statistics
+-- ----------------------------
+DROP VIEW IF EXISTS `ysxx_use_statistics`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `ysxx_use_statistics` AS select `ysxx`.`detailDataId` AS `dataId`,`ysxx`.`ysmc` AS `ysmc`,`ysxx`.`xmmc` AS `xmmc`,`ysxx`.`xmjl` AS `xmjl`,`ysxx`.`htbh` AS `htbh`,`ysxx`.`jdje` AS `jdje`,ifnull(`yssyqk`.`ysyje`,0) AS `ysyje`,if((`ysxx`.`jdje` >= ifnull(`yssyqk`.`ysyje`,0)),0,1) AS `sfcz` from (((select `dt`.`detailDataId` AS `detailDataId`,`dt`.`ysmc` AS `ysmc`,`main`.`dataId` AS `xmmc`,`dt`.`jdje` AS `jdje`,`main`.`xmjl` AS `xmjl`,`main`.`htbh` AS `htbh` from (`eoa_build`.`form_table_2_dt_1` `dt` left join `eoa_build`.`form_table_2` `main` on((`dt`.`detailMainId` = `main`.`dataId`))))) `ysxx` left join (select `userecord`.`ysx` AS `ysx`,sum(`userecord`.`je`) AS `ysyje` from ((select `dt`.`ysx` AS `ysx`,`dt`.`bcje` AS `je` from (`eoa_build`.`form_table_3_dt_2` `dt` left join `eoa_build`.`form_table_3` `main` on((`dt`.`detailMainId` = `main`.`dataId`))) where (`main`.`fpqk` = 1)) union (select `dt`.`ysx` AS `ysx`,`dt`.`bcje` AS `je` from (`eoa_build`.`form_table_4_dt_2` `dt` left join `eoa_build`.`form_table_4` `main` on((`dt`.`detailMainId` = `main`.`dataId`))) where (`main`.`fpqk` = 1)) union (select `dt`.`ysx` AS `ysx`,`dt`.`tzje` AS `je` from (`eoa_build`.`form_table_6_dt_1` `dt` left join `eoa_build`.`form_table_6` `main` on((`dt`.`detailMainId` = `main`.`dataId`))) where (`main`.`tzqk` = 1))) `userecord` group by `userecord`.`ysx`) `yssyqk` on((`ysxx`.`detailDataId` = `yssyqk`.`ysx`)));
 
 -- ----------------------------
 -- Triggers structure for table request

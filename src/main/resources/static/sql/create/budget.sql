@@ -126,3 +126,89 @@ VALUES (5, 0, '合同管理', NULL, 1, '2024-01-26 16:11:23', NULL, '{
          \"tableType\": \"\"
        }');
 
+CREATE VIEW `ysxx_use_record` AS
+SELECT UNIX_TIMESTAMP(createTime) * 3 + type AS dataId,
+       ysxx.htbh,
+       ysxx.xmmc,
+       ysxx.xmjl,
+       ysxx.ysmc,
+       useRecord.je,
+       useRecord.type,
+       useRecord.createTime
+FROM ((SELECT detailDataId,
+              ysx,
+              bcje AS je,
+              0    AS type,
+              main.createTime
+       FROM form_table_3_dt_2 AS dt
+                LEFT JOIN form_table_3 AS main ON dt.detailMainId = main.dataId
+       where main.fpqk = 1)
+      -- 采购分配细项
+      UNION
+      (SELECT detailDataId,
+              ysx,
+              bcje AS je,
+              1    AS type,
+              main.createTime
+       FROM form_table_4_dt_2 AS dt
+                LEFT JOIN form_table_4 AS main ON dt.detailMainId = main.dataId
+       where main.fpqk = 1)
+      -- 报销分配细项
+      UNION
+      (SELECT detailDataId,
+              ysx,
+              tzje AS je,
+              2    AS type,
+              main.createTime
+       FROM form_table_6_dt_1 AS dt
+                LEFT JOIN form_table_6 AS main ON dt.detailMainId = main.dataId
+       where main.tzqk = 1) -- 预算调整细项
+
+     ) AS useRecord
+         LEFT JOIN (SELECT detailDataId,
+                           ysmc,
+                           dataId as xmmc,
+                           xmjl,
+                           htbh
+                    FROM form_table_2_dt_1 AS dt
+                             LEFT JOIN form_table_2 AS main ON dt.detailMainId = main.dataId) AS ysxx
+                   ON useRecord.detailDataId = ysxx.detailDataId;
+
+CREATE VIEW `ysxx_use_statistics` AS
+SELECT ysxx.detailDataId AS dataId,
+       ysmc,
+       xmmc,
+       xmjl,
+       htbh,
+       jdje,
+       ifnull(`yssyqk`.`ysyje`, 0) as ysyje,
+       if(jdje>=ifnull(`yssyqk`.`ysyje`, 0),0,1) as sfcz
+FROM (SELECT detailDataId,
+             ysmc,
+             dataId as xmmc,
+             jdje,
+             xmjl,
+             htbh
+      FROM form_table_2_dt_1 AS dt
+               LEFT JOIN form_table_2 AS main ON dt.detailMainId = main.dataId) AS ysxx
+         LEFT JOIN (SELECT ysx,
+                           sum(je) AS ysyje
+                    FROM ((SELECT ysx, bcje AS je
+                           FROM form_table_3_dt_2 AS dt
+                                    LEFT JOIN form_table_3 AS main ON dt.detailMainId = main.dataId
+                           where main.fpqk = 1)
+                          -- 采购分配细项
+                          UNION
+                          (SELECT ysx, bcje AS je
+                           FROM form_table_4_dt_2 AS dt
+                                    LEFT JOIN form_table_4 AS main ON dt.detailMainId = main.dataId
+                           where main.fpqk = 1)
+                          -- 报销分配细项
+                          UNION
+                          (SELECT ysx, tzje AS je
+                           FROM form_table_6_dt_1 AS dt
+                                    LEFT JOIN form_table_6 AS main ON dt.detailMainId = main.dataId
+                           where main.tzqk = 1) -- 预算调整细项
+
+                         ) AS useRecord
+                    GROUP BY (ysx)) AS yssyqk ON ysxx.detailDataId = yssyqk.ysx;
