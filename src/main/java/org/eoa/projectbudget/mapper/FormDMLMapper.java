@@ -83,7 +83,7 @@ public interface FormDMLMapper {
      * 删除主表数据
      * @param dataId 数据id
      * @param formTableName 主表名
-     * @return
+     * @return 删除数量
      */
     @Delete("delete from ${formTableName} where `dataId` = #{dataId}")
     Integer deleteMainForm(@Param("dataId") Long dataId
@@ -147,5 +147,5 @@ public interface FormDMLMapper {
                                     @Param("likeMap")Map<String, String> likeMap,
                                     @Param("betweenMap")Map<String, String[]> betweenMap,
                                     @Param("orderColumn")String orderColumn,
-                                    @Param("ascOrDesc")String ascOrDesc);
+                                    @Param("asc")String ascOrDesc);
 }

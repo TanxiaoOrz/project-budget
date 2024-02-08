@@ -79,8 +79,9 @@ public class FilterFormUtils {
         if (orders == null) {
             return dmlMapper.getIdsByMap(tableName,eq,like,between);
         } else {
-            String asc = orders[0].equals("asc")? "asc" : "desc";
-            return dmlMapper.getIdsByMapWithOrder(tableName,eq,like,between, orders[1], asc);
+            String[] split = orders[0].split(",");
+            String asc = split[0].equals("asc")? "asc" : "desc";
+            return dmlMapper.getIdsByMapWithOrder(tableName,eq,like,between, split[1], asc);
         }
 
     }

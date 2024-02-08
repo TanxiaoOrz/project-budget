@@ -875,11 +875,11 @@ CREATE TABLE `search_list_base`  (
 -- Records of search_list_base
 -- ----------------------------
 INSERT INTO `search_list_base` VALUES (1, 6, '项目组织台账', NULL, 2, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:17:57');
-INSERT INTO `search_list_base` VALUES (2, 6, '采购合同分配台账', '{}', 3, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:18:40');
-INSERT INTO `search_list_base` VALUES (3, 6, '报销账单分配台账', NULL, 4, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:19:01');
+INSERT INTO `search_list_base` VALUES (2, 6, '采购合同分配台账', '{"fpqk": "1"}', 3, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', '{"type": "desc", "column": "dataId"}', 0, 1, '2024-02-06 09:18:40');
+INSERT INTO `search_list_base` VALUES (3, 6, '报销账单分配台账', '{"fpqk": "1"}', 4, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', '{"type": "desc", "column": "dataId"}', 0, 1, '2024-02-06 09:19:01');
 INSERT INTO `search_list_base` VALUES (4, 6, '销售合同台账', '{}', 1, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:19:31');
 INSERT INTO `search_list_base` VALUES (5, 6, '既定预算调整台账', NULL, 5, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:22:20');
-INSERT INTO `search_list_base` VALUES (6, 6, '使用预算调账台账', NULL, 6, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 0, 1, '2024-02-06 09:22:33');
+INSERT INTO `search_list_base` VALUES (6, 6, '使用预算调账台账', '{"tzqk": "1"}', 6, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', '{"type": "desc", "column": "dataId"}', 0, 1, '2024-02-06 09:22:33');
 INSERT INTO `search_list_base` VALUES (7, 6, '预算统计台账', '{}', 6, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 1, 1, '2024-02-06 10:01:34');
 INSERT INTO `search_list_base` VALUES (8, 6, '预算使用记录台账', '{}', 7, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', NULL, 1, 1, '2024-02-07 17:22:59');
 
