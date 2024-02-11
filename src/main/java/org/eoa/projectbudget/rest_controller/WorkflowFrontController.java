@@ -230,7 +230,7 @@ public class WorkflowFrontController {
         RequestDto requestDto = requestService.checkAndConsist(requestIn.toEntity(Long.valueOf(action)), humanDto.getDataId());
         FormIn formIn = requestIn.getForm();
 
-        if (requestIn.getRequestId() == null) {
+        if (requestIn.getRequestId() == null || requestIn.getRequestId() <= 0) {
             FormInDto formInDto = formIn.toEntity(null).consist(tableEntityMapper,columnEntityMapper).setRequestId(requestDto.getRequestId());
             Long dataId = entityService.createForm(formInDto, humanDto.getDataId());
             if (dataId == null) {
@@ -257,7 +257,7 @@ public class WorkflowFrontController {
             changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
-            requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))
+            requestDto.setCreator(organizationService.getHumanDto(humanDto.getDataId(), formOutDto.getCreator()))
                     .setFormOutDto(formOutDto);
         }
         if (onlySave)

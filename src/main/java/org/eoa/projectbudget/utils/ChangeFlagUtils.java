@@ -65,11 +65,11 @@ public class ChangeFlagUtils {
             //HUMAN             0
             {},
             //MODULE            1
-            {9},
+            {9,17},
             //TABLE_ENTITY      2
             {},
             //TABLE_VIEW        3
-            {9, 21},
+            {9, 17, 21},
             //COLUMN_ENTITY     4
             {21,},
             //COLUMN_VIEW       5
@@ -89,11 +89,11 @@ public class ChangeFlagUtils {
             //DEPART            12
             {},
             //SECTION           13
-            {},
+            {17},
             //WORKFLOW          14
-            {},
+            {17},
             //WORKFLOW_NODE     15
-            {},
+            {17},
             //WORKFLOW_ROUTE    16
             {},
             //REQUEST           17

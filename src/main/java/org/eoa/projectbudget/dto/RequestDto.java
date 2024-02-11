@@ -156,15 +156,22 @@ public class RequestDto {
                     throw new DataException("request",dataId.toString(),"checkAction", checkAction,formOutDto.table.getTableViewName()+"的主表不存在字段id" + columnId);
                 }
                 String admit;
+                String warn;
                 switch (task.getType()) {
-                    case Action.INPUT -> admit = task.getInput();
-                    case Action.SQL -> admit = jdbcTemplate.queryForObject(task.getInput(), String.class);
+                    case Action.INPUT -> {
+                        admit = task.getInput();
+                        warn = task.getInput();
+                    }
+                    case Action.SQL -> {
+                        admit = jdbcTemplate.queryForObject(task.getInput(), String.class);
+                        warn = "sql语句:" + task.getInput() + "结果" + admit;
+                    }
                     case default ->
                             throw new DataException("request", dataId.toString(), "checkAction", checkAction, "task type 设置错误");
                 }
                 if (admit != null && !admit.equals(mainValue!=null?mainValue.toString():"")) {
                     checkConclusion.set(false);
-                    falseReason.append("字段").append(formOutDto.getColumn(columnId).getColumnViewName()).append("值为").append(mainValue).append("不等于").append(task.getInput()).append(";");
+                    falseReason.append("字段").append(formOutDto.getColumn(columnId).getColumnViewName()).append("值为").append(mainValue).append("不等于").append(warn).append(";");
                 }
             });
 
