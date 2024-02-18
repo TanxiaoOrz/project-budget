@@ -36,6 +36,8 @@ mybatis-plus:
     map-underscore-to-camel-case: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:static/sql/mapper/*.xml
+jackson:
+  date-format: "yyyy-MM-ss HH:mm:ss"
 
 eoa:
   cache-time: 5  # 单位分钟

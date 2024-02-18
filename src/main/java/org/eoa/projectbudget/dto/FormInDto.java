@@ -52,6 +52,8 @@ public class FormInDto {
             Object value = mains.get(column.getColumnDataName());
             if (column.getColumnType().equals(Column.DATATYPE_GROUP_VIEW.get(Column.DATETIME))&&( value instanceof Integer || value instanceof Long))
                 value = new Date(Long.parseLong(value.toString()));
+            else if ((column.getColumnType().equals(Column.DATATYPE_GROUP_VIEW.get(Column.DATETIME))&&( value instanceof String))&&((String) value).contains("+"))
+                value = ((String) value).split("\\+")[0];
             collect.put(column.getColumnDataName(), value);
         });
         collect.put("lastEditTime",new Date());
@@ -74,6 +76,8 @@ public class FormInDto {
                     Object value1 = value.get(column.getColumnDataName());
                     if (column.getColumnType().equals(Column.DATATYPE_GROUP_VIEW.get(Column.DATETIME))&&( value1 instanceof Integer || value1 instanceof Long))
                         value1 = new Date(Long.parseLong(value1.toString()));
+                    else if ((column.getColumnType().equals(Column.DATATYPE_GROUP_VIEW.get(Column.DATETIME))&&( value1 instanceof String))&&((String) value1).contains("+"))
+                        value1 = ((String) value1).split("\\+")[0];
                     detailMap.put(column.getColumnDataName(), value1);
                 });
                 Object detailDataId = details.get(i).get("detailDataId");
@@ -158,5 +162,19 @@ public class FormInDto {
     public FormInDto setRequestId(Long requestId) {
         this.requestId = requestId;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "FormInDto{" +
+                "dataId=" + dataId +
+                ", tableId=" + tableId +
+                ", requestId=" + requestId +
+                ", mains=" + mains +
+                ", detailValueMapLists=" + detailValueMapLists +
+                ", table=" + table +
+                ", mainColumns=" + mainColumns +
+                ", detailColumns=" + detailColumns +
+                '}';
     }
 }

@@ -12,10 +12,7 @@ import org.eoa.projectbudget.dto.HumanDto;
 import org.eoa.projectbudget.dto.RequestDto;
 import org.eoa.projectbudget.dto.constraint.Constraint;
 import org.eoa.projectbudget.entity.*;
-import org.eoa.projectbudget.exception.AuthorityException;
-import org.eoa.projectbudget.exception.EoaException;
-import org.eoa.projectbudget.exception.ParameterException;
-import org.eoa.projectbudget.exception.ServerException;
+import org.eoa.projectbudget.exception.*;
 import org.eoa.projectbudget.mapper.ColumnEntityMapper;
 import org.eoa.projectbudget.mapper.RequestMapper;
 import org.eoa.projectbudget.mapper.TableEntityMapper;
@@ -55,6 +52,8 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api/v1/workflow/front")
 public class WorkflowFrontController {
+
+
 
     @Autowired
     RequestService requestService;
@@ -193,7 +192,7 @@ public class WorkflowFrontController {
             FormOutDto formOutDto = getFormOutDto(userId, requestDto, dataId);
             requestDto.setFormOutDto(formOutDto);
             WorkflowNode current = workflowService.getWorkflowNode(nodeId, userId);
-            requestDto.setCurrentNode(current);
+            requestDto.setCurrentNode(current,false);
             requestDtoOut = requestDtoOutFactory.out(requestDto);
             cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString(), userId, requestDtoOut);
         }
@@ -273,10 +272,8 @@ public class WorkflowFrontController {
             changeFlagUtils.freshDate(ChangeFlagUtils.FORM + "-" + formIn.getTableId());
             changeFlagUtils.freshDate(ChangeFlagUtils.REQUEST);
             return new Vo<>(requestDto.getRequestId());
-        }catch (EoaException e) {
-            return new Vo<>(requestDto.getRequestId(), e.description);
-        }catch (Exception e) {
-            return new Vo<>(requestDto.getRequestId(), e.getMessage());
+        } catch (Exception e) {
+            throw  new RequestException(requestDto.getRequestId(), e);
         }
 
     }

@@ -64,7 +64,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> getRequests(QueryWrapper<Request> wrapper, Long userId) {
-        List<Request> requests = requestMapper.selectList(wrapper.eq("creator", userId));
+        List<Request> requests = requestMapper.selectList(wrapper);
         log.info("用户=>{}获取列表获取数量=>{}", userId, requests.size());
         return requests;
     }
@@ -284,7 +284,7 @@ public class RequestServiceImpl implements RequestService {
 
         requestDto.setNextRoutes(workflowRouteMapper.selectList(new QueryWrapper<WorkflowRoute>()
                 .eq("startNodeId", requestDto.getNodeId())
-                .orderByDesc("viewNo")));
+                .orderByAsc("viewNo")));
         return requestDto;
     }
 
@@ -362,9 +362,9 @@ public class RequestServiceImpl implements RequestService {
         try {
             Constraint constraint = AuthorityUtils.getConstraint(node.getUserAuthorityLimit());
             List<Long> backLogHumans = AuthorityUtils.getInHumansForm(requestDto.getCreator(), requestDto.getFormOutDto(), constraint);
-            requestMapper.newBacklogs(backLogHumans, requestDto.getRequestId(), node.getDataId(), requestDto.getWorkflowId());
             if (backLogHumans.size() == 0)
-                throw new ServerException("下一个节点:"+node.getWorkflowNodeName()+"没有操作人");
+                throw new ServerException("下一个节点:"+node.getWorkflowNodeName()+"没有操作人,请联系管理员");
+            requestMapper.newBacklogs(backLogHumans, requestDto.getRequestId(), node.getDataId(), requestDto.getWorkflowId());
         } catch (EoaException e) {
             log.warn("request=>{}到达获取节点=>{}操作人失败,失败原因{}", requestDto.getRequestId(), node.getDataId(), e.description);
             throw e;

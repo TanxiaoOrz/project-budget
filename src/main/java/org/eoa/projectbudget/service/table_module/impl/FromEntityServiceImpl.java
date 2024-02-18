@@ -158,7 +158,7 @@ public class FromEntityServiceImpl implements FormService {
         TableEntity table = form.getTable();
         Long dataId = form.getDataId();
         String tableDataName = table.getTableDataName();
-        Integer integer = formDMLMapper.updateMainForm(form.getMains(), dataId, tableDataName);
+        Integer integer = formDMLMapper.updateMainForm(form.getMainMap(), dataId, tableDataName);
         List<List<Map<String, Object>>> detailMapLists = form.getDetailMapLists();
         for (int i = 0; i < table.getDetailCount(); i++) {
             int detailNo = i + 1;

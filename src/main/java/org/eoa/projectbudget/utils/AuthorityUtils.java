@@ -145,13 +145,13 @@ public class AuthorityUtils {
                 }
             }
         }
-        String tableType = authorityConstraint.getBodyType();
+        String tableType = authorityConstraint.getTableType();
         if (form!= null && !DataProcessUtils.isEmpty(tableType)) {
             for (String type:
                     tableType.split(",")) {
                 if (typeList.contains(type)) {
                     int index = typeList.indexOf(type);
-                    String constraint = authorityConstraint.getBody().get(types[index]);
+                    String constraint = authorityConstraint.getTable().get(types[index]);
                     FormSolve solve;
                     try {
                         solve = (FormSolve) new ObjectMapper().readValue(constraint, clazz[index]);

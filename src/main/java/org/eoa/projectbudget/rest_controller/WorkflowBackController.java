@@ -93,6 +93,7 @@ public class WorkflowBackController {
         RequestOut[] cache = cacheService.getCache(flag, method, humanDto.getDataId(), RequestOut[].class);
         if (cache == null) {
             outs = requestOutFactory.outs(requestService.getRequests(filter.getWrapper(), humanDto.getDataId()));
+            cacheService.setCache(flag,method, USER_ID_CACHE, outs);
         } else {
             outs = Arrays.asList(cache);
         }

@@ -4,6 +4,7 @@ package org.eoa.projectbudget.rest_controller;
 import lombok.extern.slf4j.Slf4j;
 import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.exception.ParameterException;
+import org.eoa.projectbudget.exception.RequestException;
 import org.eoa.projectbudget.vo.out.Vo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
@@ -26,6 +27,13 @@ import java.util.Arrays;
 public class ExceptionController {
     @Value("${eoa.release}")
     private boolean isRelease;
+
+    @ExceptionHandler(RequestException.class)
+    public Vo<String> handleRequestException(RequestException e) {
+        if (!isRelease)
+            e.e.printStackTrace();
+        return new Vo<>(e);
+    }
 
     @ExceptionHandler(DuplicateKeyException.class)
     public Vo<String> handleViolateUniqueConstraint(DuplicateKeyException e) {
@@ -57,6 +65,6 @@ public class ExceptionController {
         if (!isRelease)
             e.printStackTrace();
         log.error("系统运行异常,error_message:{}",e.getMessage());
-        return new Vo<>(Vo.SERVER_ERROR,e.getMessage());
+        return new Vo<>(Vo.SERVER_ERROR,"系统运行异常,error_message:{}" + e.getMessage());
     }
 }

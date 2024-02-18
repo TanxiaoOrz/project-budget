@@ -200,6 +200,15 @@ public class RequestOut implements VoOut {
         return this;
     }
 
+    public String getRequestTitle() {
+        return requestTitle;
+    }
+
+    public RequestOut setRequestTitle(String requestTitle) {
+        this.requestTitle = requestTitle;
+        return this;
+    }
+
     public RequestOut() {
     }
 

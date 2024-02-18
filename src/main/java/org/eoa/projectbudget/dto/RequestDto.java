@@ -348,6 +348,14 @@ public class RequestDto {
         return this;
     }
 
+    public RequestDto setCurrentNode(WorkflowNode currentNode, Boolean update) {
+        if (update)
+            return setCurrentNode(currentNode);
+        else
+            this.currentNode = currentNode;
+        return this;
+    }
+
     public FormOutDto getFormOutDto() {
         return formOutDto;
     }
