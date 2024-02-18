@@ -46,7 +46,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
     private final Logger log = LoggerFactory.getLogger("TableModule");
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long createTable(Table abstracts, Long userId) throws ParameterException {
         TableEntity table = (TableEntity) abstracts;
 
@@ -84,7 +84,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateTable(Table abstracts, Long userId) throws ParameterException {
         TableEntity table = (TableEntity) abstracts;
 
@@ -143,7 +143,7 @@ public class TableEntityServiceImpl implements TableColumnService<ColumnEntity,T
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long addColumn(Column base, Long userId) throws ParameterException {
         ColumnEntity column = (ColumnEntity) base;
         column.setCreateTime(new Date());

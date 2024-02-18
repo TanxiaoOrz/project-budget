@@ -167,7 +167,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long createRequest(RequestDto requestDto, Long userId) {
         log.info("用户=>{}创建流程=>{}", requestDto.getDataId(), userId);
         StringBuilder title = new StringBuilder();
@@ -190,7 +190,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public List<Long> refuseRequest(RequestDto requestDto, Long userId) {
         log.info("用户=>{}拒绝流程=>{}", requestDto.getDataId(), userId);
 
@@ -205,7 +205,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public List<Long> submitRequest(RequestDto requestDto, Long userId) {
         log.info("用户=>{}提交流程=>{}", requestDto.getDataId(), userId);
         leaveNode(requestDto, userId);
@@ -218,7 +218,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public List<Long> admitRequest(RequestDto requestDto, Long userId) {
         log.info("用户=>{}批准流程=>{}", requestDto.getDataId(), userId);
 
@@ -243,7 +243,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public RequestDto checkAndConsist(RequestDto requestDto, Long userId) throws EoaException {
 
         Long workflowId = requestDto.getWorkflowId();
