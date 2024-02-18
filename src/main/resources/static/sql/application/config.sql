@@ -758,10 +758,10 @@ VALUES (1, '销售人员', 'xsry', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId
 INSERT INTO `table_column_index`
 VALUES (2, '销售时间', 'xssj', 'DATETIME', NULL, 1, 1, -1, 2, 1, '2024-02-02 17:46:53');
 INSERT INTO `table_column_index`
-VALUES (3, '销售部门', 'xsbm', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":2,\"columnId\":1}', 1, 1, -1, 3, 1,
+VALUES (3, '销售部门', 'xsbm', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":2,\"columnId\":4}', 1, 1, -1, 3, 1,
         '2024-02-02 17:51:33');
 INSERT INTO `table_column_index`
-VALUES (4, '销售分部', 'xsfb', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":3,\"columnId\":1}', 1, 1, -1, 4, 1,
+VALUES (4, '销售分部', 'xsfb', 'BROWSER_BOX', '{\"isVirtual\":true,\"tableId\":3,\"columnId\":5}', 1, 1, -1, 4, 1,
         '2024-02-02 18:02:04');
 INSERT INTO `table_column_index`
 VALUES (5, '合同编号', 'htbh', 'SINGLE_TEXT', NULL, 1, 2, -1, 5, 1, '2024-02-04 11:21:30');
