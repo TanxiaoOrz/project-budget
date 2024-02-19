@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本机
+ Source Server         : 本机MySql-EoaBuild
  Source Server Type    : MySQL
  Source Server Version : 50743
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50743
  File Encoding         : 65001
 
- Date: 18/02/2024 17:40:39
+ Date: 19/02/2024 17:39:41
 */
 
 SET NAMES utf8mb4;
@@ -215,7 +215,7 @@ CREATE TABLE `depart_resource`  (
   `isDeprecated` tinyint(4) NULL DEFAULT 0 COMMENT '0否1是废弃',
   PRIMARY KEY (`dataId`) USING BTREE,
   UNIQUE INDEX `departCode_Unique`(`departCode`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部门表单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部门表单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of depart_resource
@@ -230,6 +230,7 @@ INSERT INTO `depart_resource` VALUES (7, '质量部', 'EQUIPMENT-QUALITY', '质�
 INSERT INTO `depart_resource` VALUES (8, '研发部', 'EQUIPMENT/RESEARCH-DEVELOP', '研发部', NULL, 4, NULL, NULL, '2024-01-26 13:16:05', NULL, 0);
 INSERT INTO `depart_resource` VALUES (9, '销售部', 'FINICAL-SALE', '销售部', NULL, 5, NULL, NULL, '2024-01-26 13:27:43', NULL, 0);
 INSERT INTO `depart_resource` VALUES (10, '采购部', 'FINICAL-PURCHASE', '采购部', NULL, 5, NULL, NULL, '2024-01-26 13:28:07', NULL, 0);
+INSERT INTO `depart_resource` VALUES (11, '商务部', 'OlD-BUDGET', '外贸商务部', NULL, 6, NULL, NULL, '2024-02-19 10:09:38', NULL, 1);
 
 -- ----------------------------
 -- Table structure for file_storage
@@ -296,7 +297,7 @@ CREATE TABLE `form_table_1`  (
 -- ----------------------------
 -- Records of form_table_1
 -- ----------------------------
-INSERT INTO `form_table_1` VALUES (1, 2, NULL, 11, '2024-02-18 10:15:23', '2024-02-18 17:09:33', NULL, NULL, NULL, 11, '2024-02-17 18:11:34', 9, 5, 'TEST001', '销售合同1', '2024-02-06 18:12:13', '2024-02-25 18:12:21', '相对方公司一', '相对方公司一银行账号', '相对方公司一税号', '相对方公司一地址', '相对方公司一联系人', '相对方公司一联系方式', 1000000.00, 0, 1.00, 0.25, 1250000.00, NULL);
+INSERT INTO `form_table_1` VALUES (1, 2, NULL, 11, '2024-02-18 10:15:23', '2024-02-18 17:09:33', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":16,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":true,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\", \"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":13,\\\"grade\\\":0},{\\\"characterId\\\":12,\\\"grade\\\":2},{\\\"characterId\\\":15,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"createConstraint,characterConstraint,\", \"tableType\": \"\"}', NULL, 11, '2024-02-17 18:11:34', 9, 5, 'TEST001', '销售合同1', '2024-02-06 18:12:13', '2024-02-25 18:12:21', '相对方公司一', '相对方公司一银行账号', '相对方公司一税号', '相对方公司一地址', '相对方公司一联系人', '相对方公司一联系方式', 1000000.00, 0, 1.00, 0.25, 1250000.00, NULL);
 
 -- ----------------------------
 -- Table structure for form_table_1_dt_1
@@ -361,7 +362,7 @@ CREATE TABLE `form_table_2`  (
 -- ----------------------------
 -- Records of form_table_2
 -- ----------------------------
-INSERT INTO `form_table_2` VALUES (1, 3, NULL, 5, '2024-02-18 17:37:03', '2024-02-18 17:37:03', NULL, NULL, NULL, 'ENERGY001', '能源项目1', '2024-02-18 17:27:04', '2024-03-27 17:27:09', NULL, NULL, NULL, 6, 3, 1250000.00, 100000.00, NULL, NULL, 1, 1, 340000.00, NULL, NULL);
+INSERT INTO `form_table_2` VALUES (1, 3, NULL, 5, '2024-02-18 17:37:03', '2024-02-19 15:50:15', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":true,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":true,\\\"sectionRecursive\\\":false}\", \"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0}]}\"}, \"table\": {\"proposedConstraint\": \"{\\\"humans\\\":[],\\\"departs\\\":[33],\\\"sections\\\":[]}\"}, \"bodyType\": \"createConstraint,characterConstraint,\", \"tableType\": \"proposedConstraint,\"}', NULL, 'ENERGY001', '能源项目1', '2024-02-17 17:27:04', '2024-03-26 17:27:09', NULL, NULL, 1, 6, 3, 1250000.00, 100000.00, NULL, NULL, 1, 1, 340000.00, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for form_table_2_dt_1
@@ -377,14 +378,11 @@ CREATE TABLE `form_table_2_dt_1`  (
   PRIMARY KEY (`detailDataId`) USING BTREE,
   UNIQUE INDEX `detailDataId_UNIQUE`(`detailDataId`) USING BTREE,
   INDEX `detailMainId_UNIQUE`(`detailMainId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of form_table_2_dt_1
 -- ----------------------------
-INSERT INTO `form_table_2_dt_1` VALUES (1, 1, '管理费', 10000.00, 0.00, 1);
-INSERT INTO `form_table_2_dt_1` VALUES (2, 1, '运输费', 100000.00, 0.00, 1);
-INSERT INTO `form_table_2_dt_1` VALUES (3, 1, '设备费', 800000.00, 0.00, 1);
 
 -- ----------------------------
 -- Table structure for form_table_3
@@ -663,12 +661,12 @@ CREATE TABLE `human_resource`  (
 -- ----------------------------
 -- Records of human_resource
 -- ----------------------------
-INSERT INTO `human_resource` VALUES (1, 'sysadmin', 'eoa', '系统管理员', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '系统管理员', 0, 0, 0, NULL, '2024-02-18 16:46:31', 0, 0);
+INSERT INTO `human_resource` VALUES (1, 'sysadmin', 'eoa', '系统管理员', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '系统管理员', 0, 0, 0, NULL, '2024-02-19 17:26:50', 0, 0);
 INSERT INTO `human_resource` VALUES (2, 'tourist', 'eoa', '游客用户', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '游客', 1, 0, 0, NULL, NULL, 0, 0);
-INSERT INTO `human_resource` VALUES (3, 'ywy', 'eoa', '杨文元', 0, NULL, NULL, NULL, NULL, NULL, 'W001', 1, 1, '总经理', 0, 0, 0, NULL, '2024-02-18 16:18:45', 0, 0);
+INSERT INTO `human_resource` VALUES (3, 'ywy', 'eoa', '杨文元', 0, NULL, NULL, NULL, NULL, NULL, 'W001', 1, 1, '总经理', 0, 0, 0, NULL, '2024-02-19 15:15:28', 0, 0);
 INSERT INTO `human_resource` VALUES (4, 'wzc', 'eoa', '王晨志', 0, NULL, NULL, NULL, NULL, NULL, 'W002', 2, 1, '法务', 3, 0, 0, NULL, NULL, 0, 0);
 INSERT INTO `human_resource` VALUES (5, 'ly', 'eoa', '李妍', 1, NULL, NULL, NULL, NULL, NULL, 'W003', 3, 1, '预决算工程师', 3, 0, 0, NULL, '2024-02-18 17:37:03', 0, 0);
-INSERT INTO `human_resource` VALUES (6, 'xp', 'eoa', '徐平', 0, NULL, NULL, NULL, NULL, NULL, 'W004', 2, 4, '项目人员', 3, 0, 0, NULL, NULL, 0, 0);
+INSERT INTO `human_resource` VALUES (6, 'xp', 'eoa', '徐平', 0, NULL, NULL, NULL, NULL, NULL, 'W004', 2, 4, '项目人员', 3, 0, 0, NULL, '2024-02-19 16:11:53', 0, 0);
 INSERT INTO `human_resource` VALUES (7, 'xj', 'eoa', '赵静', 1, NULL, NULL, NULL, NULL, NULL, 'W005', 2, 5, '项目经理', 3, 0, 0, NULL, NULL, 0, 0);
 INSERT INTO `human_resource` VALUES (8, 'lcg', 'eoa', '刘长庚', 0, NULL, NULL, NULL, NULL, NULL, 'W006', 3, 6, '项目人员', 3, 0, 0, NULL, NULL, 0, 0);
 INSERT INTO `human_resource` VALUES (9, 'fl', 'eoa', '付蕾', 1, NULL, NULL, NULL, NULL, NULL, 'W007', 3, 6, '项目经理', 3, 0, 0, NULL, NULL, 0, 0);
@@ -822,9 +820,8 @@ CREATE TABLE `request`  (
 -- ----------------------------
 -- Records of request
 -- ----------------------------
-INSERT INTO `request` VALUES (1, NULL, 1, 1, NULL, NULL, 0, NULL, NULL, NULL, 11);
 INSERT INTO `request` VALUES (2, 1, 1, 6, '[{\"time\": 1708222522525, \"nodeId\": 1, \"comment\": \"创建\", \"humanId\": 11, \"operation\": 0, \"workflowNodeName\": \"创建\"}, {\"time\": 1708241283555, \"nodeId\": 2, \"comment\": \"批准\", \"humanId\": 3, \"operation\": 2, \"workflowNodeName\": \"上级审批\"}, {\"time\": 1708244543566, \"nodeId\": 3, \"comment\": \"批准\", \"humanId\": 3, \"operation\": 2, \"workflowNodeName\": \"分部领导审批\"}, {\"time\": 1708247373673, \"nodeId\": 5, \"comment\": \"提交\", \"humanId\": 5, \"operation\": 1, \"workflowNodeName\": \"通知预决算部\"}]', '销售合同审批-TEST001', 3, '[{\"id\": 1, \"date\": 1708222522531, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 1, \"date\": 1708222522543, \"action\": \"经过路径\", \"object\": \"WorkflowRoute\"}, {\"id\": 2, \"date\": 1708222522551, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}, {\"id\": 2, \"date\": 1708241283557, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 2, \"date\": 1708241283560, \"action\": \"经过路径\", \"object\": \"WorkflowRoute\"}, {\"id\": 3, \"date\": 1708241283565, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}, {\"id\": 3, \"date\": 1708244543571, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 4, \"date\": 1708244543605, \"action\": \"经过路径\", \"object\": \"WorkflowRoute\"}, {\"id\": 5, \"date\": 1708244543614, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}, {\"id\": 5, \"date\": 1708247373673, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 6, \"date\": 1708247373675, \"action\": \"经过路径\", \"object\": \"WorkflowRoute\"}, {\"id\": 6, \"date\": 1708247373676, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}]', '2024-02-18 10:15:23', '2024-02-18 17:09:34', 11);
-INSERT INTO `request` VALUES (3, 1, 2, 8, '[{\"time\": 1708249023066, \"nodeId\": 7, \"comment\": \"创建\", \"humanId\": 5, \"operation\": 0, \"workflowNodeName\": \"建立组织\"}]', '项目预算编制审批-', 1, '[{\"id\": 7, \"date\": 1708249023067, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 7, \"date\": 1708249023068, \"action\": \"经过路径\", \"object\": \"WorkflowRoute\"}, {\"id\": 8, \"date\": 1708249023070, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}]', '2024-02-18 17:37:03', NULL, 5);
+INSERT INTO `request` VALUES (3, 1, 2, 10, '[{\"time\": 1708249023066, \"nodeId\": 7, \"comment\": \"创建\", \"humanId\": 5, \"operation\": 0, \"workflowNodeName\": \"建立组织\"}, {\"time\": 1708326787322, \"nodeId\": 8, \"comment\": \"批准\", \"humanId\": 3, \"operation\": 2, \"workflowNodeName\": \"领导审批\"}, {\"time\": 1708327849294, \"nodeId\": 9, \"comment\": \"提交\", \"humanId\": 6, \"operation\": 1, \"workflowNodeName\": \"通知项目经理\"}, {\"time\": 1708329015457, \"nodeId\": 10, \"comment\": \"test\", \"humanId\": 1, \"operation\": 4, \"workflowNodeName\": \"完成归档\"}]', '项目预算编制审批-ENERGY001', 3, '[{\"id\": 7, \"date\": 1708249023067, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 7, \"date\": 1708249023068, \"action\": \"经过路径\", \"object\": \"WorkflowRoute\"}, {\"id\": 8, \"date\": 1708249023070, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}, {\"id\": 8, \"date\": 1708326787328, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 8, \"date\": 1708326787333, \"action\": \"经过路径\", \"object\": \"WorkflowRoute\"}, {\"id\": 9, \"date\": 1708326787345, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}, {\"id\": 9, \"date\": 1708327849295, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 9, \"date\": 1708327849299, \"action\": \"经过路径\", \"object\": \"WorkflowRoute\"}, {\"id\": 10, \"date\": 1708327849302, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}, {\"id\": 10, \"date\": 1708329015463, \"action\": \"离开节点\", \"object\": \"WorkflowNode\"}, {\"id\": 10, \"date\": 1708329015477, \"action\": \"到达节点\", \"object\": \"WorkflowNode\"}]', '2024-02-18 17:37:03', '2024-02-19 15:50:15', 5);
 
 -- ----------------------------
 -- Table structure for request_backlog
@@ -844,7 +841,7 @@ CREATE TABLE `request_backlog`  (
 -- ----------------------------
 -- Records of request_backlog
 -- ----------------------------
-INSERT INTO `request_backlog` VALUES (3, 3, 8, '2024-02-18 17:37:03', 2);
+INSERT INTO `request_backlog` VALUES (5, 3, 10, '2024-02-19 15:50:15', 2);
 
 -- ----------------------------
 -- Table structure for request_done
@@ -865,8 +862,10 @@ CREATE TABLE `request_done`  (
 -- Records of request_done
 -- ----------------------------
 INSERT INTO `request_done` VALUES (3, 2, 3, '2024-02-18 16:22:23', 1);
+INSERT INTO `request_done` VALUES (3, 3, 8, '2024-02-19 15:13:07', 2);
 INSERT INTO `request_done` VALUES (5, 2, 6, '2024-02-18 17:39:03', 1);
 INSERT INTO `request_done` VALUES (5, 3, 7, '2024-02-18 17:37:03', 2);
+INSERT INTO `request_done` VALUES (6, 3, 10, '2024-02-19 15:31:49', 2);
 INSERT INTO `request_done` VALUES (11, 2, 1, '2024-02-18 10:15:22', 1);
 
 -- ----------------------------
@@ -980,7 +979,7 @@ CREATE TABLE `section_resource`  (
   PRIMARY KEY (`dataId`) USING BTREE,
   UNIQUE INDEX `sectionName_Unique`(`sectionName`) USING BTREE,
   UNIQUE INDEX `sectionCode_Unique`(`sectionCode`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '分部表单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '分部表单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of section_resource
@@ -990,6 +989,7 @@ INSERT INTO `section_resource` VALUES (2, '能源制造公司', 'ENERGY', '维�
 INSERT INTO `section_resource` VALUES (3, '设备制造分部', 'EQUIPMENT', '维森化工石油-设备制造分部', 0, NULL, NULL, '2024-01-25 17:26:51', NULL, 0);
 INSERT INTO `section_resource` VALUES (4, '研发分部', 'EQUIPMENT/RESEARCH', '维森化工石油公司设备制造研发分部', 3, NULL, NULL, '2024-01-26 11:39:41', NULL, 0);
 INSERT INTO `section_resource` VALUES (5, '商务分部', 'SERVER/FINICAL', '维森集团商务分部', 1, NULL, NULL, '2024-01-26 13:26:57', NULL, 0);
+INSERT INTO `section_resource` VALUES (6, '外贸部门', 'OLD001', '石油外贸部门', 0, NULL, NULL, '2024-02-19 10:08:47', NULL, 1);
 
 -- ----------------------------
 -- Table structure for table_column_index
@@ -1009,7 +1009,7 @@ CREATE TABLE `table_column_index`  (
   `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`columnId`) USING BTREE,
   INDEX `tableNo_FOREIGN`(`tableNo`) USING BTREE COMMENT '所属表单索引加速'
-) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字段数据索引表（table_column_index）' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 101 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字段数据索引表（table_column_index）' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of table_column_index
@@ -1113,6 +1113,7 @@ INSERT INTO `table_column_index` VALUES (96, '调整金额', 'dzje', 'NUMBER', N
 INSERT INTO `table_column_index` VALUES (97, '分配情况', 'fpqk', 'SELECT_ITEM', '{\"items\":\"待分配,已分配,已废弃\"}', 3, 3, -1, 23, 1, '2024-02-06 16:55:31');
 INSERT INTO `table_column_index` VALUES (98, '分配情况', 'fpqk', 'SELECT_ITEM', '{\"items\":\"待分配,已分配,已废弃\"}', 4, 3, -1, 14, 1, '2024-02-06 16:57:45');
 INSERT INTO `table_column_index` VALUES (99, '调整情况', 'tzqk', 'SELECT_ITEM', '{\"items\":\"待审批,已调整,已退回\"}', 6, 2, -1, 8, 1, '2024-02-07 16:34:22');
+INSERT INTO `table_column_index` VALUES (100, '调整情况', 'tzqk', 'SELECT_ITEM', '{\"items\":\"待审批,已调整,已退回\"}', 5, 2, -1, 8, 1, '2024-02-19 13:50:22');
 
 -- ----------------------------
 -- Table structure for table_index
@@ -1145,12 +1146,12 @@ CREATE TABLE `table_index`  (
 -- ----------------------------
 -- Records of table_index
 -- ----------------------------
-INSERT INTO `table_index` VALUES (1, '销售合同', 'form_table_1', 6, NULL, 1, '付款条件', 4, '申请信息,合同基础信息,相对方信息,金额信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-02 16:03:51');
-INSERT INTO `table_index` VALUES (2, '项目预算编制', 'form_table_2', 6, NULL, 1, '预算明细', 5, '项目信息,合同信息,组织信息,金额信息,利润信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-02 16:18:13');
-INSERT INTO `table_index` VALUES (3, '采购单', 'form_table_3', 6, NULL, 2, '物料交付明细,预算分配明细', 3, '采购信息,项目信息,金额信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-02 16:19:35');
-INSERT INTO `table_index` VALUES (4, '报销单', 'form_table_4', 6, NULL, 2, '报销金额明细,预算分配明细', 3, '报销信息,项目信息,金额信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-02 16:19:40');
-INSERT INTO `table_index` VALUES (5, '既定预算调整单', 'form_table_5', 6, NULL, 1, '调整明细', 2, '项目信息,调整信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-04 09:53:27');
-INSERT INTO `table_index` VALUES (6, '使用预算调整单', 'form_table_6', 6, NULL, 1, '调整明细', 2, '项目信息,调整信息', '项目预算表单', NULL, NULL, NULL, NULL, 1, '2024-02-04 09:53:41');
+INSERT INTO `table_index` VALUES (1, '销售合同', 'form_table_1', 6, NULL, 1, '付款条件', 4, '申请信息,合同基础信息,相对方信息,金额信息', '项目预算表单', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":16,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', NULL, NULL, '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":true,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\", \"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":13,\\\"grade\\\":0},{\\\"characterId\\\":12,\\\"grade\\\":2},{\\\"characterId\\\":15,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"createConstraint,characterConstraint,\", \"tableType\": \"\"}', 1, '2024-02-02 16:03:51');
+INSERT INTO `table_index` VALUES (2, '项目预算编制', 'form_table_2', 6, NULL, 1, '预算明细', 5, '项目信息,合同信息,组织信息,金额信息,利润信息', '项目预算表单', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":true,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', NULL, NULL, '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":true,\\\"sectionRecursive\\\":false}\", \"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0}]}\"}, \"table\": {\"proposedConstraint\": \"{\\\"humans\\\":[],\\\"departs\\\":[33],\\\"sections\\\":[]}\"}, \"bodyType\": \"createConstraint,characterConstraint,\", \"tableType\": \"proposedConstraint,\"}', 1, '2024-02-02 16:18:13');
+INSERT INTO `table_index` VALUES (3, '采购单', 'form_table_3', 6, NULL, 2, '物料交付明细,预算分配明细', 3, '采购信息,项目信息,金额信息', '项目预算表单', NULL, NULL, NULL, '{\"body\": {\"createConstraint\": \"{\\\"self\\\":false,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":true,\\\"sectionRecursive\\\":false}\", \"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":11,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"createConstraint,characterConstraint,\", \"tableType\": \"\"}', 1, '2024-02-02 16:19:35');
+INSERT INTO `table_index` VALUES (4, '报销单', 'form_table_4', 6, NULL, 2, '报销金额明细,预算分配明细', 3, '报销信息,项目信息,金额信息', '项目预算表单', NULL, NULL, NULL, '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":true,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\", \"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0}]}\"}, \"table\": {}, \"bodyType\": \"createConstraint,characterConstraint,\", \"tableType\": \"\"}', 1, '2024-02-02 16:19:40');
+INSERT INTO `table_index` VALUES (5, '既定预算调整单', 'form_table_5', 6, NULL, 1, '调整明细', 2, '项目信息,调整信息', '项目预算表单', NULL, NULL, NULL, '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":true,\\\"sectionRecursive\\\":false}\", \"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":15,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"createConstraint,characterConstraint,\", \"tableType\": \"\"}', 1, '2024-02-04 09:53:27');
+INSERT INTO `table_index` VALUES (6, '使用预算调整单', 'form_table_6', 6, NULL, 1, '调整明细', 2, '项目信息,调整信息', '项目预算表单', NULL, NULL, NULL, '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\", \"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":15,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"createConstraint,characterConstraint,\", \"tableType\": \"\"}', 1, '2024-02-04 09:53:41');
 
 -- ----------------------------
 -- Table structure for table_view_column_index
@@ -1251,7 +1252,7 @@ CREATE TABLE `workflow`  (
 -- Records of workflow
 -- ----------------------------
 INSERT INTO `workflow` VALUES (1, 6, 1, 5, '销售合同审批流程', NULL, '销售合同审批-', 1, '2024-02-05 10:46:51', 0);
-INSERT INTO `workflow` VALUES (2, 6, 2, NULL, '项目预算编制流程', NULL, '项目预算编制审批-', 1, '2024-02-05 14:11:09', 0);
+INSERT INTO `workflow` VALUES (2, 6, 2, 25, '项目预算编制流程', NULL, '项目预算编制审批-', 1, '2024-02-05 14:11:09', 0);
 INSERT INTO `workflow` VALUES (3, 6, 3, NULL, '采购审批流程', NULL, '采购审批', 1, '2024-02-05 14:16:15', 0);
 INSERT INTO `workflow` VALUES (4, 6, 4, NULL, '报销审批流程', NULL, '报销审批', 1, '2024-02-05 14:16:35', 0);
 INSERT INTO `workflow` VALUES (5, 6, 5, NULL, '既定预算调整审批流程', NULL, '既定预算调整申请', 1, '2024-02-05 14:17:12', 0);
@@ -1290,21 +1291,21 @@ INSERT INTO `workflow_node` VALUES (5, '通知预决算部', '{\"body\": {\"char
 INSERT INTO `workflow_node` VALUES (6, '创建人归档', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', 0, 3, '{\"1\": false, \"2\": false, \"3\": false, \"4\": false, \"5\": false, \"6\": false, \"7\": false, \"8\": false, \"9\": false, \"10\": false, \"11\": false, \"12\": false, \"13\": false, \"14\": false, \"15\": false, \"16\": false, \"17\": false, \"18\": false, \"19\": false, \"20\": false, \"21\": false, \"22\": false, \"23\": false, \"24\": false}', NULL, NULL, NULL, 1, 6, 1, '2024-02-05 11:05:33');
 INSERT INTO `workflow_node` VALUES (7, '建立组织', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":15,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"25\": true, \"26\": true, \"27\": true, \"28\": true, \"29\": true, \"30\": true, \"31\": true, \"32\": true, \"33\": true, \"34\": true, \"35\": true, \"36\": true, \"37\": true, \"38\": true, \"39\": true, \"40\": true, \"41\": true, \"42\": true, \"43\": true, \"44\": true, \"45\": true, \"46\": true}', NULL, NULL, NULL, 2, 1, 1, '2024-02-05 14:27:02');
 INSERT INTO `workflow_node` VALUES (8, '领导审批', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":16,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 1, '{\"25\": false, \"26\": false, \"27\": false, \"28\": false, \"29\": false, \"30\": false, \"31\": false, \"32\": false, \"33\": false, \"34\": false, \"35\": false, \"36\": false, \"37\": false, \"38\": false, \"39\": false, \"40\": false, \"41\": false, \"42\": false, \"43\": false, \"44\": false, \"45\": false, \"46\": false}', NULL, NULL, NULL, 2, 2, 1, '2024-02-05 14:27:12');
-INSERT INTO `workflow_node` VALUES (9, '通知项目经理', '{\"body\": {\"characterConstraint\": \"[]\"}, \"table\": {\"proposedConstraint\": \"{\\\"humans\\\":[32],\\\"departs\\\":[],\\\"section\\\":[]}\"}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"proposedConstraint,\"}', 0, 2, '{\"25\": false, \"26\": false, \"27\": false, \"28\": false, \"29\": false, \"30\": false, \"31\": false, \"32\": false, \"33\": false, \"34\": false, \"35\": false, \"36\": false, \"37\": false, \"38\": false, \"39\": false, \"40\": false, \"41\": false, \"42\": false, \"43\": false, \"44\": false, \"45\": false, \"46\": false}', NULL, NULL, NULL, 2, 3, 1, '2024-02-05 14:27:24');
+INSERT INTO `workflow_node` VALUES (9, '通知项目经理', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[]}\"}, \"table\": {\"proposedConstraint\": \"{\\\"humans\\\":[32],\\\"departs\\\":[],\\\"sections\\\":[]}\"}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"proposedConstraint,\"}', 0, 2, '{\"25\": false, \"26\": false, \"27\": false, \"28\": false, \"29\": false, \"30\": false, \"31\": false, \"32\": false, \"33\": false, \"34\": false, \"35\": false, \"36\": false, \"37\": false, \"38\": false, \"39\": false, \"40\": false, \"41\": false, \"42\": false, \"43\": false, \"44\": false, \"45\": false, \"46\": false}', NULL, NULL, NULL, 2, 3, 1, '2024-02-05 14:27:24');
 INSERT INTO `workflow_node` VALUES (10, '完成归档', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', 0, 3, '{\"25\": false, \"26\": false, \"27\": false, \"28\": false, \"29\": false, \"30\": false, \"31\": false, \"32\": false, \"33\": false, \"34\": false, \"35\": false, \"36\": false, \"37\": false, \"38\": false, \"39\": false, \"40\": false, \"41\": false, \"42\": false, \"43\": false, \"44\": false, \"45\": false, \"46\": false}', NULL, NULL, NULL, 2, 4, 1, '2024-02-05 14:27:39');
-INSERT INTO `workflow_node` VALUES (11, '采购发起', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":11,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"47\": true, \"48\": true, \"49\": true, \"50\": true, \"51\": true, \"52\": true, \"53\": true, \"54\": true, \"55\": true, \"56\": true, \"57\": true, \"58\": true, \"59\": true, \"60\": true, \"61\": true, \"62\": true, \"63\": true, \"64\": true, \"65\": true, \"66\": true, \"67\": true, \"68\": true}', '{\"tasks\": [{\"type\": 1, \"input\": \"2\", \"columnId\": 97}], \"classNames\": []}', NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"0\", \"columnId\": 97}], \"classNames\": []}', 3, 1, 1, '2024-02-05 16:17:19');
-INSERT INTO `workflow_node` VALUES (12, '项目经理分配预算', '{\"body\": {}, \"table\": {\"proposedConstraint\": \"{\\\"humans\\\":[54],\\\"departs\\\":[],\\\"section\\\":[]}\"}, \"bodyType\": \"\", \"tableType\": \"proposedConstraint,\"}', 0, 1, '{\"47\": false, \"48\": false, \"49\": false, \"50\": false, \"51\": false, \"52\": false, \"53\": false, \"54\": false, \"55\": false, \"56\": false, \"57\": false, \"58\": false, \"59\": false, \"60\": false, \"61\": false, \"62\": false, \"63\": false, \"64\": false, \"65\": true, \"66\": true, \"67\": true, \"68\": true}', NULL, NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"1\", \"columnId\": 97}], \"classNames\": []}', 3, 2, 1, '2024-02-05 16:17:41');
+INSERT INTO `workflow_node` VALUES (11, '采购发起', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":11,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"47\": true, \"48\": true, \"49\": true, \"50\": true, \"51\": true, \"52\": true, \"53\": true, \"54\": true, \"55\": true, \"56\": true, \"57\": true, \"58\": true, \"59\": true, \"60\": true, \"61\": true, \"62\": true, \"63\": true, \"64\": true, \"65\": true, \"66\": true, \"67\": true, \"68\": true}', '{\"tasks\": [{\"type\": 1, \"input\": \"2\", \"columnId\": 97}], \"classNames\": [\"org.eoa.projectbudget.extension.SyncUseBudget\"]}', NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"0\", \"columnId\": 97}], \"classNames\": []}', 3, 1, 1, '2024-02-05 16:17:19');
+INSERT INTO `workflow_node` VALUES (12, '项目经理分配预算', '{\"body\": {}, \"table\": {\"proposedConstraint\": \"{\\\"humans\\\":[54],\\\"departs\\\":[],\\\"sections\\\":[]}\"}, \"bodyType\": \"\", \"tableType\": \"proposedConstraint,\"}', 0, 1, '{\"47\": false, \"48\": false, \"49\": false, \"50\": false, \"51\": false, \"52\": false, \"53\": false, \"54\": false, \"55\": false, \"56\": false, \"57\": false, \"58\": false, \"59\": false, \"60\": false, \"61\": false, \"62\": false, \"63\": false, \"64\": false, \"65\": true, \"66\": true, \"67\": true, \"68\": true}', NULL, NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"1\", \"columnId\": 97}], \"classNames\": [\"org.eoa.projectbudget.extension.SyncUseBudget\"]}', 3, 2, 1, '2024-02-05 16:17:41');
 INSERT INTO `workflow_node` VALUES (13, '预决算部超支审批', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":15,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 1, '{\"47\": false, \"48\": false, \"49\": false, \"50\": false, \"51\": false, \"52\": false, \"53\": false, \"54\": false, \"55\": false, \"56\": false, \"57\": false, \"58\": false, \"59\": false, \"60\": false, \"61\": false, \"62\": false, \"63\": false, \"64\": false, \"65\": false, \"66\": false, \"67\": false, \"68\": false}', NULL, NULL, NULL, 3, 3, 1, '2024-02-05 16:18:26');
 INSERT INTO `workflow_node` VALUES (14, '归档', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', 0, 3, '{\"47\": false, \"48\": false, \"49\": false, \"50\": false, \"51\": false, \"52\": false, \"53\": false, \"54\": false, \"55\": false, \"56\": false, \"57\": false, \"58\": false, \"59\": false, \"60\": false, \"61\": false, \"62\": false, \"63\": false, \"64\": false, \"65\": false, \"66\": false, \"67\": false, \"68\": false}', NULL, NULL, NULL, 3, 4, 1, '2024-02-05 16:18:32');
-INSERT INTO `workflow_node` VALUES (15, '业务人员发起', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"69\": true, \"70\": true, \"71\": true, \"72\": true, \"73\": true, \"74\": true, \"75\": true, \"76\": true, \"77\": true, \"78\": true, \"79\": true, \"80\": true, \"81\": true}', '{\"tasks\": [{\"type\": 1, \"input\": \"2\", \"columnId\": 98}], \"classNames\": []}', NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"0\", \"columnId\": 98}], \"classNames\": []}', 4, 1, 1, '2024-02-05 17:01:36');
-INSERT INTO `workflow_node` VALUES (16, '项目经理分配预算', '{\"body\": {}, \"table\": {\"proposedConstraint\": \"{\\\"humans\\\":[72],\\\"departs\\\":[],\\\"section\\\":[]}\"}, \"bodyType\": \"\", \"tableType\": \"proposedConstraint,\"}', 0, 1, '{\"69\": false, \"70\": false, \"71\": false, \"72\": false, \"73\": false, \"74\": false, \"75\": false, \"76\": false, \"77\": false, \"78\": true, \"79\": true, \"80\": true, \"81\": true}', NULL, NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"1\", \"columnId\": 98}], \"classNames\": []}', 4, 2, 1, '2024-02-05 17:01:56');
+INSERT INTO `workflow_node` VALUES (15, '业务人员发起', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"69\": true, \"70\": true, \"71\": true, \"72\": true, \"73\": true, \"74\": true, \"75\": true, \"76\": true, \"77\": true, \"78\": true, \"79\": true, \"80\": true, \"81\": true}', '{\"tasks\": [{\"type\": 1, \"input\": \"2\", \"columnId\": 98}], \"classNames\": [\"org.eoa.projectbudget.extension.SyncUseBudget\"]}', NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"0\", \"columnId\": 98}], \"classNames\": []}', 4, 1, 1, '2024-02-05 17:01:36');
+INSERT INTO `workflow_node` VALUES (16, '项目经理分配预算', '{\"body\": {}, \"table\": {\"proposedConstraint\": \"{\\\"humans\\\":[72],\\\"departs\\\":[],\\\"sections\\\":[]}\"}, \"bodyType\": \"\", \"tableType\": \"proposedConstraint,\"}', 0, 1, '{\"69\": false, \"70\": false, \"71\": false, \"72\": false, \"73\": false, \"74\": false, \"75\": false, \"76\": false, \"77\": false, \"78\": true, \"79\": true, \"80\": true, \"81\": true}', NULL, NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"1\", \"columnId\": 98}], \"classNames\": [\"org.eoa.projectbudget.extension.SyncUseBudget\"]}', 4, 2, 1, '2024-02-05 17:01:56');
 INSERT INTO `workflow_node` VALUES (17, '预算部超支审查', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":15,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 1, '{\"69\": false, \"70\": false, \"71\": false, \"72\": false, \"73\": false, \"74\": false, \"75\": false, \"76\": false, \"77\": false, \"78\": false, \"79\": false, \"80\": false, \"81\": false}', NULL, NULL, NULL, 4, 3, 1, '2024-02-05 17:02:17');
 INSERT INTO `workflow_node` VALUES (18, '归档', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', 0, 3, '{\"69\": false, \"70\": false, \"71\": false, \"72\": false, \"73\": false, \"74\": false, \"75\": false, \"76\": false, \"77\": false, \"78\": false, \"79\": false, \"80\": false, \"81\": false}', NULL, NULL, NULL, 4, 4, 1, '2024-02-05 17:05:35');
-INSERT INTO `workflow_node` VALUES (19, '项目经理发起', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":14,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"82\": true, \"83\": true, \"84\": true, \"85\": true, \"86\": true, \"87\": true, \"88\": true}', NULL, NULL, NULL, 5, 1, 1, '2024-02-05 17:24:37');
-INSERT INTO `workflow_node` VALUES (20, '预决算部审批', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":15,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 1, '{\"82\": false, \"83\": false, \"84\": false, \"85\": false, \"86\": false, \"87\": false, \"88\": false}', NULL, NULL, NULL, 5, 2, 1, '2024-02-05 17:24:47');
+INSERT INTO `workflow_node` VALUES (19, '项目经理发起', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":14,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"82\": true, \"83\": true, \"84\": true, \"85\": true, \"86\": true, \"87\": true, \"88\": true}', '{\"tasks\": [{\"type\": 1, \"input\": \"2\", \"columnId\": 100}], \"classNames\": []}', NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"0\", \"columnId\": 100}], \"classNames\": []}', 5, 1, 1, '2024-02-05 17:24:37');
+INSERT INTO `workflow_node` VALUES (20, '预决算部审批', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":15,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 1, '{\"82\": false, \"83\": false, \"84\": false, \"85\": false, \"86\": false, \"87\": false, \"88\": false}', NULL, NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"1\", \"columnId\": 100}], \"classNames\": [\"org.eoa.projectbudget.extension.SyncProposedBudget\"]}', 5, 2, 1, '2024-02-05 17:24:47');
 INSERT INTO `workflow_node` VALUES (21, '归档', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', 0, 3, '{\"82\": false, \"83\": false, \"84\": false, \"85\": false, \"86\": false, \"87\": false, \"88\": false}', NULL, NULL, NULL, 5, 3, 1, '2024-02-05 17:24:55');
-INSERT INTO `workflow_node` VALUES (22, '项目经理发起', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":14,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"89\": true, \"90\": true, \"91\": true, \"92\": true, \"93\": true, \"94\": true, \"95\": true, \"96\": true}', NULL, NULL, NULL, 6, 1, 1, '2024-02-05 17:31:58');
-INSERT INTO `workflow_node` VALUES (23, '预决算部审批', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":15,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 1, '{\"89\": false, \"90\": false, \"91\": false, \"92\": false, \"93\": false, \"94\": false, \"95\": false, \"96\": false}', NULL, NULL, NULL, 6, 2, 1, '2024-02-05 17:32:04');
+INSERT INTO `workflow_node` VALUES (22, '项目经理发起', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":1,\\\"grade\\\":0},{\\\"characterId\\\":14,\\\"grade\\\":2}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 0, '{\"89\": true, \"90\": true, \"91\": true, \"92\": true, \"93\": true, \"94\": true, \"95\": true, \"96\": true}', '{\"tasks\": [{\"type\": 1, \"input\": \"2\", \"columnId\": 99}], \"classNames\": [\"org.eoa.projectbudget.extension.SyncUseBudget\"]}', NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"0\", \"columnId\": 99}], \"classNames\": []}', 6, 1, 1, '2024-02-05 17:31:58');
+INSERT INTO `workflow_node` VALUES (23, '预决算部审批', '{\"body\": {\"characterConstraint\": \"{\\\"characters\\\":[{\\\"characterId\\\":15,\\\"grade\\\":1}]}\"}, \"table\": {}, \"bodyType\": \"characterConstraint,\", \"tableType\": \"\"}', 0, 1, '{\"89\": false, \"90\": false, \"91\": false, \"92\": false, \"93\": false, \"94\": false, \"95\": false, \"96\": false}', NULL, NULL, '{\"tasks\": [{\"type\": 1, \"input\": \"1\", \"columnId\": 99}], \"classNames\": [\"org.eoa.projectbudget.extension.SyncUseBudget\"]}', 6, 2, 1, '2024-02-05 17:32:04');
 INSERT INTO `workflow_node` VALUES (24, '归档', '{\"body\": {\"createConstraint\": \"{\\\"self\\\":true,\\\"leader\\\":false,\\\"leaderRecursion\\\":false,\\\"depart\\\":false,\\\"section\\\":false,\\\"sectionRecursive\\\":false}\"}, \"table\": {}, \"bodyType\": \"createConstraint,\", \"tableType\": \"\"}', 0, 3, '{\"89\": false, \"90\": false, \"91\": false, \"92\": false, \"93\": false, \"94\": false, \"95\": false, \"96\": false}', NULL, NULL, NULL, 6, 3, 1, '2024-02-05 17:32:09');
 
 -- ----------------------------
