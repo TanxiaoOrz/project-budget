@@ -124,7 +124,7 @@ public class CharacterConstraint implements AuthoritySolve, FormSolve {
         Object mainValue = formOutDto.getMainValue(character.getCharacterId());
 
         if (mainValue != null) {
-            asked.add((Long) mainValue);
+            asked.add(Long.parseLong(mainValue.toString()));
             isFound = true;
         }
 

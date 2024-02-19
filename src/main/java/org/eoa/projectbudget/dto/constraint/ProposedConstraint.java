@@ -9,17 +9,15 @@ import org.eoa.projectbudget.exception.EoaException;
 import org.eoa.projectbudget.mapper.HumanMapper;
 import org.eoa.projectbudget.utils.ContextUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 张骏山
  * @Date: 2023/10/31 11:14
  * @PackageName: org.eoa.projectbudget.utils.authority
  * @ClassName: Proposed
- * @Description: TODO
+ * @Description: 指定人员权限类
  * @Version 1.0
  **/
 
@@ -85,12 +83,13 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
         Set<Long> sections = new HashSet<>();
         this.sections.forEach(section->sections.addAll(getAsked(formOutDto,section)));
 
-        ArrayList<Long> longs = new ArrayList<>();
-        longs.addAll(humans);
-        longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("depart",departs)).stream().map(HumanResource::getDataId).toList());
-        longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("section",sections)).stream().map(HumanResource::getDataId).toList());
+        ArrayList<Long> longs = new ArrayList<>(humans);
+        if (departs.size()>0)
+            longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("depart",departs)).stream().map(HumanResource::getDataId).toList());
+        if (sections.size()>0)
+            longs.addAll(humanMapper.selectList(new QueryWrapper<HumanResource>().in("section",sections)).stream().map(HumanResource::getDataId).toList());
 
-        return longs;
+        return longs.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     private Set<Long> getAsked(FormOutDto formOutDto, Long columnId) throws DataException {
@@ -104,7 +103,7 @@ public class ProposedConstraint implements AuthoritySolve, FormSolve {
         Object mainValue = formOutDto.getMainValue(columnId);
 
         if (mainValue != null) {
-            asked.add((Long) mainValue);
+            asked.add(Long.parseLong(mainValue.toString()));
             isFound = true;
         }
 
