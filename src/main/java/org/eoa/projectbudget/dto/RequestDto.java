@@ -188,17 +188,6 @@ public class RequestDto {
             } catch (JsonProcessingException e) {
                 throw new DataException("request",dataId.toString(),"checkAction", checkAction, "json解析失败");
             }
-            action.getClassNames().forEach(name->{
-                try {
-                    Class<?> clazz = Class.forName(name);
-                    WorkflowCheck workflowCheck = (WorkflowCheck) clazz.getDeclaredConstructor().newInstance();
-                    boolean check = workflowCheck.check(this, jdbcTemplate);
-                    checkConclusion.set(check);
-
-                } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
-                    throw new DataException("request",dataId.toString(),"checkAction", checkAction, name+"不存在或未继承WorkflowCheck");
-                }
-            });
             action.getTasks().forEach(task -> {
                 Long columnId = task.getColumnId();
                 Object mainValue = formOutDto.getMainValue(columnId);
@@ -216,7 +205,17 @@ public class RequestDto {
                     checkConclusion.set(false);
                 }
             });
+            action.getClassNames().forEach(name->{
+                try {
+                    Class<?> clazz = Class.forName(name);
+                    WorkflowCheck workflowCheck = (WorkflowCheck) clazz.getDeclaredConstructor().newInstance();
+                    boolean check = workflowCheck.check(this, jdbcTemplate);
+                    checkConclusion.set(check);
 
+                } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
+                    throw new DataException("request",dataId.toString(),"checkAction", checkAction, name+"不存在或未继承WorkflowCheck");
+                }
+            });
         }
         return checkConclusion.get();
     }
@@ -229,15 +228,7 @@ public class RequestDto {
             } catch (JsonProcessingException e) {
                 throw new DataException("request",dataId.toString(),"action", actionString, "json解析失败");
             }
-            action.getClassNames().forEach(name->{
-                try {
-                    Class<?> clazz = Class.forName(name);
-                    WorkflowAction workflowAction = (WorkflowAction) clazz.getDeclaredConstructor().newInstance();
-                    workflowAction.action(this, jdbcTemplate);
-                } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
-                    throw new DataException("request",dataId.toString(),"action", actionString, name+"不存在或未继承WorkflowAction");
-                }
-            });
+
             Map<String,Object> updates = new HashMap<>();
             action.getTasks().forEach(task -> {
                 String admit;
@@ -255,6 +246,15 @@ public class RequestDto {
                 updates.put(column.getColumnDataName(),admit);
             });
             formDMLMapper.updateMainForm(updates, dataId, formOutDto.getTable().getTableDataName());
+            action.getClassNames().forEach(name->{
+                try {
+                    Class<?> clazz = Class.forName(name);
+                    WorkflowAction workflowAction = (WorkflowAction) clazz.getDeclaredConstructor().newInstance();
+                    workflowAction.action(this, jdbcTemplate);
+                } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
+                    throw new DataException("request",dataId.toString(),"action", actionString, name+"不存在或未继承WorkflowAction");
+                }
+            });
         }
     }
 
