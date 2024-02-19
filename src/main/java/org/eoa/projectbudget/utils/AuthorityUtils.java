@@ -96,18 +96,21 @@ public class AuthorityUtils {
             else {
                 boolean result = false;
                 int index = typeList.indexOf(type);
-                String constraint = authorityConstraint.getBody().get(types[index]);
+                String constraint = authorityConstraint.getTable().get(types[index]);
                 FormSolve solve;
                 try {
                     solve = (FormSolve) new ObjectMapper().readValue(constraint, clazz[index]);
+                    if (solve != null) {
+                        result = solve.solve(user, formOutDto);
+                    }
+                    if (result)
+                        return true;
                 } catch (JsonProcessingException e) {
                     throw new AuthoritySolveException(constraint, "无法解析");
+                } catch (Exception e) {
+                    throw new AuthoritySolveException(constraint,e.getMessage());
                 }
-                if (solve != null) {
-                    result = solve.solve(user, formOutDto);
-                }
-                if (result)
-                    return true;
+
             }
         }
         return false;
