@@ -76,6 +76,7 @@ public class RequestServiceImpl implements RequestService {
 //    }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Map<Long,Long> dropRequest(Long requestId, Long userId) {
         Request request = requestMapper.selectById(requestId);
         int delete = requestMapper.deleteById(requestId);
@@ -92,6 +93,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer transferRequest(RequestDto requestDto, Long nodeId, List<Long> receivers, Long userId) {
         log.info("用户=>{}将流程=>{}流转至节点=>{}指定操作人=>{}",userId,requestDto.getRequestId(),nodeId,receivers);
         leaveNode(requestDto, userId);
@@ -100,7 +102,7 @@ public class RequestServiceImpl implements RequestService {
         if (!Objects.equals(requestDto.getWorkflowId(), node.getWorkflowId()))
             throw new ParameterException("nodeId", nodeId.toString(), "该节点不属于该流程");
         arriveNode(requestDto, node);
-        if (receivers.size()!=0) {
+        if (receivers != null && receivers.size()!=0) {
             requestMapper.doRequestAll(requestDto.getRequestId());
             requestMapper.newBacklogs(receivers, requestDto.getRequestId(), nodeId, requestDto.getWorkflowId());
         }
@@ -271,7 +273,7 @@ public class RequestServiceImpl implements RequestService {
                 case RequestDto.FLOW -> {
                     request = requestMapper.selectById(requestId);
                     requestDto.setRequest(request);
-                    requestDto.setCurrentNode(getCreateNode(request.getCurrentNode()));
+                    requestDto.setCurrentNode(workflowNodeMapper.selectById(request.getCurrentNode()));
                 }
                 default -> throw new AuthorityException(userId, "request", requestId, "流程流转");
             }
@@ -344,6 +346,7 @@ public class RequestServiceImpl implements RequestService {
         WorkflowNode workflowNode;
         try {
             WorkflowRoute passRoute = requestDto.passRoute(jdbcTemplate, formDMLMapper);
+            log.info("途径路径=>{}",passRoute.getDataId());
             Long endNodeId = passRoute.getEndNodeId();
             workflowNode = workflowNodeMapper.selectById(endNodeId);
             if (workflowNode == null) {
@@ -359,6 +362,7 @@ public class RequestServiceImpl implements RequestService {
     private void arriveNode(RequestDto requestDto, WorkflowNode node) {
         requestDto.setNodeId(node.getDataId());
         requestDto.setCurrentNode(node);
+        log.info("request=>{}到达节点=>{}",requestDto.getRequestId(),node.getDataId());
         try {
             Constraint constraint = AuthorityUtils.getConstraint(node.getUserAuthorityLimit());
             List<Long> backLogHumans = AuthorityUtils.getInHumansForm(requestDto.getCreator(), requestDto.getFormOutDto(), constraint);
