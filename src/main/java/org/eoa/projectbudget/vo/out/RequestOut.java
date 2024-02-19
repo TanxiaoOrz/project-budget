@@ -3,6 +3,7 @@ package org.eoa.projectbudget.vo.out;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.eoa.projectbudget.entity.Request;
 import org.eoa.projectbudget.entity.RequestBacklogView;
+import org.eoa.projectbudget.entity.RequestDoneView;
 
 import java.util.Date;
 
@@ -59,8 +60,9 @@ public class RequestOut implements VoOut {
                 time = ((RequestBacklogView) request).getArriveTime();
                 timeSelectName = "arriveTime";
             }
-            case "" -> {
-
+            case "RequestDoneView" -> {
+                time = ((RequestDoneView) request).getDoneTime();
+                timeSelectName = "doneTime";
             }
         }
     }
