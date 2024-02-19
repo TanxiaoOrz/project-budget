@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @Description: check测试实验
  * @Version: 1.0
  */
+
+@SuppressWarnings("unused")
 public class TestCheck implements WorkflowCheck{
     @Override
     public boolean check(RequestDto requestDto, JdbcTemplate jdbcTemplate) {

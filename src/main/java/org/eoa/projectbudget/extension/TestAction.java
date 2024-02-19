@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @Description: action测试实验
  * @Version: 1.0
  */
+
+@SuppressWarnings("unused")
 public class TestAction implements WorkflowAction{
     @Override
     public void action(RequestDto requestDto, JdbcTemplate jdbcTemplate) throws EoaException {
