@@ -169,7 +169,7 @@ public class FromEntityServiceImpl implements FormService {
             for (Map<String, Object> detailMap
                     :detailMapList) {
                 Long detailDataId = Long.valueOf(detailMap.remove("detailDataId").toString()) ;    //获取并去除明细id
-                if (detailDataId == null || oldExist.contains(detailDataId)) {
+                if (detailDataId == null || !oldExist.contains(detailDataId)) {
                     detailMap.put("detailMainId",dataId);
                     formDMLMapper.insertDetailForm(detailMap, formDetailTableName);
                 } else {
@@ -178,6 +178,11 @@ public class FromEntityServiceImpl implements FormService {
                 }
             }
             oldExist.removeAll(newExist);
+            if (oldExist.size()>0) {
+                log.warn("开始删除明细行");
+                log.warn("删除内容:{}",oldExist);
+                log.warn("传入明细:{}",detailMapList);
+            }
             oldExist.forEach(deleted -> formDMLMapper.deleteDetailForm(deleted,formDetailTableName));
         }
 

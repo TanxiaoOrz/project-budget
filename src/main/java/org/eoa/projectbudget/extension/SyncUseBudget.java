@@ -27,7 +27,7 @@ public class SyncUseBudget implements WorkflowAction{
      */
     @Override
     public void action(RequestDto requestDto, JdbcTemplate jdbcTemplate) throws EoaException {
-        int update = jdbcTemplate.update("update form_table_2_dt_1 set yyje = (select yyje from ysxx_use_statistics where dataId = detailDataId)");
+        int update = jdbcTemplate.update("update form_table_2_dt_1 set yyje = (select je from (select ysyje as je,dataId from ysxx_use_statistics) as temp  where dataId = form_table_2_dt_1.detailDataId)");
         log.info("request请求更新使用预算,requestId=>{},更新数量=>{}",requestDto.getRequestId(),update);
     }
 }

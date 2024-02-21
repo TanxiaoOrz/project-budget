@@ -80,7 +80,7 @@ public class FormInDto {
                         value1 = ((String) value1).split("\\+")[0];
                     detailMap.put(column.getColumnDataName(), value1);
                 });
-                Object detailDataId = details.get(i).get("detailDataId");
+                Object detailDataId = value.get("detailDataId");
                 if (detailDataId != null) {
                     detailMap.put("detailDataId",detailDataId);
                 }
