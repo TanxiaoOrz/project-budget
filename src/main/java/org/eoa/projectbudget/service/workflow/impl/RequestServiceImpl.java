@@ -64,7 +64,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> getRequests(QueryWrapper<Request> wrapper, Long userId) {
-        List<Request> requests = requestMapper.selectList(wrapper);
+        List<Request> requests = requestMapper.selectList(wrapper.isNotNull("dataId"));
         log.info("用户=>{}获取列表获取数量=>{}", userId, requests.size());
         return requests;
     }
@@ -111,21 +111,21 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<RequestBacklogView> getBackLogRequest(QueryWrapper<RequestBacklogView> wrapper, Long userId) {
-        List<RequestBacklogView> backlogs = requestBacklogMapper.selectList(wrapper.eq("humanId", userId).orderByDesc("arriveTime"));
+        List<RequestBacklogView> backlogs = requestBacklogMapper.selectList(wrapper.isNotNull("dataId").eq("humanId", userId).orderByDesc("arriveTime"));
         log.info("用户=>{}获取待办列表获取数量=>{}", userId, backlogs);
         return backlogs;
     }
 
     @Override
     public List<RequestDoneView> getHaveDone(QueryWrapper<RequestDoneView> wrapper, Long userId) {
-        List<RequestDoneView> does = doneMapper.selectList(wrapper.eq("humanId", userId).orderByDesc("doneTime"));
+        List<RequestDoneView> does = doneMapper.selectList(wrapper.isNotNull("dataId").eq("humanId", userId).orderByDesc("doneTime"));
         log.info("用户=>{}获取已办列表获取数量=>{}", userId, does.size());
         return does;
     }
 
     @Override
     public List<Request> getRequestsSelf(QueryWrapper<Request> wrapper, Long userId) {
-        List<Request> requests = requestMapper.selectList(wrapper.eq("creator", userId).orderByDesc("finishTime").orderByDesc("submitTime"));
+        List<Request> requests = requestMapper.selectList(wrapper.eq("creator", userId).isNotNull("dataId").orderByDesc("finishTime").orderByDesc("submitTime"));
         log.info("用户=>{}获取我的请求获取数量=>{}", userId, requests.size());
         return requests;
     }

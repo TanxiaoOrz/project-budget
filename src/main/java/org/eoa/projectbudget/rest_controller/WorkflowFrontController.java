@@ -156,13 +156,13 @@ public class WorkflowFrontController {
                                         @RequestParam(required = false) Long workflowId) {
         Long userId = humanDto.getDataId();
         if (requestId == 0) {
-            Boolean couldCreate = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+workflowId, userId, Boolean.class);
+            Boolean couldCreate = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId +"-"+workflowId, userId, Boolean.class);
             if (couldCreate == null) {
                 RequestDtoOut requestDtoOut = getRequestCreate(requestId, workflowId, userId);
                 String userAuthorityLimit = requestDtoOut.getCurrentNode().getUserAuthorityLimit();
                 Constraint constraint = AuthorityUtils.getConstraint(userAuthorityLimit);
                 couldCreate = AuthorityUtils.checkAuthority(humanDto, humanDto, constraint);
-                cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+workflowId, userId, couldCreate);
+                cacheService.setCache(ChangeFlagUtils.REQUEST, requestId +"-"+workflowId, userId, couldCreate);
             }
             if (couldCreate)
                 return new Vo<>(getRequestCreate(requestId, workflowId, userId));
@@ -171,14 +171,14 @@ public class WorkflowFrontController {
         }
 
 
-        Long nodeId = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId.toString()+"node", userId, Long.class);
+        Long nodeId = cacheService.getCache(ChangeFlagUtils.REQUEST, requestId +"node", userId, Long.class);
         if (nodeId == null) {
             try {
                 nodeId = requestService.getViewNode(requestId, userId);
-                cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"node", userId, nodeId);
+                cacheService.setCache(ChangeFlagUtils.REQUEST, requestId +"node", userId, nodeId);
             } catch (EoaException e) {
                 nodeId = 0L;
-                cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"node", userId, nodeId);
+                cacheService.setCache(ChangeFlagUtils.REQUEST, requestId +"node", userId, nodeId);
                 throw e;
             }
         }
@@ -212,7 +212,7 @@ public class WorkflowFrontController {
             RequestDto requestDto = requestService.getRequestCreate(nodeId, userId);
             requestDto.setFormOutDto(getFormOutDto(userId, requestDto, 0L));
             requestDtoOut = requestDtoOutFactory.out(requestDto);
-            cacheService.setCache(ChangeFlagUtils.REQUEST, requestId.toString()+"-"+ nodeId, USER_ID_CACHE, requestDtoOut);
+            cacheService.setCache(ChangeFlagUtils.REQUEST, requestId +"-"+ nodeId, USER_ID_CACHE, requestDtoOut);
         }
         return requestDtoOut;
     }
@@ -256,7 +256,7 @@ public class WorkflowFrontController {
             changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
-            requestDto.setCreator(organizationService.getHumanDto(humanDto.getDataId(), formOutDto.getCreator()))
+            requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),humanDto.getDataId()))
                     .setFormOutDto(formOutDto);
         }
         if (onlySave)
