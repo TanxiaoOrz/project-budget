@@ -29,10 +29,11 @@ public class ExceptionController {
     private boolean isRelease;
 
     @ExceptionHandler(RequestException.class)
-    public Vo<String> handleRequestException(RequestException e) {
+    public Vo<Long> handleRequestException(RequestException e) {
         if (!isRelease)
             e.e.printStackTrace();
-        return new Vo<>(e);
+        Vo<Long> longVo = new Vo<>(e);
+        return longVo.setEntity(e.requestId);
     }
 
     @ExceptionHandler(DuplicateKeyException.class)

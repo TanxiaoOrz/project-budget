@@ -11,7 +11,7 @@ import org.eoa.projectbudget.vo.out.Vo;
  * @Version: 1.0
  **/
 public class RequestException extends EoaException{
-    Long requestId;
+    public Long requestId;
 
     public Exception e;
 
