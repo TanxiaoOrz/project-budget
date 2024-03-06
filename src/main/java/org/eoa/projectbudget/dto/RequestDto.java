@@ -8,6 +8,7 @@ import org.eoa.projectbudget.exception.*;
 import org.eoa.projectbudget.extension.WorkflowAction;
 import org.eoa.projectbudget.extension.WorkflowCheck;
 import org.eoa.projectbudget.mapper.FormDMLMapper;
+import org.eoa.projectbudget.service.table_module.impl.FromEntityServiceImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.reflect.InvocationTargetException;
@@ -59,20 +60,22 @@ public class RequestDto {
 
     public WorkflowRoute passRoute(JdbcTemplate jdbcTemplate, FormDMLMapper formDMLMapper) {
         WorkflowRoute nextRoute = null;
+        StringBuilder falseReason = new StringBuilder();
         for (WorkflowRoute route:
              nextRoutes) {
             String checkAction = route.getRouteAction();
-            if (doChecks(jdbcTemplate, checkAction)) {
+            if (doChecks(jdbcTemplate, checkAction, falseReason)) {
                 nextRoute = route;
                 break;
             }
         }
         if (nextRoute == null) {
-            throw new ServerException("不存在符合条件的流转路径");
+            throw new ServerException("不存在符合条件的流转路径:"+falseReason.toString());
         }
         String routeAction = nextRoute.getRouteAction();
         doActions(jdbcTemplate, formDMLMapper, routeAction);
         request.pushFlowHistory(nextRoute.getDataId(), nextRoute.getClass(),"经过路径");
+        reloadForm();
         return nextRoute;
     }
 
@@ -126,6 +129,7 @@ public class RequestDto {
         String afterAction = currentNode.getAfterAction();
         doActions(jdbcTemplate, formDMLMapper, afterAction);
         request.pushFlowHistory(nodeId,WorkflowNode.class,"离开节点");
+        reloadForm();
     }
 
     private boolean doChecks(JdbcTemplate jdbcTemplate, String checkAction, StringBuilder falseReason) {
@@ -144,7 +148,7 @@ public class RequestDto {
                     boolean check1 = workflowCheck.check(this, jdbcTemplate);
                     checkConclusion.set(check1);
                     if (!check1)
-                        falseReason.append(name).append("检测失败;");
+                        falseReason.append("检测失败:").append(workflowCheck.getFailureReason()).append(";");
                 } catch (ClassNotFoundException |InstantiationException | IllegalAccessException |ClassCastException| NoSuchMethodException | InvocationTargetException e) {
                     throw new DataException("request",dataId.toString(),"checkAction", checkAction, name+"不存在或未继承WorkflowCheck");
                 }
@@ -256,6 +260,18 @@ public class RequestDto {
                 }
             });
         }
+    }
+
+    FromEntityServiceImpl fromEntityService;
+    Long userId;
+
+    private void reloadForm() {
+        formOutDto = fromEntityService.getFormOne(formOutDto.getTableId(),formOutDto.dataId,userId);
+    }
+
+    public void reloadFunction(FromEntityServiceImpl fromEntityService, Long userId) {
+        this.fromEntityService = fromEntityService;
+        this.userId = userId;
     }
 
 

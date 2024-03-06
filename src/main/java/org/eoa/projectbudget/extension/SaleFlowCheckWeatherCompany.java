@@ -26,6 +26,8 @@ public class SaleFlowCheckWeatherCompany implements WorkflowCheck{
 
     private final Logger log = LoggerFactory.getLogger("BudgetModule");
 
+    private String reason = "";
+
     /**
      * 若金额小于要求金额并且币种属于规定币种则无需公司领导审批
      * @param requestDto 提交时的传入数据和流程涉及到的其它数据,注意获取数据时可能会在之前的操作中已修改未及时更新,表单数据均视为提交时数据,获取最新数据请从数据库中重新寻找
@@ -37,7 +39,13 @@ public class SaleFlowCheckWeatherCompany implements WorkflowCheck{
         Integer bz = (Integer) requestDto.getFormOutDto().getMainValue(BZ_ID);
         Integer je = (Integer) requestDto.getFormOutDto().getMainValue(JE_ID);
         boolean con =  (je <= ALLOWED_JE && bz == ALLOWED_BZ);
+        reason = "币种=>CNY,金额=>" + je + "<" + ALLOWED_JE;
         log.info("流程=>{}判断是否公司领导审批,币种=>{},金额=>{},结果=>{}",requestDto.getRequestId(),bz,je,con);
         return con;
+    }
+
+    @Override
+    public String getFailureReason() {
+        return reason;
     }
 }

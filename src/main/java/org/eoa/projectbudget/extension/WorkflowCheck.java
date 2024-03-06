@@ -22,4 +22,10 @@ public interface WorkflowCheck {
      * @throws EoaException 若想要阻止流程提交请抛出异常
      */
     boolean check(RequestDto requestDto, JdbcTemplate jdbcTemplate);
+
+    /**
+     * 获取失败原因
+     * @return 失败原因字符串
+     */
+    String getFailureReason();
 }

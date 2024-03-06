@@ -106,7 +106,8 @@ public class WorkflowBackController {
     public Vo<String> flowRequest(@RequestAttribute("HumanDto") HumanDto humanDto,
                                   @RequestBody RequestIn requestIn) {
         int action = RequestDto.FLOW;
-        RequestDto requestDto = requestService.checkAndConsist(requestIn.toEntity((long) action), humanDto.getDataId());
+        Long userId = humanDto.getDataId();
+        RequestDto requestDto = requestService.checkAndConsist(requestIn.toEntity((long) action), userId);
         Long dataId = requestDto.getDataId();
 
 
@@ -114,13 +115,13 @@ public class WorkflowBackController {
         Long tableId = formIn.getTableId();
 
         FormInDto formInDto = formIn.toEntity(dataId).consist(tableEntityMapper,columnEntityMapper);
-        entityService.updateForm(formInDto, humanDto.getDataId());
-        FormOutDto formOutDto =  entityService.getFormOne(tableId, dataId, humanDto.getDataId());
+        entityService.updateForm(formInDto, userId);
+        FormOutDto formOutDto =  entityService.getFormOne(tableId, dataId, userId);
 
         requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),null))
-                .setFormOutDto(formOutDto);
+                .setFormOutDto(formOutDto).reloadFunction(entityService, userId);
 
-        requestService.transferRequest(requestDto, requestIn.getNodeId(), requestIn.getReceivers(), humanDto.getDataId());
+        requestService.transferRequest(requestDto, requestIn.getNodeId(), requestIn.getReceivers(), userId);
 
         changeFlagUtils.freshDate(ChangeFlagUtils.FORM +"-"+tableId);
         return new Vo<>("流转成功");

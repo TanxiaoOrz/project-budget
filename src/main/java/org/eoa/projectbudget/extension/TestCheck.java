@@ -19,4 +19,9 @@ public class TestCheck implements WorkflowCheck{
         System.out.println("Test Check Start");
         return false;
     }
+
+    @Override
+    public String getFailureReason() {
+        return "";
+    }
 }

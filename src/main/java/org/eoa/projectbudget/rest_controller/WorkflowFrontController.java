@@ -226,12 +226,13 @@ public class WorkflowFrontController {
                                         @RequestBody RequestIn requestIn) {
         if (action == RequestDto.FLOW)
             throw new ParameterException("action",action.toString(),"本接口禁止进行流转操作");
-        RequestDto requestDto = requestService.checkAndConsist(requestIn.toEntity(Long.valueOf(action)), humanDto.getDataId());
+        Long userId = humanDto.getDataId();
+        RequestDto requestDto = requestService.checkAndConsist(requestIn.toEntity(Long.valueOf(action)), userId);
         FormIn formIn = requestIn.getForm();
 
         if (requestIn.getRequestId() == null || requestIn.getRequestId() <= 0) {
             FormInDto formInDto = formIn.toEntity(null).consist(tableEntityMapper,columnEntityMapper).setRequestId(requestDto.getRequestId());
-            Long dataId = entityService.createForm(formInDto, humanDto.getDataId());
+            Long dataId = entityService.createForm(formInDto, userId);
             if (dataId == null) {
                 throw new ServerException("未进行新建,请联系管理员");
             }
@@ -239,7 +240,7 @@ public class WorkflowFrontController {
             Long tableId = formIn.getTableId();
             changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
 
-            FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
+            FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, userId);
             requestDto.setCreator(humanDto)
                     .setFormOutDto(formOutDto);
             Request request = requestDto.getRequest();
@@ -250,23 +251,24 @@ public class WorkflowFrontController {
         } else {
             Long dataId = requestDto.getDataId();
             FormInDto formInDto = formIn.toEntity(dataId).consist(tableEntityMapper,columnEntityMapper);
-            entityService.updateForm(formInDto, humanDto.getDataId());
+            entityService.updateForm(formInDto, userId);
 
             Long tableId = formIn.getTableId();
             changeFlagUtils.freshDate(ChangeFlagUtils.FLAGS[ChangeFlagUtils.FORM]+"-"+tableId);
 
-            FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, humanDto.getDataId());
-            requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(),humanDto.getDataId()))
-                    .setFormOutDto(formOutDto);
+            FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, userId);
+
+            requestDto.setCreator(organizationService.getHumanDto(formOutDto.getCreator(), userId))
+                    .setFormOutDto(formOutDto).reloadFunction(entityService,userId);
         }
         if (onlySave)
             return new Vo<>(requestDto.getRequestId());
         try {
             switch (action) {
-                case RequestDto.CREATE -> requestService.createRequest(requestDto, humanDto.getDataId());
-                case RequestDto.ADMIT -> requestService.admitRequest(requestDto, humanDto.getDataId());
-                case RequestDto.SUBMIT -> requestService.submitRequest(requestDto, humanDto.getDataId());
-                case RequestDto.REFUSE -> requestService.refuseRequest(requestDto, humanDto.getDataId());
+                case RequestDto.CREATE -> requestService.createRequest(requestDto, userId);
+                case RequestDto.ADMIT -> requestService.admitRequest(requestDto, userId);
+                case RequestDto.SUBMIT -> requestService.submitRequest(requestDto, userId);
+                case RequestDto.REFUSE -> requestService.refuseRequest(requestDto, userId);
                 default -> throw new ParameterException("action", action.toString(), "错误的操作数值");
             }
             changeFlagUtils.freshDate(ChangeFlagUtils.FORM + "-" + formIn.getTableId());
