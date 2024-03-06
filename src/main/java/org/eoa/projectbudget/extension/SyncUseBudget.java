@@ -27,7 +27,15 @@ public class SyncUseBudget implements WorkflowAction{
      */
     @Override
     public void action(RequestDto requestDto, JdbcTemplate jdbcTemplate) throws EoaException {
-        int update = jdbcTemplate.update("update form_table_2_dt_1 set yyje = (select je from (select ysyje as je,dataId from ysxx_use_statistics) as temp  where dataId = form_table_2_dt_1.detailDataId)");
+        Long dataId = requestDto.getDataId();
+        // 更新使用金额
+        int update = jdbcTemplate.update("update form_table_2_dt_1 set yyje = (select je from (select ysyje as je,dataId from ysxx_use_statistics) as temp  where dataId = form_table_2_dt_1.detailDataId) where form_table_2_dt_1.detailMainId = ?", dataId);
+        // 更新预算细项是否超支
+        jdbcTemplate.update("update form_table_2_dt_1 set sfcz = if(jdje>yyje,1,0) where form_table_2_dt_1.detailMainId = ?", dataId);
+        // 更新实际利润
+        jdbcTemplate.update("update form_table_2 set sjzc = (select sum(yyje) from form_table_2_dt_1 where detailMainId = ?) where dataId = ?", dataId, dataId);
+        // 更新实际利润 总金额是否超支
+        jdbcTemplate.update("update form_table_2 set sjlr = (xsje - sjzc), sfcz = if(xsje>sjzc,1,0)  where dataId = ?", dataId);
         log.info("request请求更新使用预算,requestId=>{},更新数量=>{}",requestDto.getRequestId(),update);
     }
 }
