@@ -11,7 +11,7 @@
  Target Server Version : 50743
  File Encoding         : 65001
 
- Date: 06/03/2024 17:24:30
+ Date: 07/03/2024 15:35:15
 */
 
 SET NAMES utf8mb4;
@@ -679,7 +679,7 @@ CREATE TABLE `human_resource`  (
 -- ----------------------------
 -- Records of human_resource
 -- ----------------------------
-INSERT INTO `human_resource` VALUES (1, 'sysadmin', 'eoa', '系统管理员', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '系统管理员', 0, 0, 0, NULL, '2024-03-06 17:21:31', 0, 0);
+INSERT INTO `human_resource` VALUES (1, 'sysadmin', 'eoa', '系统管理员', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '系统管理员', 0, 0, 0, NULL, '2024-03-07 13:31:10', 0, 0);
 INSERT INTO `human_resource` VALUES (2, 'tourist', 'eoa', '游客用户', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '游客', 1, 0, 0, NULL, NULL, 0, 0);
 INSERT INTO `human_resource` VALUES (3, 'ywy', 'eoa', '杨文元', 0, NULL, NULL, NULL, NULL, NULL, 'W001', 1, 1, '总经理', 0, 0, 0, NULL, '2024-02-19 15:15:28', 0, 0);
 INSERT INTO `human_resource` VALUES (4, 'wzc', 'eoa', '王晨志', 0, NULL, NULL, NULL, NULL, NULL, 'W002', 2, 1, '法务', 3, 0, 0, NULL, NULL, 0, 0);
@@ -735,7 +735,7 @@ CREATE TABLE `menu_base`  (
   `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`dataId`) USING BTREE,
   INDEX `menu_base_belong_content_index`(`belongContent`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '页面菜单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '页面菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu_base
@@ -744,7 +744,7 @@ INSERT INTO `menu_base` VALUES (1, '主页', NULL, NULL, 1, 0, '{\"body\": {\"al
 INSERT INTO `menu_base` VALUES (2, '组织结构', NULL, NULL, 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
 INSERT INTO `menu_base` VALUES (3, '知识目录', NULL, NULL, 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
 INSERT INTO `menu_base` VALUES (4, '工作流程', NULL, NULL, 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
-INSERT INTO `menu_base` VALUES (5, '公司主页', 1, '/main', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
+INSERT INTO `menu_base` VALUES (5, '公司业务', 1, '/main', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
 INSERT INTO `menu_base` VALUES (6, '组织结构树', 2, '/organization', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
 INSERT INTO `menu_base` VALUES (7, '分部列表', 2, '/section', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
 INSERT INTO `menu_base` VALUES (8, '部门列表', 2, '/depart', 3, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-01-24 13:33:10');
@@ -764,10 +764,11 @@ INSERT INTO `menu_base` VALUES (21, '既定预算调整记录', 18, '/search/5',
 INSERT INTO `menu_base` VALUES (22, '预算使用统计', 28, '/search/7', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:51:07');
 INSERT INTO `menu_base` VALUES (23, '销售合同台账', 16, '/search/4', 1, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:54:08');
 INSERT INTO `menu_base` VALUES (24, '使用预算调整记录', 18, '/search/6', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:56:09');
-INSERT INTO `menu_base` VALUES (25, '项目预算业务流程', 1, '/main', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:57:02');
+INSERT INTO `menu_base` VALUES (25, '业务流程', 1, '/flow', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 15:57:02');
 INSERT INTO `menu_base` VALUES (26, '组织预算', 16, '/search/1', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-06 16:35:02');
 INSERT INTO `menu_base` VALUES (27, '预算使用明细', 28, '/search/8', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-07 17:37:29');
 INSERT INTO `menu_base` VALUES (28, '预算信息', 15, '', 2, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-02-07 17:39:46');
+INSERT INTO `menu_base` VALUES (29, '预算角色', 1, '/character', 3, 0, '{\"body\": {\"allConstraint\": \"{\\\"start\\\":0,\\\"end\\\":100}\"}, \"table\": {}, \"bodyType\": \"allConstraint,\", \"tableType\": \"\"}', 1, '2024-03-07 13:32:26');
 
 -- ----------------------------
 -- Table structure for module_type
