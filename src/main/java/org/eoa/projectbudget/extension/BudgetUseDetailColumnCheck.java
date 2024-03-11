@@ -54,7 +54,7 @@ public class BudgetUseDetailColumnCheck implements WorkflowCheck {
             }
         }
         if (tableId != 5)
-            jdbcTemplate.update("update " + tableName +" used left join form_table_2_dt_1 ys on used.ysx = ys.detailDataId set jdje = ys.jdje, used.yyje = ys.yyje where used.detailMainId = ?",dataId);
+            jdbcTemplate.update("update " + tableName +" used left join form_table_2_dt_1 ys on used.ysx = ys.detailDataId set used.jdje = ys.jdje, used.yyje = ys.yyje where used.detailMainId = ?",dataId);
         else
             jdbcTemplate.update("update form_table_5_dt_1 used left join form_table_2_dt_1 ys on used.ysx = ys.detailDataId set used.yjdje = ys.jdje where used.detailMainId = ?",dataId);
     }

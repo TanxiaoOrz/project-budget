@@ -242,7 +242,8 @@ public class WorkflowFrontController {
 
             FormOutDto formOutDto = entityService.getFormOne(tableId, dataId, userId);
             requestDto.setCreator(humanDto)
-                    .setFormOutDto(formOutDto);
+                    .setFormOutDto(formOutDto)
+                    .reloadFunction(entityService,userId);
             Request request = requestDto.getRequest();
             request.setDataId(dataId);
 

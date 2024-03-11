@@ -63,7 +63,7 @@ public class RequestDto {
         StringBuilder falseReason = new StringBuilder();
         for (WorkflowRoute route:
              nextRoutes) {
-            String checkAction = route.getRouteAction();
+            String checkAction = route.getEnterCondition();
             if (doChecks(jdbcTemplate, checkAction, falseReason)) {
                 nextRoute = route;
                 break;
