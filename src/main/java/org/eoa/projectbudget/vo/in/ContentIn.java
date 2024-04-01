@@ -51,7 +51,7 @@ public class ContentIn implements CheckParameter<Content>{
                 .setDefaultEdit(defaultEdit)
                 .setDefaultDelete(defaultDelete)
                 .setDefaultShare(defaultShare)
-                .setLeadContent(leadContent)
+                .setLeadContent(leadContent==null?0:leadContent)
                 .setIsDeprecated(0)
                 .setDefaultView(defaultView);
     }
